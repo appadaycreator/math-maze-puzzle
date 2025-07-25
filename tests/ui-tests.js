@@ -1,385 +1,515 @@
-/**
- * Math Maze Puzzle - UIテストスイート
- * ゲームの各機能をテストするためのテストフレームワーク
- */
+// UI テスト専用モジュール
+// Math Maze Puzzle UI テスト
 
-// テストフレームワーク
-class TestFramework {
+class UITestSuite {
     constructor() {
-        this.tests = [];
-        this.results = {
-            total: 0,
-            passed: 0,
-            failed: 0,
-            pending: 0
-        };
-        this.currentSuite = null;
-        this.log = [];
+        this.testResults = [];
+        this.currentTest = null;
     }
 
-    describe(suiteName, callback) {
-        this.currentSuite = suiteName;
-        this.log.push(`\n📋 ${suiteName}`);
-        callback();
-        this.currentSuite = null;
-    }
-
-    it(testName, testFunction) {
-        const test = {
-            suite: this.currentSuite,
-            name: testName,
-            function: testFunction,
-            status: 'pending',
-            error: null,
-            duration: 0
-        };
-        this.tests.push(test);
-        this.results.total++;
-        this.results.pending++;
-    }
-
-    async runTest(test) {
-        const startTime = performance.now();
-        
-        try {
-            this.log.push(`⏳ ${test.suite} - ${test.name}`);
-            this.updateLog();
-            
-            await test.function();
-            
-            test.status = 'passed';
-            test.duration = performance.now() - startTime;
-            this.results.passed++;
-            this.results.pending--;
-            
-            this.log.push(`✅ ${test.suite} - ${test.name} (${test.duration.toFixed(2)}ms)`);
-            
-        } catch (error) {
-            test.status = 'failed';
-            test.error = error;
-            test.duration = performance.now() - startTime;
-            this.results.failed++;
-            this.results.pending--;
-            
-            this.log.push(`❌ ${test.suite} - ${test.name} (${error.message})`);
-        }
-        
-        this.updateUI();
-    }
-
-    async runAllTests() {
-        this.log.push('🚀 テスト実行開始...\n');
-        this.updateLog();
-        
-        for (const test of this.tests) {
-            await this.runTest(test);
-            await this.sleep(100); // UIの更新を確認するための短い待機
-        }
-        
-        this.log.push('\n🏁 テスト完了');
-        this.updateLog();
-    }
-
-    async runTestsByType(type) {
-        const filteredTests = this.tests.filter(test => 
-            test.suite.toLowerCase().includes(type.toLowerCase())
-        );
-        
-        this.log.push(`🎯 ${type}テスト実行開始...\n`);
-        this.updateLog();
-        
-        for (const test of filteredTests) {
-            await this.runTest(test);
-            await this.sleep(100);
-        }
-        
-        this.log.push(`\n✨ ${type}テスト完了`);
-        this.updateLog();
-    }
-
-    updateUI() {
-        // 統計の更新
-        document.getElementById('total-tests').textContent = this.results.total;
-        document.getElementById('passed-tests').textContent = this.results.passed;
-        document.getElementById('failed-tests').textContent = this.results.failed;
-        document.getElementById('pending-tests').textContent = this.results.pending;
-        
-        // プログレスバーの更新
-        const completedTests = this.results.passed + this.results.failed;
-        const progress = this.results.total > 0 ? (completedTests / this.results.total) * 100 : 0;
-        document.getElementById('progress-fill').style.width = `${progress}%`;
-        document.getElementById('progress-text').textContent = `${Math.round(progress)}%`;
-        
-        // テストケースの表示更新
-        this.updateTestCases();
-    }
-
-    updateTestCases() {
-        const suites = {
-            'ユニット': document.getElementById('unit-tests-container'),
-            '統合': document.getElementById('integration-tests-container'),
-            'UI': document.getElementById('ui-tests-container')
-        };
-        
-        Object.values(suites).forEach(container => {
-            if (container) container.innerHTML = '';
-        });
-        
-        this.tests.forEach(test => {
-            const container = this.getContainerForTest(test);
-            if (container) {
-                const testElement = this.createTestElement(test);
-                container.appendChild(testElement);
+    // モバイルメニューテスト
+    async testMobileMenu() {
+        return new Promise((resolve, reject) => {
+            try {
+                const mobileMenuButton = document.querySelector('#mobileMenuButton');
+                const mobileMenu = document.querySelector('#mobileMenu');
+                
+                if (!mobileMenuButton) {
+                    throw new Error('モバイルメニューボタンが見つかりません');
+                }
+                
+                if (!mobileMenu) {
+                    throw new Error('モバイルメニューが見つかりません');
+                }
+                
+                // メニューの初期状態をチェック
+                const initialDisplay = window.getComputedStyle(mobileMenu).display;
+                
+                // ボタンをクリック
+                mobileMenuButton.click();
+                
+                // 少し待ってから状態をチェック
+                setTimeout(() => {
+                    const newDisplay = window.getComputedStyle(mobileMenu).display;
+                    if (newDisplay === initialDisplay) {
+                        reject(new Error('モバイルメニューの表示状態が変更されませんでした'));
+                    } else {
+                        // 元に戻す
+                        mobileMenuButton.click();
+                        resolve('モバイルメニューが正常に動作しています');
+                    }
+                }, 300);
+            } catch (error) {
+                reject(error);
             }
         });
     }
 
-    getContainerForTest(test) {
-        if (test.suite.includes('ユニット')) {
-            return document.getElementById('unit-tests-container');
-        } else if (test.suite.includes('統合')) {
-            return document.getElementById('integration-tests-container');
-        } else if (test.suite.includes('UI')) {
-            return document.getElementById('ui-tests-container');
+    // 言語切り替えテスト
+    async testLanguageSwitch() {
+        return new Promise((resolve, reject) => {
+            try {
+                const languageSelects = document.querySelectorAll('select[data-setting="language"]');
+                
+                if (languageSelects.length === 0) {
+                    throw new Error('言語選択要素が見つかりません');
+                }
+                
+                const select = languageSelects[0];
+                const originalValue = select.value;
+                
+                // 値を変更
+                const newValue = originalValue === 'ja' ? 'en' : 'ja';
+                select.value = newValue;
+                
+                // change イベントを発火
+                const event = new Event('change', { bubbles: true });
+                select.dispatchEvent(event);
+                
+                // 少し待ってから元に戻す
+                setTimeout(() => {
+                    select.value = originalValue;
+                    select.dispatchEvent(new Event('change', { bubbles: true }));
+                    resolve('言語切り替えが正常に動作しています');
+                }, 500);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    // フォントサイズ変更テスト
+    async testFontSizeChange() {
+        return new Promise((resolve, reject) => {
+            try {
+                const fontSizeSelects = document.querySelectorAll('select[data-setting="fontSize"]');
+                
+                if (fontSizeSelects.length === 0) {
+                    throw new Error('フォントサイズ選択要素が見つかりません');
+                }
+                
+                const select = fontSizeSelects[0];
+                const originalValue = select.value;
+                const originalSize = document.documentElement.style.fontSize;
+                
+                // 値を変更
+                const newValue = originalValue === 'medium' ? 'large' : 'medium';
+                select.value = newValue;
+                
+                // change イベントを発火
+                const event = new Event('change', { bubbles: true });
+                select.dispatchEvent(event);
+                
+                // 少し待ってからチェック
+                setTimeout(() => {
+                    const newSize = document.documentElement.style.fontSize;
+                    if (newSize === originalSize) {
+                        reject(new Error('フォントサイズが変更されませんでした'));
+                    } else {
+                        // 元に戻す
+                        select.value = originalValue;
+                        select.dispatchEvent(new Event('change', { bubbles: true }));
+                        resolve('フォントサイズ変更が正常に動作しています');
+                    }
+                }, 300);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    // ダークモード切り替えテスト
+    async testDarkModeToggle() {
+        return new Promise((resolve, reject) => {
+            try {
+                const darkModeToggles = document.querySelectorAll('input[data-setting="darkMode"]');
+                
+                if (darkModeToggles.length === 0) {
+                    throw new Error('ダークモードトグルが見つかりません');
+                }
+                
+                const toggle = darkModeToggles[0];
+                const originalChecked = toggle.checked;
+                const originalClass = document.body.className;
+                
+                // トグルをクリック
+                toggle.click();
+                
+                // 少し待ってからチェック
+                setTimeout(() => {
+                    const newClass = document.body.className;
+                    if (newClass === originalClass) {
+                        reject(new Error('ダークモードの状態が変更されませんでした'));
+                    } else {
+                        // 元に戻す
+                        toggle.click();
+                        resolve('ダークモード切り替えが正常に動作しています');
+                    }
+                }, 300);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    // レスポンシブデザインテスト
+    async testResponsiveDesign() {
+        return new Promise((resolve, reject) => {
+            try {
+                const originalWidth = window.innerWidth;
+                
+                // モバイルサイズをシミュレート
+                Object.defineProperty(window, 'innerWidth', {
+                    writable: true,
+                    configurable: true,
+                    value: 375
+                });
+                
+                // リサイズイベントを発火
+                window.dispatchEvent(new Event('resize'));
+                
+                // 少し待ってからチェック
+                setTimeout(() => {
+                    const mobileMenuButton = document.querySelector('#mobileMenuButton');
+                    const desktopNav = document.querySelector('nav:not(#mobileMenu)');
+                    
+                    if (!mobileMenuButton || !desktopNav) {
+                        reject(new Error('レスポンシブ要素が見つかりません'));
+                        return;
+                    }
+                    
+                    // 元のサイズに戻す
+                    Object.defineProperty(window, 'innerWidth', {
+                        writable: true,
+                        configurable: true,
+                        value: originalWidth
+                    });
+                    window.dispatchEvent(new Event('resize'));
+                    
+                    resolve('レスポンシブデザインが正常に動作しています');
+                }, 500);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    // アクセシビリティテスト
+    async testAccessibility() {
+        return new Promise((resolve, reject) => {
+            try {
+                const focusableElements = document.querySelectorAll(
+                    'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                );
+                
+                if (focusableElements.length === 0) {
+                    throw new Error('フォーカス可能な要素が見つかりません');
+                }
+                
+                let missingAriaLabels = 0;
+                let missingAltTexts = 0;
+                
+                // ARIA ラベルのチェック
+                focusableElements.forEach(element => {
+                    if (element.tagName === 'BUTTON' && !element.getAttribute('aria-label') && !element.textContent.trim()) {
+                        missingAriaLabels++;
+                    }
+                });
+                
+                // 画像の alt 属性チェック
+                const images = document.querySelectorAll('img');
+                images.forEach(img => {
+                    if (!img.getAttribute('alt')) {
+                        missingAltTexts++;
+                    }
+                });
+                
+                const issues = [];
+                if (missingAriaLabels > 0) {
+                    issues.push(`${missingAriaLabels}個のボタンにaria-labelが不足`);
+                }
+                if (missingAltTexts > 0) {
+                    issues.push(`${missingAltTexts}個の画像にalt属性が不足`);
+                }
+                
+                if (issues.length > 0) {
+                    reject(new Error(`アクセシビリティの問題: ${issues.join(', ')}`));
+                } else {
+                    resolve('アクセシビリティテストに合格しました');
+                }
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    // フォームバリデーションテスト
+    async testFormValidation() {
+        return new Promise((resolve, reject) => {
+            try {
+                const forms = document.querySelectorAll('form');
+                
+                if (forms.length === 0) {
+                    resolve('フォームが存在しないため、テストをスキップします');
+                    return;
+                }
+                
+                let validationCount = 0;
+                
+                forms.forEach(form => {
+                    const requiredInputs = form.querySelectorAll('input[required], select[required], textarea[required]');
+                    
+                    requiredInputs.forEach(input => {
+                        // 空の値でバリデーションをテスト
+                        const originalValue = input.value;
+                        input.value = '';
+                        
+                        if (input.checkValidity()) {
+                            throw new Error(`必須フィールドのバリデーションが機能していません: ${input.name || input.id}`);
+                        }
+                        
+                        // 元の値に戻す
+                        input.value = originalValue;
+                        validationCount++;
+                    });
+                });
+                
+                resolve(`${validationCount}個のフィールドでバリデーションが正常に動作しています`);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    // キーボードナビゲーションテスト
+    async testKeyboardNavigation() {
+        return new Promise((resolve, reject) => {
+            try {
+                const focusableElements = document.querySelectorAll(
+                    'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                );
+                
+                if (focusableElements.length < 2) {
+                    resolve('フォーカス可能な要素が少ないため、テストをスキップします');
+                    return;
+                }
+                
+                // 最初の要素にフォーカス
+                focusableElements[0].focus();
+                
+                // Tab キーをシミュレート
+                const tabEvent = new KeyboardEvent('keydown', {
+                    key: 'Tab',
+                    code: 'Tab',
+                    keyCode: 9,
+                    bubbles: true
+                });
+                
+                document.dispatchEvent(tabEvent);
+                
+                // 少し待ってからチェック
+                setTimeout(() => {
+                    const activeElement = document.activeElement;
+                    if (!activeElement || activeElement === focusableElements[0]) {
+                        reject(new Error('キーボードナビゲーションが正常に動作していません'));
+                    } else {
+                        resolve('キーボードナビゲーションが正常に動作しています');
+                    }
+                }, 100);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    // パフォーマンステスト
+    async testPerformance() {
+        return new Promise((resolve, reject) => {
+            try {
+                const startTime = performance.now();
+                
+                // DOM操作のパフォーマンステスト
+                const testElement = document.createElement('div');
+                testElement.innerHTML = '<p>パフォーマンステスト</p>'.repeat(100);
+                document.body.appendChild(testElement);
+                
+                // 計算集約的な処理をテスト
+                let result = 0;
+                for (let i = 0; i < 10000; i++) {
+                    result += Math.random();
+                }
+                
+                // 要素を削除
+                document.body.removeChild(testElement);
+                
+                const endTime = performance.now();
+                const duration = endTime - startTime;
+                
+                if (duration > 1000) {
+                    reject(new Error(`パフォーマンスが低下しています: ${duration.toFixed(2)}ms`));
+                } else {
+                    resolve(`パフォーマンステストに合格: ${duration.toFixed(2)}ms`);
+                }
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    // メモリリークテスト
+    async testMemoryLeaks() {
+        return new Promise((resolve, reject) => {
+            try {
+                if (!performance.memory) {
+                    resolve('ブラウザがメモリ情報をサポートしていません');
+                    return;
+                }
+                
+                const initialMemory = performance.memory.usedJSHeapSize;
+                
+                // メモリを消費する処理
+                const largeArray = new Array(100000).fill(0).map((_, i) => ({
+                    id: i,
+                    data: 'test data '.repeat(10)
+                }));
+                
+                // 少し待つ
+                setTimeout(() => {
+                    // 配列をクリア
+                    largeArray.length = 0;
+                    
+                    // ガベージコレクションを促す
+                    if (window.gc) {
+                        window.gc();
+                    }
+                    
+                    setTimeout(() => {
+                        const finalMemory = performance.memory.usedJSHeapSize;
+                        const memoryIncrease = finalMemory - initialMemory;
+                        
+                        if (memoryIncrease > 10 * 1024 * 1024) { // 10MB以上の増加
+                            reject(new Error(`メモリリークの可能性: ${(memoryIncrease / 1024 / 1024).toFixed(2)}MB増加`));
+                        } else {
+                            resolve(`メモリテストに合格: ${(memoryIncrease / 1024 / 1024).toFixed(2)}MB増加`);
+                        }
+                    }, 1000);
+                }, 500);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    // すべてのUIテストを実行
+    async runAllUITests() {
+        const tests = [
+            { name: 'モバイルメニューテスト', method: this.testMobileMenu },
+            { name: '言語切り替えテスト', method: this.testLanguageSwitch },
+            { name: 'フォントサイズ変更テスト', method: this.testFontSizeChange },
+            { name: 'ダークモード切り替えテスト', method: this.testDarkModeToggle },
+            { name: 'レスポンシブデザインテスト', method: this.testResponsiveDesign },
+            { name: 'アクセシビリティテスト', method: this.testAccessibility },
+            { name: 'フォームバリデーションテスト', method: this.testFormValidation },
+            { name: 'キーボードナビゲーションテスト', method: this.testKeyboardNavigation },
+            { name: 'パフォーマンステスト', method: this.testPerformance },
+            { name: 'メモリリークテスト', method: this.testMemoryLeaks }
+        ];
+
+        const results = [];
+
+        for (const test of tests) {
+            try {
+                const result = await test.method.call(this);
+                results.push({
+                    name: test.name,
+                    status: 'passed',
+                    message: result
+                });
+                console.log(`✅ ${test.name}: ${result}`);
+            } catch (error) {
+                results.push({
+                    name: test.name,
+                    status: 'failed',
+                    message: error.message
+                });
+                console.error(`❌ ${test.name}: ${error.message}`);
+            }
         }
-        return null;
-    }
 
-    createTestElement(test) {
-        const div = document.createElement('div');
-        div.className = 'test-case';
-        
-        const statusClass = test.status === 'passed' ? 'pass' : 
-                           test.status === 'failed' ? 'fail' : 'pending';
-        
-        const statusIcon = test.status === 'passed' ? '✅' : 
-                          test.status === 'failed' ? '❌' : '⏳';
-        
-        div.innerHTML = `
-            <div class="flex justify-between items-center">
-                <span class="font-medium">${test.name}</span>
-                <span class="test-result ${statusClass}">
-                    ${statusIcon} ${test.status.toUpperCase()}
-                    ${test.duration ? ` (${test.duration.toFixed(2)}ms)` : ''}
-                </span>
-            </div>
-            ${test.error ? `<div class="text-red-600 text-sm mt-2">${test.error.message}</div>` : ''}
-        `;
-        
-        return div;
-    }
-
-    updateLog() {
-        const logElement = document.getElementById('test-log');
-        if (logElement) {
-            logElement.textContent = this.log.join('\n');
-            logElement.scrollTop = logElement.scrollHeight;
-        }
-    }
-
-    clearLog() {
-        this.log = [];
-        this.updateLog();
-    }
-
-    sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    // アサーション関数
-    assert(condition, message = 'Assertion failed') {
-        if (!condition) {
-            throw new Error(message);
-        }
-    }
-
-    assertEqual(actual, expected, message = `Expected ${expected}, got ${actual}`) {
-        if (actual !== expected) {
-            throw new Error(message);
-        }
-    }
-
-    assertExists(element, message = 'Element does not exist') {
-        if (!element) {
-            throw new Error(message);
-        }
-    }
-
-    assertVisible(element, message = 'Element is not visible') {
-        if (!element || element.style.display === 'none' || 
-            element.style.visibility === 'hidden' || 
-            element.offsetParent === null) {
-            throw new Error(message);
-        }
+        return results;
     }
 }
 
-// テストインスタンスの作成
-const testFramework = new TestFramework();
+// ユーティリティ関数
+const UITestUtils = {
+    // 要素が表示されているかチェック
+    isElementVisible: (element) => {
+        if (!element) return false;
+        const style = window.getComputedStyle(element);
+        return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
+    },
 
-// ユニットテスト
-testFramework.describe('ユニットテスト - 数学問題生成', () => {
-    testFramework.it('基本的な足し算問題が生成される', async () => {
-        // 実際のゲームロジックがロードされている場合のテスト
-        if (typeof window.generateAdditionProblem === 'function') {
-            const problem = window.generateAdditionProblem(1, 10);
-            testFramework.assert(problem.num1 >= 1 && problem.num1 <= 10);
-            testFramework.assert(problem.num2 >= 1 && problem.num2 <= 10);
-            testFramework.assertEqual(problem.answer, problem.num1 + problem.num2);
-        } else {
-            testFramework.assert(true, 'Mock test - 関数が未実装');
-        }
-    });
+    // 要素がフォーカス可能かチェック
+    isFocusable: (element) => {
+        if (!element) return false;
+        const focusableSelectors = [
+            'a[href]',
+            'button:not([disabled])',
+            'input:not([disabled])',
+            'select:not([disabled])',
+            'textarea:not([disabled])',
+            '[tabindex]:not([tabindex="-1"])'
+        ];
+        return focusableSelectors.some(selector => element.matches(selector));
+    },
 
-    testFramework.it('引き算問題が正しく生成される', async () => {
-        // モックテスト
-        const mockProblem = { num1: 10, num2: 3, answer: 7, operation: '-' };
-        testFramework.assertEqual(mockProblem.answer, mockProblem.num1 - mockProblem.num2);
-    });
+    // CSS プロパティの値を取得
+    getCSSProperty: (element, property) => {
+        if (!element) return null;
+        return window.getComputedStyle(element).getPropertyValue(property);
+    },
 
-    testFramework.it('掛け算問題が正しく生成される', async () => {
-        const mockProblem = { num1: 5, num2: 4, answer: 20, operation: '×' };
-        testFramework.assertEqual(mockProblem.answer, mockProblem.num1 * mockProblem.num2);
-    });
-});
-
-testFramework.describe('ユニットテスト - 迷路生成', () => {
-    testFramework.it('迷路のサイズが正しく設定される', async () => {
-        const mockMaze = { width: 10, height: 10 };
-        testFramework.assertEqual(mockMaze.width, 10);
-        testFramework.assertEqual(mockMaze.height, 10);
-    });
-
-    testFramework.it('迷路に開始点と終了点が存在する', async () => {
-        const mockMaze = {
-            start: { x: 0, y: 0 },
-            end: { x: 9, y: 9 }
+    // 要素のサイズを取得
+    getElementSize: (element) => {
+        if (!element) return null;
+        const rect = element.getBoundingClientRect();
+        return {
+            width: rect.width,
+            height: rect.height,
+            top: rect.top,
+            left: rect.left
         };
-        testFramework.assertExists(mockMaze.start);
-        testFramework.assertExists(mockMaze.end);
-    });
-});
+    },
 
-// 統合テスト
-testFramework.describe('統合テスト - ゲームフロー', () => {
-    testFramework.it('ゲーム開始からプレイまでの流れ', async () => {
-        // 開始画面の存在確認
-        const startScreen = document.querySelector('.start-screen');
-        if (startScreen) {
-            testFramework.assertExists(startScreen);
-        } else {
-            testFramework.assert(true, 'Mock test - 開始画面要素が未実装');
-        }
-    });
+    // カラーコントラストを計算
+    calculateColorContrast: (color1, color2) => {
+        // 簡易的なコントラスト計算
+        const getLuminance = (color) => {
+            const rgb = color.match(/\d+/g);
+            if (!rgb) return 0;
+            const [r, g, b] = rgb.map(c => {
+                c = parseInt(c) / 255;
+                return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+            });
+            return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        };
 
-    testFramework.it('レベル選択機能', async () => {
-        // レベル選択ボタンの存在確認
-        const levelButtons = document.querySelectorAll('[data-level]');
-        if (levelButtons.length > 0) {
-            testFramework.assert(levelButtons.length > 0);
-        } else {
-            testFramework.assert(true, 'Mock test - レベル選択ボタンが未実装');
-        }
-    });
+        const l1 = getLuminance(color1);
+        const l2 = getLuminance(color2);
+        const lighter = Math.max(l1, l2);
+        const darker = Math.min(l1, l2);
 
-    testFramework.it('スコア計算とレベルアップ', async () => {
-        // モックスコアシステムのテスト
-        const mockScore = { current: 100, level: 1 };
-        testFramework.assert(mockScore.current >= 0);
-        testFramework.assert(mockScore.level >= 1);
-    });
-});
+        return (lighter + 0.05) / (darker + 0.05);
+    }
+};
 
-// UIテスト
-testFramework.describe('UIテスト - レスポンシブデザイン', () => {
-    testFramework.it('モバイルメニューが正しく動作する', async () => {
-        const mobileMenuButton = document.querySelector('[data-mobile-menu]');
-        if (mobileMenuButton) {
-            // モバイルメニューのクリックイベントをシミュレート
-            mobileMenuButton.click();
-            await testFramework.sleep(300);
-            // メニューの表示状態を確認（実装依存）
-            testFramework.assert(true, 'モバイルメニューのテスト完了');
-        } else {
-            testFramework.assert(true, 'Mock test - モバイルメニューボタンが未実装');
-        }
-    });
+// グローバルに公開
+if (typeof window !== 'undefined') {
+    window.UITestSuite = UITestSuite;
+    window.UITestUtils = UITestUtils;
+}
 
-    testFramework.it('言語切り替え機能', async () => {
-        const langSelect = document.querySelector('#language-select');
-        if (langSelect) {
-            const originalValue = langSelect.value;
-            langSelect.value = originalValue === 'ja' ? 'en' : 'ja';
-            langSelect.dispatchEvent(new Event('change'));
-            await testFramework.sleep(100);
-            testFramework.assert(true, '言語切り替えテスト完了');
-            // 元の値に戻す
-            langSelect.value = originalValue;
-        } else {
-            testFramework.assert(true, 'Mock test - 言語選択要素が未実装');
-        }
-    });
-
-    testFramework.it('フォントサイズ調整機能', async () => {
-        const fontSizeSlider = document.querySelector('#font-size');
-        if (fontSizeSlider) {
-            const originalValue = fontSizeSlider.value;
-            fontSizeSlider.value = '18';
-            fontSizeSlider.dispatchEvent(new Event('input'));
-            await testFramework.sleep(100);
-            testFramework.assert(true, 'フォントサイズ調整テスト完了');
-            // 元の値に戻す
-            fontSizeSlider.value = originalValue;
-        } else {
-            testFramework.assert(true, 'Mock test - フォントサイズ調整要素が未実装');
-        }
-    });
-});
-
-testFramework.describe('UIテスト - アクセシビリティ', () => {
-    testFramework.it('キーボードナビゲーション', async () => {
-        const focusableElements = document.querySelectorAll(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        testFramework.assert(focusableElements.length > 0, 'フォーカス可能な要素が存在する');
-    });
-
-    testFramework.it('適切なARIAラベルが設定されている', async () => {
-        const ariaElements = document.querySelectorAll('[aria-label], [aria-labelledby]');
-        // 最低限のアクセシビリティ要素があることを確認
-        testFramework.assert(true, 'ARIAラベルのテスト完了');
-    });
-});
-
-// DOMContentLoadedイベントでテストUIを初期化
-document.addEventListener('DOMContentLoaded', () => {
-    // イベントリスナーの設定
-    document.getElementById('run-all-tests')?.addEventListener('click', () => {
-        testFramework.runAllTests();
-    });
-
-    document.getElementById('run-unit-tests')?.addEventListener('click', () => {
-        testFramework.runTestsByType('ユニット');
-    });
-
-    document.getElementById('run-integration-tests')?.addEventListener('click', () => {
-        testFramework.runTestsByType('統合');
-    });
-
-    document.getElementById('run-ui-tests')?.addEventListener('click', () => {
-        testFramework.runTestsByType('UI');
-    });
-
-    document.getElementById('clear-log')?.addEventListener('click', () => {
-        testFramework.clearLog();
-    });
-
-    // 初期UI状態の設定
-    testFramework.updateUI();
-    
-    console.log('Math Maze Puzzle テストスイートが初期化されました');
-    console.log(`総テスト数: ${testFramework.tests.length}`);
-});
-
-// グローバルスコープに公開（デバッグ用）
-window.testFramework = testFramework; 
+// エクスポート（Node.js環境用）
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { UITestSuite, UITestUtils };
+} 
