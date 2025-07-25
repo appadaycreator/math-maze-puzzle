@@ -1,0 +1,94 @@
+{
+  "name": "計算の迷宮 - Math Maze",
+  "short_name": "Math Maze",
+  "description": "暗算力を鍛える迷路型パズルゲーム - A maze puzzle game to train your mental arithmetic",
+  "version": "1.0.0",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#2563eb",
+  "background_color": "#f9fafb",
+  "scope": "/",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "assets/icons/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": [
+    "games",
+    "education",
+    "entertainment"
+  ],
+  "screenshots": [
+    {
+      "src": "assets/images/screenshot-game.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "Game screen"
+    },
+    {
+      "src": "assets/images/screenshot-menu.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "Main menu"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "ゲーム開始",
+      "short_name": "Play",
+      "description": "ゲームを開始する",
+      "url": "/index.html",
+      "icons": [
+        {
+          "src": "assets/icons/play-icon.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "使い方",
+      "short_name": "Guide",
+      "description": "ゲームの使い方を見る",
+      "url": "/about.html",
+      "icons": [
+        {
+          "src": "assets/icons/help-icon.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "handle_links": "preferred",
+  "capture_links": "existing-client-navigate"
+} 

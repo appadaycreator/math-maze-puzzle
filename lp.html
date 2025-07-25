@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="暗算力を鍛える迷路型パズルゲーム「計算の迷宮」のサービス紹介。楽しみながら計算力アップ！子供から大人まで楽しめる脳トレゲーム。">
+    <meta name="keywords" content="計算パズル,脳トレ,暗算,迷路ゲーム,数学ゲーム,計算練習,脳トレーニング,サービス紹介">
+    <title>サービス紹介 - 計算の迷宮</title>
+    
+    <!-- favicon -->
+    <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+    
+    <!-- PWA support -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    
+    <!-- OGP -->
+    <meta property="og:title" content="サービス紹介 - 計算の迷宮">
+    <meta property="og:description" content="暗算力を鍛える迷路型パズルゲーム。楽しみながら計算力をアップできる革新的な脳トレゲーム。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://appadaycreator.github.io/math-maze-puzzle/lp.html">
+    <meta property="og:image" content="https://appadaycreator.github.io/math-maze-puzzle/assets/images/ogp.png">
+    <meta property="og:site_name" content="計算の迷宮">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TXQGZRF9');</script>
+    <!-- End Google Tag Manager -->
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQGZRF9"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-600 to-green-500 text-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="index.html" class="flex items-center">
+                    <svg class="w-8 h-8 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 17L12 22L22 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 12L12 17L22 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="text-xl font-bold">計算の迷宮</span>
+                </a>
+            </div>
+            
+            <!-- PC Navigation -->
+            <nav class="hidden md:flex">
+                <ul class="flex space-x-6">
+                    <li><a href="index.html" class="hover:text-blue-200">ゲーム</a></li>
+                    <li><a href="about.html" class="hover:text-blue-200">使い方</a></li>
+                    <li><a href="terms.html" class="hover:text-blue-200">利用規約</a></li>
+                    <li><a href="privacy.html" class="hover:text-blue-200">プライバシー</a></li>
+                    <li><a href="contact.html" class="hover:text-blue-200">お問い合わせ</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Language & Font Size Controls (PC) -->
+            <div class="hidden md:flex items-center space-x-4">
+                <div class="flex border rounded-lg overflow-hidden">
+                    <button id="ja-btn" class="px-2 py-1 bg-white text-blue-600">JP</button>
+                    <button id="en-btn" class="px-2 py-1 bg-transparent text-white">EN</button>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden flex items-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+    
+    <!-- Mobile Side Menu -->
+    <div id="mobile-menu" class="fixed top-0 right-0 h-full w-64 bg-white shadow-xl transform translate-x-full transition-transform duration-300 ease-in-out z-50">
+        <div class="flex justify-between items-center p-4 border-b">
+            <h2 class="text-xl font-bold text-blue-600">メニュー</h2>
+            <button id="close-mobile-menu" class="text-gray-500 hover:text-gray-800">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <nav class="p-4">
+            <ul class="space-y-3">
+                <li><a href="index.html" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">ゲーム</a></li>
+                <li><a href="about.html" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">使い方</a></li>
+                <li><a href="terms.html" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">利用規約</a></li>
+                <li><a href="privacy.html" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">プライバシー</a></li>
+                <li><a href="contact.html" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">お問い合わせ</a></li>
+            </ul>
+        </nav>
+    </div>
+    
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="bg-gradient-to-r from-blue-600 to-green-500 text-white py-20">
+            <div class="container mx-auto px-4 text-center">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">計算の迷宮</h1>
+                <p class="text-xl md:text-2xl mb-8">楽しみながら暗算力を鍛える、革新的な迷路型パズルゲーム</p>
+                <a href="index.html" class="bg-white text-blue-600 font-bold py-3 px-8 rounded-lg shadow-lg transform transition hover:scale-105 inline-block">
+                    今すぐプレイ
+                </a>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="py-16">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-12">なぜ計算の迷宮なのか？</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="text-center p-6 bg-white rounded-xl shadow-lg">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-brain text-2xl text-blue-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">脳トレ効果</h3>
+                        <p class="text-gray-600">迷路を進みながら計算問題を解くことで、集中力と計算力を同時に鍛えられます。</p>
+                    </div>
+                    <div class="text-center p-6 bg-white rounded-xl shadow-lg">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-gamepad text-2xl text-green-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">楽しく学習</h3>
+                        <p class="text-gray-600">ゲーム形式なので飽きることなく継続できます。子供から大人まで楽しめる設計です。</p>
+                    </div>
+                    <div class="text-center p-6 bg-white rounded-xl shadow-lg">
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-chart-line text-2xl text-purple-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">レベル設定</h3>
+                        <p class="text-gray-600">初級から上級まで、あなたのレベルに合わせて段階的に学習できます。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How it Works Section -->
+        <section class="py-16 bg-gray-100">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-12">ゲームの流れ</h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">1</div>
+                        <h3 class="font-bold mb-2">レベル選択</h3>
+                        <p class="text-gray-600">初級から上級まで、あなたのレベルを選択</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">2</div>
+                        <h3 class="font-bold mb-2">迷路をスタート</h3>
+                        <p class="text-gray-600">制限時間内に迷路のゴールを目指そう</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-purple-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">3</div>
+                        <h3 class="font-bold mb-2">計算問題</h3>
+                        <p class="text-gray-600">分岐点で計算問題が登場、正解を選んで進もう</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-orange-600 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">4</div>
+                        <h3 class="font-bold mb-2">ゴール達成</h3>
+                        <p class="text-gray-600">ゴールに到達してスコアをゲット！</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Levels Section -->
+        <section class="py-16">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-12">レベル紹介</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <div class="text-center mb-4">
+                            <span class="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">初級</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-center mb-3">足し算・引き算</h3>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li>• 一桁同士の計算</li>
+                            <li>• 二桁までの計算</li>
+                            <li>• 基礎的な四則演算</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <div class="text-center mb-4">
+                            <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">中級</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-center mb-3">掛け算・割り算</h3>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li>• 九九の応用</li>
+                            <li>• 二桁の掛け算</li>
+                            <li>• 割り切れる割り算</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <div class="text-center mb-4">
+                            <span class="bg-orange-100 text-orange-800 text-sm font-medium px-3 py-1 rounded-full">上級</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-center mb-3">小数・分数</h3>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li>• 小数の四則演算</li>
+                            <li>• 分数の計算</li>
+                            <li>• 約分・通分</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <div class="text-center mb-4">
+                            <span class="bg-red-100 text-red-800 text-sm font-medium px-3 py-1 rounded-full">マスター</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-center mb-3">複合計算</h3>
+                        <ul class="text-sm text-gray-600 space-y-2">
+                            <li>• 複数の演算子</li>
+                            <li>• 括弧の計算</li>
+                            <li>• 計算順序の理解</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Target Audience Section -->
+        <section class="py-16 bg-gray-100">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-12">こんな方におすすめ</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                        <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-child text-2xl text-yellow-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">小学生</h3>
+                        <p class="text-gray-600">算数の計算力を楽しみながら向上させたい</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-graduation-cap text-2xl text-blue-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">中高生</h3>
+                        <p class="text-gray-600">数学の基礎力を固めたい受験生</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-user-tie text-2xl text-green-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">大人</h3>
+                        <p class="text-gray-600">脳トレや認知機能の維持を目指したい</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-users text-2xl text-purple-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">親子</h3>
+                        <p class="text-gray-600">家族で一緒に楽しみながら学習したい</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                        <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-chalkboard-teacher text-2xl text-indigo-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">先生</h3>
+                        <p class="text-gray-600">授業で使える教材を探している</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+                        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-clock text-2xl text-red-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">時短学習</h3>
+                        <p class="text-gray-600">短時間で効率よく学習したい</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="py-16 bg-gradient-to-r from-blue-600 to-green-500 text-white">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-3xl font-bold mb-4">今すぐ始めよう！</h2>
+                <p class="text-xl mb-8">無料で遊べる計算の迷宮で、楽しく暗算力を鍛えましょう</p>
+                <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                    <a href="index.html" class="bg-white text-blue-600 font-bold py-3 px-8 rounded-lg shadow-lg transform transition hover:scale-105">
+                        ゲームを始める
+                    </a>
+                    <a href="about.html" class="border-2 border-white text-white font-bold py-3 px-8 rounded-lg transition hover:bg-white hover:text-blue-600">
+                        使い方を見る
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap">
+                <div class="w-full md:w-1/3 mb-6 md:mb-0">
+                    <h3 class="text-xl font-bold mb-3">計算の迷宮</h3>
+                    <p class="text-gray-400 mb-4">暗算力を鍛える迷路型パズルゲーム</p>
+                    <div class="flex space-x-4">
+                        <a href="#" aria-label="Twitter" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" aria-label="Facebook" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" aria-label="Instagram" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/3 mb-6 md:mb-0">
+                    <h4 class="font-bold mb-3">サイトメニュー</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white">ゲーム</a></li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-white">使い方</a></li>
+                        <li><a href="lp.html" class="text-gray-400 hover:text-white">サービス紹介</a></li>
+                        <li><a href="terms.html" class="text-gray-400 hover:text-white">利用規約</a></li>
+                        <li><a href="privacy.html" class="text-gray-400 hover:text-white">プライバシーポリシー</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white">お問い合わせ</a></li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-1/3">
+                    <h4 class="font-bold mb-3">お問い合わせ</h4>
+                    <p class="text-gray-400 mb-4">ご質問・ご感想はこちらからお寄せください。</p>
+                    <a href="contact.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
+                        お問い合わせフォーム
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-sm text-gray-500">
+                <p>© 2023 計算の迷宮 All Rights Reserved.</p>
+                <p class="mt-2">Powered by <a href="https://github.com/appadaycreator/math-maze-puzzle" target="_blank" rel="noopener" class="text-blue-400 hover:underline">GitHub Pages</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('translate-x-full');
+        });
+        
+        document.getElementById('close-mobile-menu').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.add('translate-x-full');
+        });
+    </script>
+</body>
+</html> 

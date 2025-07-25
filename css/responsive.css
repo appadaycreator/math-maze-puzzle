@@ -1,0 +1,596 @@
+/* 計算の迷宮 - レスポンシブデザイン */
+
+/* ブレークポイント定義 */
+/* xs: 0px */
+/* sm: 640px */
+/* md: 768px */
+/* lg: 1024px */
+/* xl: 1280px */
+/* 2xl: 1536px */
+
+/* Base / Mobile First Styles */
+:root {
+  --container-padding: 1rem;
+  --header-height: 64px;
+  --sidebar-width: 0px;
+}
+
+/* コンテナの基本設定 */
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--container-padding);
+  padding-right: var(--container-padding);
+}
+
+/* ヘッダーのレスポンシブ対応 */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  height: var(--header-height);
+}
+
+/* メインコンテンツのレスポンシブ対応 */
+main {
+  padding-top: var(--header-height);
+  margin-left: var(--sidebar-width);
+  min-height: calc(100vh - var(--header-height));
+}
+
+/* モバイル専用スタイル（〜767px） */
+@media (max-width: 767px) {
+  :root {
+    --container-padding: 0.75rem;
+    --header-height: 56px;
+  }
+
+  /* ヘッダー */
+  header .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  header .text-xl {
+    font-size: 1.125rem;
+  }
+
+  /* ナビゲーション - PC版を非表示 */
+  header nav.hidden.md\:flex {
+    display: none !important;
+  }
+
+  /* サイドメニュー */
+  #mobile-menu {
+    width: 280px;
+  }
+
+  /* ゲームコンテナ */
+  #game-container {
+    margin: 0 -0.75rem;
+    border-radius: 0;
+  }
+
+  /* 迷路キャンバス */
+  #maze-canvas {
+    max-width: 100%;
+    max-height: 60vh;
+    width: auto !important;
+    height: auto !important;
+  }
+
+  /* 問題表示 */
+  #problem-display {
+    max-width: 95vw;
+    margin: 0 2.5vw;
+    padding: 1rem;
+  }
+
+  #problem-text {
+    font-size: 1.25rem !important;
+  }
+
+  .answer-btn {
+    font-size: 0.875rem !important;
+    padding: 0.75rem 0.5rem !important;
+    min-height: 48px;
+  }
+
+  /* ゲーム情報バー */
+  .game-info-bar {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .game-info-card {
+    padding: 0.5rem 0.75rem;
+    text-align: center;
+  }
+
+  .game-info-card p:first-child {
+    font-size: 0.75rem;
+  }
+
+  .game-info-card p:last-child {
+    font-size: 0.875rem;
+  }
+
+  /* カードグリッド */
+  .grid.grid-cols-1.md\:grid-cols-3 {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .grid.grid-cols-1.md\:grid-cols-2 {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* フォーム */
+  .form-input,
+  .form-select,
+  .form-textarea {
+    font-size: 16px; /* iOS ズーム防止 */
+  }
+
+  /* ボタン */
+  .btn {
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+  }
+
+  .btn-lg {
+    min-height: 48px;
+    padding: 1rem 1.25rem;
+  }
+
+  /* テキストサイズ調整 */
+  .text-4xl {
+    font-size: 2rem;
+  }
+
+  .text-3xl {
+    font-size: 1.5rem;
+  }
+
+  .text-2xl {
+    font-size: 1.25rem;
+  }
+
+  /* パディング・マージン調整 */
+  .py-20 {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .py-16 {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .py-8 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  /* カード内パディング */
+  .card,
+  .bg-white.rounded-xl.shadow-lg {
+    padding: 1rem;
+  }
+
+  /* フッター */
+  footer .flex.flex-wrap > div {
+    width: 100%;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  footer .flex.flex-wrap > div:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* タブレット専用スタイル（768px〜1023px） */
+@media (min-width: 768px) and (max-width: 1023px) {
+  :root {
+    --container-padding: 1rem;
+    --header-height: 64px;
+  }
+
+  .container {
+    max-width: 768px;
+  }
+
+  /* サイドバー非表示 */
+  aside.hidden.md\:block {
+    display: none !important;
+  }
+
+  main.md\:pl-52 {
+    padding-left: 0 !important;
+  }
+
+  /* 迷路キャンバス */
+  #maze-canvas {
+    max-width: 600px;
+    max-height: 70vh;
+  }
+
+  /* 問題表示 */
+  #problem-display {
+    max-width: 480px;
+  }
+
+  /* ゲーム情報バー */
+  .game-info-bar {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  /* グリッドレイアウト調整 */
+  .grid.grid-cols-1.lg\:grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid.grid-cols-1.lg\:grid-cols-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* デスクトップ専用スタイル（1024px〜） */
+@media (min-width: 1024px) {
+  :root {
+    --container-padding: 1.5rem;
+    --header-height: 64px;
+    --sidebar-width: 208px; /* 52 * 0.25rem */
+  }
+
+  .container {
+    max-width: 1024px;
+  }
+
+  /* モバイルメニューボタン非表示 */
+  #mobile-menu-button {
+    display: none !important;
+  }
+
+  /* サイドバー表示 */
+  aside.hidden.md\:block {
+    display: block !important;
+    width: var(--sidebar-width);
+  }
+
+  /* 迷路キャンバス */
+  #maze-canvas {
+    max-width: 700px;
+    max-height: 80vh;
+  }
+
+  /* 問題表示 */
+  #problem-display {
+    max-width: 500px;
+  }
+}
+
+/* 大型デスクトップ（1280px〜） */
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px;
+  }
+
+  /* 迷路キャンバス */
+  #maze-canvas {
+    max-width: 800px;
+  }
+}
+
+/* 超大型デスクトップ（1536px〜） */
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1536px;
+  }
+
+  :root {
+    --container-padding: 2rem;
+  }
+}
+
+/* 横向きスマートフォン対応 */
+@media (max-width: 1023px) and (orientation: landscape) {
+  :root {
+    --header-height: 48px;
+  }
+
+  /* ヘッダーを小さく */
+  header {
+    height: var(--header-height);
+  }
+
+  header .py-3 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  header .text-xl {
+    font-size: 1rem;
+  }
+
+  /* 迷路キャンバス */
+  #maze-canvas {
+    max-height: 50vh;
+  }
+
+  /* ゲームコンテナ */
+  #game-container {
+    padding: 1rem;
+  }
+
+  /* 問題表示 */
+  #problem-display {
+    max-width: 90vw;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+}
+
+/* 印刷用スタイル */
+@media print {
+  :root {
+    --header-height: 0px;
+    --sidebar-width: 0px;
+  }
+
+  header,
+  footer,
+  #mobile-menu,
+  aside,
+  .no-print {
+    display: none !important;
+  }
+
+  main {
+    padding-top: 0;
+    margin-left: 0;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 12pt;
+  }
+
+  .container {
+    max-width: none;
+    padding: 0;
+  }
+
+  .card,
+  .bg-white {
+    background: white !important;
+    box-shadow: none !important;
+    border: 1px solid #000 !important;
+  }
+
+  a::after {
+    content: " (" attr(href) ")";
+    font-size: 10pt;
+    color: #666;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+}
+
+/* タッチデバイス対応 */
+@media (hover: none) and (pointer: coarse) {
+  /* タッチターゲットサイズ最小44px確保 */
+  button,
+  .btn,
+  a[role="button"],
+  input[type="button"],
+  input[type="submit"],
+  .answer-btn,
+  .stage-btn,
+  .level-btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* ホバー効果を無効化 */
+  .hover\:bg-blue-700:hover,
+  .hover\:text-blue-200:hover,
+  .hover\:bg-gray-100:hover,
+  .hover\:underline:hover,
+  .hover\:scale-105:hover {
+    background-color: inherit;
+    color: inherit;
+    text-decoration: inherit;
+    transform: inherit;
+  }
+
+  /* フォーカススタイル強化 */
+  button:focus,
+  .btn:focus,
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: 3px solid #3b82f6;
+    outline-offset: 2px;
+  }
+}
+
+/* 高コントラストモード */
+@media (prefers-contrast: high) {
+  :root {
+    --border-color: #000000;
+    --text-secondary: #000000;
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  }
+
+  .card,
+  .bg-white {
+    border: 2px solid #000000 !important;
+  }
+
+  button,
+  .btn {
+    border: 2px solid #000000 !important;
+  }
+}
+
+/* アニメーション削減 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  #start-screen::before {
+    animation: none !important;
+  }
+
+  .answer-btn:hover {
+    transform: none !important;
+  }
+
+  .stage-btn:hover,
+  .level-btn:hover {
+    transform: none !important;
+  }
+}
+
+/* カスタムスクロールバー（Webkit系ブラウザ） */
+@media (min-width: 1024px) {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+}
+
+/* フォーカス可能要素のスタイル */
+@media (prefers-reduced-motion: no-preference) {
+  [tabindex]:focus,
+  button:focus,
+  a:focus,
+  input:focus,
+  select:focus,
+  textarea:focus {
+    animation: focusPulse 0.3s ease-in-out;
+  }
+
+  @keyframes focusPulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+  }
+}
+
+/* ユーティリティクラス - レスポンシブ対応 */
+/* モバイル非表示 */
+@media (max-width: 767px) {
+  .hidden-mobile {
+    display: none !important;
+  }
+}
+
+/* タブレット非表示 */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hidden-tablet {
+    display: none !important;
+  }
+}
+
+/* デスクトップ非表示 */
+@media (min-width: 1024px) {
+  .hidden-desktop {
+    display: none !important;
+  }
+}
+
+/* レスポンシブテキストサイズ */
+.text-responsive-sm {
+  font-size: 0.75rem;
+}
+
+.text-responsive-base {
+  font-size: 0.875rem;
+}
+
+.text-responsive-lg {
+  font-size: 1rem;
+}
+
+@media (min-width: 768px) {
+  .text-responsive-sm {
+    font-size: 0.875rem;
+  }
+
+  .text-responsive-base {
+    font-size: 1rem;
+  }
+
+  .text-responsive-lg {
+    font-size: 1.125rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .text-responsive-sm {
+    font-size: 1rem;
+  }
+
+  .text-responsive-base {
+    font-size: 1.125rem;
+  }
+
+  .text-responsive-lg {
+    font-size: 1.25rem;
+  }
+}
+
+/* レスポンシブ間隔 */
+.spacing-responsive {
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .spacing-responsive {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .spacing-responsive {
+    padding: 2rem;
+  }
+} 

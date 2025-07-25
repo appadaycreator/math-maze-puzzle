@@ -1,0 +1,182 @@
+{
+  "app": {
+    "title": "Math Maze",
+    "subtitle": "A maze puzzle game to train your mental arithmetic",
+    "version": "1.0.0"
+  },
+  "navigation": {
+    "game": "Game",
+    "howToPlay": "How to Play",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "contact": "Contact",
+    "serviceIntro": "Service Introduction"
+  },
+  "game": {
+    "start": "Start Game",
+    "retry": "Try Again",
+    "nextStage": "Next Stage",
+    "pause": "Pause",
+    "resume": "Resume",
+    "quit": "Quit",
+    "level": "Level",
+    "stage": "Stage",
+    "time": "Time",
+    "score": "Score",
+    "question": "Question",
+    "timeUp": "Time's Up!",
+    "stageComplete": "Stage Complete!",
+    "gameOver": "Game Over",
+    "clearTime": "Clear Time",
+    "correctRate": "Accuracy",
+    "earnedScore": "Score Earned"
+  },
+  "levels": {
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "master": "Master",
+    "beginnerDesc": "Addition & Subtraction",
+    "intermediateDesc": "Multiplication & Division",
+    "advancedDesc": "Decimals & Fractions",
+    "masterDesc": "Complex Calculations"
+  },
+  "instructions": {
+    "welcome": "Welcome to Math Maze!",
+    "description": "Solve math problems while navigating through the maze within the time limit!",
+    "howToPlay": "How to Play",
+    "step1": "Math problems appear at maze intersections",
+    "step2": "Choose the correct path by solving the problem",
+    "step3": "Wrong answers restart the stage",
+    "step4": "Reach the goal within the time limit!"
+  },
+  "settings": {
+    "sound": "Sound Effects",
+    "hints": "Show Hints",
+    "fontSize": "Font Size",
+    "language": "Language",
+    "resetProgress": "Reset Progress",
+    "hintsRemaining": "{count} remaining"
+  },
+  "statistics": {
+    "playCount": "Games Played",
+    "clearCount": "Stages Cleared",
+    "highScore": "High Score",
+    "accuracy": "Accuracy Rate",
+    "averageTime": "Average Time"
+  },
+  "share": {
+    "title": "Share with Friends",
+    "description": "Share your Math Maze results with friends!",
+    "twitter": "Share on Twitter",
+    "facebook": "Share on Facebook",
+    "line": "Share on LINE",
+    "copyUrl": "Copy URL",
+    "shareText": "Playing Math Maze! Cleared Level {level} Stage {stage}! Score: {score} points"
+  },
+  "messages": {
+    "correct": "Correct!",
+    "incorrect": "Incorrect",
+    "tryAgain": "Let's try again",
+    "excellent": "Excellent!",
+    "goodJob": "Good job!",
+    "almostThere": "Almost there!",
+    "timeWarning": "Running out of time",
+    "urlCopied": "URL copied!",
+    "urlCopyFailed": "Failed to copy URL",
+    "gameInitialized": "Game initialized",
+    "errorOccurred": "An error occurred. Please reload the page."
+  },
+  "hints": {
+    "operationHint": "This is a {operation} problem.",
+    "rangeHint": "The answer is between {min} and {max}.",
+    "stepHint": "Take your time and calculate step by step.",
+    "parenthesesHint": "Calculate inside the parentheses first.",
+    "orderHint": "Calculate multiplication and division first.",
+    "divisionHint": "Division is the opposite of multiplication.",
+    "subtractionHint": "Subtraction is the opposite of addition."
+  },
+  "operations": {
+    "addition": "Addition",
+    "subtraction": "Subtraction",
+    "multiplication": "Multiplication",
+    "division": "Division",
+    "complex": "Complex Calculation"
+  },
+  "achievements": {
+    "firstClear": "First Clear",
+    "perfectScore": "Perfect Score",
+    "speedClear": "Speed Clear",
+    "levelMaster": "Level Master",
+    "calculator": "Calculator",
+    "persistent": "Persistent"
+  },
+  "errors": {
+    "levelNotFound": "Level not found",
+    "stageNotFound": "Stage not found",
+    "problemGenerationFailed": "Failed to generate problem",
+    "saveDataCorrupted": "Save data is corrupted",
+    "networkError": "Network error occurred",
+    "unknownError": "Unknown error occurred"
+  },
+  "accessibility": {
+    "skipToContent": "Skip to main content",
+    "closeModal": "Close modal",
+    "openMenu": "Open menu",
+    "languageSelector": "Language selector",
+    "fontSizeIncrease": "Increase font size",
+    "fontSizeDecrease": "Decrease font size",
+    "fontSizeDefault": "Default font size",
+    "playSound": "Play sound",
+    "pauseSound": "Pause sound"
+  },
+  "form": {
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message",
+    "inquiryType": "Inquiry Type",
+    "submit": "Submit",
+    "required": "Required",
+    "optional": "Optional",
+    "placeholder": {
+      "name": "John Doe",
+      "email": "example@email.com",
+      "subject": "Enter your inquiry subject",
+      "message": "Please provide detailed information. For bugs, include the situation and environment."
+    },
+    "inquiryTypes": {
+      "bug": "Bug Report",
+      "question": "Game Question",
+      "feature": "Feature Request",
+      "other": "Other"
+    }
+  },
+  "footer": {
+    "description": "A maze puzzle game to train your mental arithmetic",
+    "siteMenu": "Site Menu",
+    "contactUs": "Contact Us",
+    "contactDescription": "Please feel free to send us your questions and feedback.",
+    "contactForm": "Contact Form",
+    "copyright": "© 2023 Math Maze All Rights Reserved.",
+    "poweredBy": "Powered by"
+  },
+  "meta": {
+    "loading": "Loading...",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "save": "Save",
+    "reset": "Reset",
+    "edit": "Edit",
+    "delete": "Delete",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "finish": "Finish"
+  }
+} 
