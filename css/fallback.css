@@ -1,0 +1,171 @@
+/* フォールバック用CSS - CDNが利用できない場合の代替スタイル */
+
+/* 基本レイアウト */
+.fallback-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.fallback-header {
+  background: linear-gradient(to right, #2563eb, #059669);
+  color: white;
+  padding: 1rem 0;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.fallback-body {
+  background-color: #f9fafb;
+  font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  padding-top: 80px;
+  min-height: 100vh;
+}
+
+/* ゲームエリア */
+.fallback-game-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+.fallback-maze {
+  display: grid;
+  gap: 2px;
+  background: #374151;
+  padding: 10px;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.fallback-cell {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.fallback-cell.wall {
+  background-color: #374151;
+}
+
+.fallback-cell.path {
+  background-color: #f3f4f6;
+}
+
+.fallback-cell.player {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.fallback-cell.goal {
+  background-color: #10b981;
+  color: white;
+}
+
+.fallback-cell.problem {
+  background-color: #fbbf24;
+  color: #1f2937;
+}
+
+/* ボタン */
+.fallback-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin: 0.25rem;
+}
+
+.fallback-btn-primary {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.fallback-btn-primary:hover {
+  background-color: #2563eb;
+}
+
+.fallback-btn-secondary {
+  background-color: #6b7280;
+  color: white;
+}
+
+.fallback-btn-secondary:hover {
+  background-color: #4b5563;
+}
+
+.fallback-btn-success {
+  background-color: #10b981;
+  color: white;
+}
+
+.fallback-btn-success:hover {
+  background-color: #059669;
+}
+
+/* ユーティリティクラス */
+.fallback-text-center { text-align: center; }
+.fallback-text-left { text-align: left; }
+.fallback-text-right { text-align: right; }
+
+.fallback-flex { display: flex; }
+.fallback-flex-col { flex-direction: column; }
+.fallback-items-center { align-items: center; }
+.fallback-justify-center { justify-content: center; }
+.fallback-justify-between { justify-content: space-between; }
+
+.fallback-hidden { display: none; }
+.fallback-block { display: block; }
+
+.fallback-mb-2 { margin-bottom: 0.5rem; }
+.fallback-mb-4 { margin-bottom: 1rem; }
+.fallback-mt-2 { margin-top: 0.5rem; }
+.fallback-mt-4 { margin-top: 1rem; }
+
+.fallback-p-2 { padding: 0.5rem; }
+.fallback-p-4 { padding: 1rem; }
+
+.fallback-bg-white { background-color: white; }
+.fallback-bg-gray-100 { background-color: #f3f4f6; }
+.fallback-bg-blue-500 { background-color: #3b82f6; }
+.fallback-bg-green-500 { background-color: #10b981; }
+
+.fallback-text-white { color: white; }
+.fallback-text-gray-700 { color: #374151; }
+.fallback-text-blue-600 { color: #2563eb; }
+
+.fallback-rounded { border-radius: 4px; }
+.fallback-rounded-lg { border-radius: 8px; }
+
+.fallback-shadow { box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.fallback-shadow-lg { box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+  .fallback-container {
+    padding: 0 10px;
+  }
+  
+  .fallback-game-container {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .fallback-cell {
+    width: 25px;
+    height: 25px;
+    font-size: 12px;
+  }
+}

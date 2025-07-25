@@ -40,8 +40,9 @@ const EXCLUDE_PATTERNS = [
   /\/admin\//,
   /\/__debug__\//,
   /\.map$/,
-  /chrome-extension:/,
-  /moz-extension:/
+  /^chrome-extension:/,
+  /^moz-extension:/,
+  /^extension:/
 ];
 
 // Service Worker インストール
@@ -93,8 +94,8 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const requestUrl = new URL(event.request.url);
   
-  // 除外パターンをチェック
-  if (EXCLUDE_PATTERNS.some(pattern => pattern.test(requestUrl.pathname))) {
+  // 除外パターンをチェック（URLスキームも含む）
+  if (EXCLUDE_PATTERNS.some(pattern => pattern.test(requestUrl.href) || pattern.test(requestUrl.pathname))) {
     return;
   }
   
@@ -126,12 +127,27 @@ async function cacheFirst(request) {
 // ネットワークファーストストラテジー
 async function networkFirst(request) {
   try {
+    const requestUrl = new URL(request.url);
+    
+    // Chrome拡張のリクエストは処理しない
+    if (requestUrl.protocol === 'chrome-extension:' || 
+        requestUrl.protocol === 'moz-extension:') {
+      throw new Error('拡張機能のリクエストはスキップ');
+    }
+    
     const networkResponse = await fetch(request);
     
     if (networkResponse.ok) {
-      // 動的キャッシュに保存
-      const cache = await caches.open(DYNAMIC_CACHE_NAME);
-      cache.put(request, networkResponse.clone());
+      // Chrome拡張のリクエストはキャッシュしない
+      if (requestUrl.protocol !== 'chrome-extension:' && 
+          requestUrl.protocol !== 'moz-extension:') {
+        const cache = await caches.open(DYNAMIC_CACHE_NAME);
+        try {
+          await cache.put(request, networkResponse.clone());
+        } catch (cacheError) {
+          console.warn('[SW] キャッシュ保存エラー:', cacheError);
+        }
+      }
       console.log('[SW] ネットワークから提供:', request.url);
       return networkResponse;
     }

@@ -628,19 +628,33 @@ class AudioManager {
             // エラーハンドリング
             this.sounds[key].addEventListener('error', () => {
                 console.warn(`音声ファイルの読み込みに失敗: ${src}`);
+                // フォールバック音声を使用
+                this.sounds[key] = null;
             });
         });
     }
 
     play(soundName) {
-        if (!this.enabled || !this.sounds[soundName]) return;
+        if (!this.enabled) return;
 
         const sound = this.sounds[soundName];
-        sound.currentTime = 0;
         
-        sound.play().catch(error => {
-            console.warn(`音声再生エラー (${soundName}):`, error);
-        });
+        if (sound && sound.src) {
+            sound.currentTime = 0;
+            sound.play().catch(error => {
+                console.warn(`音声再生エラー (${soundName}):`, error);
+                this.playFallback(soundName);
+            });
+        } else {
+            this.playFallback(soundName);
+        }
+    }
+    
+    playFallback(soundName) {
+        // Web Audio APIを使用したフォールバック音声
+        if (window.playFallbackSound) {
+            window.playFallbackSound(soundName);
+        }
     }
 
     setVolume(volume) {

@@ -93,7 +93,7 @@ class MazeGenerator {
         this.canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
             this.handleCanvasClick(e.touches[0]);
-        });
+        }, { passive: false });
 
         // ホバーエフェクト（デスクトップのみ）
         this.canvas.addEventListener('mousemove', (e) => this.handleCanvasHover(e));
