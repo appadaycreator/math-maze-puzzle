@@ -3,192 +3,412 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Maze Puzzle - テストスイート</title>
-    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.19.4.css">
+    <meta name="description" content="数学迷路パズル - テストスイート">
+    <meta name="keywords" content="数学,迷路,パズル,テスト,品質保証">
+    <meta name="author" content="Math Maze Puzzle Team">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="../manifest.json">
+    
+    <!-- OGP Tags -->
+    <meta property="og:title" content="数学迷路パズル - テストスイート">
+    <meta property="og:description" content="ゲーム機能のテストと品質保証">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://example.com/tests/test-suite.html">
+    <meta property="og:image" content="https://example.com/assets/images/ogp-test.png">
+    <meta property="og:site_name" content="Math Maze Puzzle">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="数学迷路パズル - テストスイート">
+    <meta name="twitter:description" content="ゲーム機能のテストと品質保証">
+    <meta name="twitter:image" content="https://example.com/assets/images/ogp-test.png">
+    
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+    
+    <title>テストスイート - 数学迷路パズル</title>
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/responsive.css" rel="stylesheet">
     <style>
-        .test-info {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 0.375rem;
-            padding: 1rem;
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .test-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+        }
+        
+        .test-case {
             margin-bottom: 1rem;
+            padding: 1rem;
+            border-left: 4px solid #6366f1;
+            background: #f8fafc;
         }
-        .test-info h2 {
-            margin-top: 0;
-            color: #495057;
+        
+        .test-result {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-left: 1rem;
         }
+        
+        .test-pass {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .test-fail {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        .test-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .test-summary {
+            background: #f3f4f6;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            transition: width 0.3s ease;
+        }
+        
         .test-controls {
-            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .test-log {
+            height: 200px;
+            overflow-y: auto;
+            background: #1f2937;
+            color: #f9fafb;
             padding: 1rem;
-            background-color: #e9ecef;
-            border-radius: 0.375rem;
-        }
-        .test-controls button {
-            margin-right: 0.5rem;
-            padding: 0.5rem 1rem;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 0.25rem;
-            cursor: pointer;
-        }
-        .test-controls button:hover {
-            background-color: #0056b3;
-        }
-        .coverage-report {
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
             margin-top: 1rem;
-            padding: 1rem;
-            background-color: #f8f9fa;
-            border-radius: 0.375rem;
+        }
+        
+        .test-log pre {
+            margin: 0;
+            white-space: pre-wrap;
         }
     </style>
 </head>
-<body>
-    <div class="test-info">
-        <h1>Math Maze Puzzle - テストスイート</h1>
-        <p>このページではアプリケーションの各機能をテストします。</p>
-        
-        <div class="test-controls">
-            <button id="run-all-tests">全テスト実行</button>
-            <button id="run-unit-tests">ユニットテスト</button>
-            <button id="run-integration-tests">統合テスト</button>
-            <button id="run-ui-tests">UIテスト</button>
-            <button id="clear-results">結果クリア</button>
-        </div>
-    </div>
-
-    <div id="qunit"></div>
-    <div id="qunit-fixture"></div>
-
-    <div class="coverage-report">
-        <h3>テストカバレッジ情報</h3>
-        <div id="coverage-summary">
-            <p>テスト実行後にカバレッジ情報が表示されます。</p>
-        </div>
-    </div>
-
-    <!-- テスト対象のファイル -->
-    <script src="../js/main.js"></script>
-    <script src="../js/game.js"></script>
-    <script src="../js/maze.js"></script>
-    <script src="../js/problems.js"></script>
-    <script src="../js/ui.js"></script>
-
-    <!-- QUnit テストフレームワーク -->
-    <script src="https://code.jquery.com/qunit/qunit-2.19.4.js"></script>
+<body class="bg-gray-50">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     
-    <!-- テストファイル -->
-    <script src="ui-tests.js"></script>
-    
-    <script>
-        // テスト設定
-        QUnit.config.reorder = false;
-        QUnit.config.autostart = false;
-        
-        // テスト制御
-        document.addEventListener('DOMContentLoaded', function() {
-            const runAllBtn = document.getElementById('run-all-tests');
-            const runUnitBtn = document.getElementById('run-unit-tests');
-            const runIntegrationBtn = document.getElementById('run-integration-tests');
-            const runUIBtn = document.getElementById('run-ui-tests');
-            const clearBtn = document.getElementById('clear-results');
-            
-            runAllBtn.addEventListener('click', function() {
-                QUnit.start();
-            });
-            
-            runUnitBtn.addEventListener('click', function() {
-                QUnit.config.module = 'Unit Tests';
-                QUnit.start();
-            });
-            
-            runIntegrationBtn.addEventListener('click', function() {
-                QUnit.config.module = 'Integration Tests';
-                QUnit.start();
-            });
-            
-            runUIBtn.addEventListener('click', function() {
-                QUnit.config.module = 'UI Tests';
-                QUnit.start();
-            });
-            
-            clearBtn.addEventListener('click', function() {
-                const qunitResults = document.getElementById('qunit');
-                qunitResults.innerHTML = '';
-                document.getElementById('coverage-summary').innerHTML = '<p>テスト実行後にカバレッジ情報が表示されます。</p>';
-            });
-        });
-
-        // テスト完了時のコールバック
-        QUnit.done(function(details) {
-            const coverageSummary = document.getElementById('coverage-summary');
-            coverageSummary.innerHTML = `
-                <div>
-                    <h4>テスト結果サマリー</h4>
-                    <p><strong>実行テスト数:</strong> ${details.total}</p>
-                    <p><strong>成功:</strong> ${details.passed}</p>
-                    <p><strong>失敗:</strong> ${details.failed}</p>
-                    <p><strong>実行時間:</strong> ${details.runtime}ms</p>
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <a href="../index.html" class="flex items-center space-x-2">
+                        <i class="fas fa-cube text-blue-600 text-2xl"></i>
+                        <span class="text-xl font-bold text-gray-800">Math Maze Puzzle</span>
+                    </a>
+                    <span class="text-sm text-gray-500">- テストスイート</span>
                 </div>
-            `;
-        });
+                
+                <nav class="hidden md:flex items-center space-x-6">
+                    <a href="../index.html" class="text-gray-700 hover:text-blue-600 transition-colors">
+                        <i class="fas fa-home mr-1"></i>ホーム
+                    </a>
+                    <a href="../about.html" class="text-gray-700 hover:text-blue-600 transition-colors">
+                        <i class="fas fa-question-circle mr-1"></i>遊び方
+                    </a>
+                </nav>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden p-2 text-gray-600 hover:text-gray-800">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="md:hidden hidden border-t border-gray-200 py-4">
+                <nav class="flex flex-col space-y-2">
+                    <a href="../index.html" class="px-4 py-2 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-home mr-2"></i>ホーム
+                    </a>
+                    <a href="../about.html" class="px-4 py-2 text-gray-700 hover:bg-gray-100">
+                        <i class="fas fa-question-circle mr-2"></i>遊び方
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
 
-        // モックオブジェクトとヘルパー関数
-        window.TestHelpers = {
-            // DOM要素のモック
-            createMockElement: function(tagName, attributes = {}) {
-                const element = document.createElement(tagName);
-                Object.keys(attributes).forEach(key => {
-                    element.setAttribute(key, attributes[key]);
-                });
-                return element;
-            },
+    <!-- Main Content -->
+    <main class="min-h-screen py-8">
+        <div class="test-container">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-vial mr-3 text-blue-600"></i>
+                    テストスイート
+                </h1>
+                <p class="text-gray-600">ゲーム機能の自動テストと品質保証</p>
+            </div>
 
-            // ローカルストレージのモック
-            mockLocalStorage: function() {
-                const storage = {};
-                return {
-                    getItem: function(key) {
-                        return storage[key] || null;
-                    },
-                    setItem: function(key, value) {
-                        storage[key] = value.toString();
-                    },
-                    removeItem: function(key) {
-                        delete storage[key];
-                    },
-                    clear: function() {
-                        Object.keys(storage).forEach(key => delete storage[key]);
-                    }
-                };
-            },
+            <!-- Test Summary -->
+            <div class="test-summary">
+                <h2 class="text-xl font-semibold mb-4">テスト実行結果</h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-green-600" id="passCount">0</div>
+                        <div class="text-sm text-gray-600">成功</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-red-600" id="failCount">0</div>
+                        <div class="text-sm text-gray-600">失敗</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-yellow-600" id="pendingCount">0</div>
+                        <div class="text-sm text-gray-600">保留</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-blue-600" id="totalCount">0</div>
+                        <div class="text-sm text-gray-600">総計</div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                <div class="text-sm text-gray-600 mt-2" id="progressText">0% 完了</div>
+            </div>
 
-            // イベントのシミュレーション
-            simulateEvent: function(element, eventType, eventData = {}) {
-                const event = new Event(eventType, { bubbles: true });
-                Object.keys(eventData).forEach(key => {
-                    event[key] = eventData[key];
-                });
-                element.dispatchEvent(event);
-            },
+            <!-- Test Controls -->
+            <div class="test-controls">
+                <button id="runAllTests" class="btn btn-primary">
+                    <i class="fas fa-play mr-2"></i>全テスト実行
+                </button>
+                <button id="runUnitTests" class="btn btn-secondary">
+                    <i class="fas fa-cog mr-2"></i>ユニットテスト
+                </button>
+                <button id="runIntegrationTests" class="btn btn-secondary">
+                    <i class="fas fa-puzzle-piece mr-2"></i>統合テスト
+                </button>
+                <button id="runPerformanceTests" class="btn btn-secondary">
+                    <i class="fas fa-tachometer-alt mr-2"></i>パフォーマンステスト
+                </button>
+                <button id="clearResults" class="btn btn-outline">
+                    <i class="fas fa-trash mr-2"></i>結果クリア
+                </button>
+            </div>
 
-            // 非同期テストのヘルパー
-            waitFor: function(condition, timeout = 5000) {
-                return new Promise((resolve, reject) => {
-                    const startTime = Date.now();
-                    const check = () => {
-                        if (condition()) {
-                            resolve();
-                        } else if (Date.now() - startTime > timeout) {
-                            reject(new Error('Timeout waiting for condition'));
-                        } else {
-                            setTimeout(check, 10);
-                        }
-                    };
-                    check();
-                });
-            }
-        };
-    </script>
+            <!-- Unit Tests Section -->
+            <div class="test-section">
+                <h3 class="text-lg font-semibold mb-4">
+                    <i class="fas fa-cog mr-2 text-blue-600"></i>
+                    ユニットテスト
+                </h3>
+                <div id="unitTests">
+                    <div class="test-case">
+                        <div class="flex items-center justify-between">
+                            <span>迷路生成機能のテスト</span>
+                            <span class="test-result test-pending" id="test-maze-generation">保留</span>
+                        </div>
+                    </div>
+                    <div class="test-case">
+                        <div class="flex items-center justify-between">
+                            <span>数学問題生成機能のテスト</span>
+                            <span class="test-result test-pending" id="test-problem-generation">保留</span>
+                        </div>
+                    </div>
+                    <div class="test-case">
+                        <div class="flex items-center justify-between">
+                            <span>答え検証機能のテスト</span>
+                            <span class="test-result test-pending" id="test-answer-validation">保留</span>
+                        </div>
+                    </div>
+                    <div class="test-case">
+                        <div class="flex items-center justify-between">
+                            <span>スコア計算機能のテスト</span>
+                            <span class="test-result test-pending" id="test-score-calculation">保留</span>
+                        </div>
+                    </div>
+                    <div class="test-case">
+                        <div class="flex items-center justify-between">
+                            <span>プレイヤー移動機能のテスト</span>
+                            <span class="test-result test-pending" id="test-player-movement">保留</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Integration Tests Section -->
+            <div class="test-section">
+                <h3 class="text-lg font-semibold mb-4">
+                    <i class="fas fa-puzzle-piece mr-2 text-green-600"></i>
+                    統合テスト
+                </h3>
+                <div id="integrationTests">
+                    <div class="test-case">
+                        <div class="flex items-center justify-between">
+                            <span>ゲーム開始から終了までの流れ</span>
+                            <span class="test-result test-pending" id="test-game-flow">保留</span>
+                        </div>
+                    </div>
+                    <div class="test-case">
+                        <div class="flex items-center justify-between">
+                            <span>レベル/ステージ進行機能</span>
+                            <span class="test-result test-pending" id="test-level-progression">保留</span>
+                        </div>
+                    </div>
+                    <div class="test-case">
+                        <div class="flex items-center justify-between">
+                            <span>データ保存・読み込み機能</span>
+                            <span class="test-result test-pending" id="test-data-persistence">保留</span>
+                        </div>
+                    </div>
+                    <div class="test-case">
+                        <div class="flex items-center justify-between">
+                            <span>多言語対応機能</span>
+                            <span class="test-result test-pending" id="test-localization">保留</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Tests Section -->
+            <div class="test-section">
+                <h3 class="text-lg font-semibold mb-4">
+                    <i class="fas fa-tachometer-alt mr-2 text-purple-600"></i>
+                    パフォーマンステスト
+                </h3>
+                <div id="performanceTests">
+                    <div class="test-case">
+                        <div class="flex items-center justify-between">
+                            <span>迷路描画パフォーマンス</span>
+                            <span class="test-result test-pending" id="test-maze-rendering">保留</span>
+                        </div>
+                    </div>
+                    <div class="test-case">
+                        <div class="flex items-center justify-between">
+                            <span>メモリ使用量テスト</span>
+                            <span class="test-result test-pending" id="test-memory-usage">保留</span>
+                        </div>
+                    </div>
+                    <div class="test-case">
+                        <div class="flex items-center justify-between">
+                            <span>応答時間テスト</span>
+                            <span class="test-result test-pending" id="test-response-time">保留</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Log -->
+            <div class="test-section">
+                <h3 class="text-lg font-semibold mb-4">
+                    <i class="fas fa-terminal mr-2 text-gray-600"></i>
+                    テストログ
+                </h3>
+                <div class="test-log" id="testLog">
+                    <pre>テストログが表示されます...</pre>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="font-bold text-lg mb-4">Math Maze Puzzle</h3>
+                    <p class="text-gray-300 text-sm">楽しく数学を学べる迷路パズルゲーム</p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">ゲーム</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="../index.html" class="text-gray-300 hover:text-white transition-colors">プレイ開始</a></li>
+                        <li><a href="../about.html" class="text-gray-300 hover:text-white transition-colors">遊び方</a></li>
+                        <li><a href="../lp.html" class="text-gray-300 hover:text-white transition-colors">機能紹介</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">サポート</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="../contact.html" class="text-gray-300 hover:text-white transition-colors">お問い合わせ</a></li>
+                        <li><a href="../function.html" class="text-gray-300 hover:text-white transition-colors">機能要件</a></li>
+                        <li><a href="test-suite.html" class="text-gray-300 hover:text-white transition-colors">テストスイート</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">法的情報</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="../terms.html" class="text-gray-300 hover:text-white transition-colors">利用規約</a></li>
+                        <li><a href="../privacy.html" class="text-gray-300 hover:text-white transition-colors">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-sm text-gray-400">
+                <p>&copy; 2024 Math Maze Puzzle. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="../js/main.js"></script>
+    <script src="ui-tests.js"></script>
 </body>
 </html> 
