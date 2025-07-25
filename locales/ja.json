@@ -1,182 +1,161 @@
 {
   "app": {
-    "title": "計算の迷宮",
-    "subtitle": "暗算力を鍛える迷路型パズルゲーム",
-    "version": "1.0.0"
+    "title": "Math Maze Puzzle",
+    "description": "楽しい数学迷路パズルゲーム",
+    "subtitle": "算数と迷路が融合した学習ゲーム"
   },
   "navigation": {
+    "home": "ホーム",
     "game": "ゲーム",
-    "howToPlay": "使い方",
-    "terms": "利用規約",
-    "privacy": "プライバシー",
+    "howToPlay": "遊び方",
+    "about": "ゲームについて",
     "contact": "お問い合わせ",
-    "serviceIntro": "サービス紹介"
+    "terms": "利用規約",
+    "privacy": "プライバシーポリシー",
+    "function": "機能要件書",
+    "landingPage": "サービス紹介"
   },
   "game": {
-    "start": "ゲームスタート",
-    "retry": "もう一度チャレンジ",
-    "nextStage": "次のステージ",
+    "start": "ゲーム開始",
     "pause": "一時停止",
     "resume": "再開",
+    "restart": "リスタート",
     "quit": "終了",
+    "next": "次へ",
+    "submit": "回答する",
+    "skip": "スキップ",
+    "hint": "ヒント",
+    "problem": "問題",
+    "answer": "答え",
+    "correct": "正解！",
+    "incorrect": "不正解",
+    "timeUp": "時間切れ",
+    "gameOver": "ゲームオーバー",
+    "gameComplete": "ゲームクリア！",
+    "score": "スコア",
+    "time": "時間",
     "level": "レベル",
     "stage": "ステージ",
-    "time": "タイム",
-    "score": "スコア",
-    "question": "問題",
-    "timeUp": "タイムアップ!",
-    "stageComplete": "ステージクリア!",
-    "gameOver": "ゲームオーバー",
-    "clearTime": "クリアタイム",
-    "correctRate": "正答率",
-    "earnedScore": "獲得スコア"
+    "player": "プレイヤー",
+    "goal": "ゴール"
   },
   "levels": {
-    "beginner": "初級",
-    "intermediate": "中級",
-    "advanced": "上級",
-    "master": "マスター",
-    "beginnerDesc": "足し算・引き算",
-    "intermediateDesc": "掛け算・割り算",
-    "advancedDesc": "小数・分数",
-    "masterDesc": "複合計算"
+    "level1": "レベル1: 足し算",
+    "level2": "レベル2: 引き算", 
+    "level3": "レベル3: 掛け算",
+    "level4": "レベル4: 割り算",
+    "level5": "レベル5: 混合問題",
+    "stage": "ステージ {number}",
+    "difficulty": {
+      "easy": "やさしい",
+      "normal": "ふつう",
+      "hard": "むずかしい"
+    }
   },
   "instructions": {
-    "welcome": "計算の迷宮へようこそ!",
-    "description": "制限時間内に計算問題を解きながら迷路を進め、ゴールを目指そう！",
-    "howToPlay": "遊び方",
-    "step1": "迷路の分岐点で計算問題が表示されます",
-    "step2": "正解の道を選んで進みましょう",
-    "step3": "間違えると最初からやり直し",
-    "step4": "制限時間内にゴールを目指せ！"
+    "title": "遊び方",
+    "movePlayer": "プレイヤーの移動",
+    "solveProblem": "問題を解く",
+    "reachGoal": "ゴールを目指す",
+    "controls": "操作方法",
+    "keyboard": "キーボード",
+    "mouse": "マウス",
+    "touch": "タッチ"
   },
   "settings": {
-    "sound": "効果音",
-    "hints": "ヒント表示",
+    "title": "設定",
+    "language": "言語",
     "fontSize": "文字サイズ",
-    "language": "言語切替",
-    "resetProgress": "進捗をリセット",
-    "hintsRemaining": "残り{count}回"
+    "sound": "サウンド",
+    "darkMode": "ダークモード",
+    "on": "オン",
+    "off": "オフ",
+    "small": "小",
+    "medium": "中",
+    "large": "大"
   },
   "statistics": {
-    "playCount": "プレイ回数",
-    "clearCount": "クリア回数",
-    "highScore": "最高スコア",
-    "accuracy": "正答率",
-    "averageTime": "平均時間"
+    "title": "統計",
+    "totalScore": "総合スコア",
+    "gamesPlayed": "プレイ回数",
+    "averageTime": "平均時間",
+    "bestScore": "最高スコア",
+    "accuracy": "正解率",
+    "problemsSolved": "解いた問題数"
   },
   "share": {
-    "title": "友達にシェア",
-    "description": "計算の迷宮で遊んだ結果を友達とシェアしよう！",
+    "title": "シェア",
+    "shareScore": "スコアをシェア",
     "twitter": "Twitterでシェア",
     "facebook": "Facebookでシェア",
     "line": "LINEでシェア",
-    "copyUrl": "URLをコピー",
-    "shareText": "計算の迷宮で遊んでいます！レベル{level}ステージ{stage}をクリアしました！スコア: {score}点"
+    "copyLink": "リンクをコピー",
+    "copied": "コピーしました！"
   },
   "messages": {
-    "correct": "正解！",
-    "incorrect": "間違いです",
-    "tryAgain": "もう一度挑戦しましょう",
-    "excellent": "素晴らしい！",
-    "goodJob": "よくできました！",
-    "almostThere": "もう少し！",
-    "timeWarning": "時間が少なくなっています",
-    "urlCopied": "URLをコピーしました！",
-    "urlCopyFailed": "URLのコピーに失敗しました",
-    "gameInitialized": "ゲームが初期化されました",
-    "errorOccurred": "エラーが発生しました。ページを再読み込みしてください。"
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました",
+    "retry": "再試行",
+    "confirm": "確認",
+    "cancel": "キャンセル",
+    "yes": "はい",
+    "no": "いいえ",
+    "close": "閉じる",
+    "save": "保存",
+    "reset": "リセット"
   },
   "hints": {
-    "operationHint": "これは{operation}の問題です。",
-    "rangeHint": "答えは{min}から{max}の間にあります。",
-    "stepHint": "落ち着いて一歩ずつ計算しましょう。",
-    "parenthesesHint": "括弧の中から先に計算しましょう。",
-    "orderHint": "掛け算・割り算を先に計算しましょう。",
-    "divisionHint": "割り算は掛け算の逆の操作です。",
-    "subtractionHint": "引き算は足し算の逆の操作です。"
+    "calculation": "計算のヒント",
+    "movement": "移動のヒント",
+    "strategy": "戦略のヒント",
+    "remaining": "残りヒント: {count}回"
   },
   "operations": {
     "addition": "足し算",
     "subtraction": "引き算",
     "multiplication": "掛け算",
     "division": "割り算",
-    "complex": "複合計算"
+    "mixed": "混合"
   },
   "achievements": {
-    "firstClear": "初回クリア",
-    "perfectScore": "パーフェクトスコア",
-    "speedClear": "スピードクリア",
-    "levelMaster": "レベルマスター",
-    "calculator": "計算機",
-    "persistent": "粘り強い"
+    "title": "実績",
+    "firstClear": "初クリア",
+    "perfectScore": "パーフェクト",
+    "speedRunner": "スピードランナー",
+    "mathematician": "数学者",
+    "explorer": "探検家"
   },
   "errors": {
-    "levelNotFound": "指定されたレベルが見つかりません",
-    "stageNotFound": "指定されたステージが見つかりません",
-    "problemGenerationFailed": "問題の生成に失敗しました",
-    "saveDataCorrupted": "セーブデータが破損しています",
-    "networkError": "ネットワークエラーが発生しました",
-    "unknownError": "不明なエラーが発生しました"
+    "networkError": "ネットワークエラーです",
+    "invalidInput": "無効な入力です",
+    "gameNotFound": "ゲームが見つかりません",
+    "saveError": "保存に失敗しました"
   },
   "accessibility": {
-    "skipToContent": "メインコンテンツにスキップ",
-    "closeModal": "モーダルを閉じる",
+    "skipToContent": "コンテンツにスキップ",
+    "closeMenu": "メニューを閉じる",
     "openMenu": "メニューを開く",
-    "languageSelector": "言語選択",
-    "fontSizeIncrease": "文字サイズを大きく",
-    "fontSizeDecrease": "文字サイズを小さく",
-    "fontSizeDefault": "標準の文字サイズ",
-    "playSound": "音声を再生",
-    "pauseSound": "音声を停止"
+    "gameCanvas": "ゲーム画面",
+    "answerButton": "回答ボタン",
+    "navigationMenu": "ナビゲーションメニュー"
   },
   "form": {
     "name": "お名前",
     "email": "メールアドレス",
     "subject": "件名",
-    "message": "お問い合わせ内容",
-    "inquiryType": "お問い合わせ種類",
-    "submit": "送信する",
+    "message": "メッセージ",
+    "send": "送信",
     "required": "必須",
     "optional": "任意",
-    "placeholder": {
-      "name": "山田太郎",
-      "email": "example@email.com",
-      "subject": "お問い合わせの件名を入力してください",
-      "message": "詳しい内容をお書きください。不具合の場合は、発生状況や使用環境も合わせてお教えください。"
-    },
-    "inquiryTypes": {
-      "bug": "不具合・バグ報告",
-      "question": "ゲームに関する質問",
-      "feature": "機能追加のご要望",
-      "other": "その他"
-    }
+    "invalidEmail": "メールアドレスの形式が正しくありません"
   },
   "footer": {
-    "description": "暗算力を鍛える迷路型パズルゲーム",
-    "siteMenu": "サイトメニュー",
-    "contactUs": "お問い合わせ",
-    "contactDescription": "ご質問・ご感想はこちらからお寄せください。",
-    "contactForm": "お問い合わせフォーム",
-    "copyright": "© 2023 計算の迷宮 All Rights Reserved.",
-    "poweredBy": "Powered by"
+    "copyright": "© 2024 Math Maze Puzzle. All rights reserved.",
+    "madeWith": "❤️で作成",
+    "version": "バージョン 1.0.0"
   },
   "meta": {
-    "loading": "読み込み中...",
-    "retry": "再試行",
-    "cancel": "キャンセル",
-    "confirm": "確認",
-    "close": "閉じる",
-    "save": "保存",
-    "reset": "リセット",
-    "edit": "編集",
-    "delete": "削除",
-    "yes": "はい",
-    "no": "いいえ",
-    "ok": "OK",
-    "back": "戻る",
-    "next": "次へ",
-    "previous": "前へ",
-    "finish": "完了"
+    "keywords": "数学, 迷路, パズル, ゲーム, 学習, 教育, 算数",
+    "ogDescription": "楽しく学べる数学迷路パズルゲーム。算数の問題を解きながら迷路をクリアしよう！"
   }
 } 

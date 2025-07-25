@@ -1,0 +1,33 @@
+# Math Maze Puzzle - robots.txt
+
+# すべてのクローラーに対する指示
+User-agent: *
+
+# 許可されたページ
+Allow: /
+Allow: /lp.html
+Allow: /about.html
+Allow: /function.html
+Allow: /terms.html
+Allow: /privacy.html
+Allow: /contact.html
+
+# 静的リソースの許可
+Allow: /css/
+Allow: /js/
+Allow: /assets/
+Allow: /locales/
+
+# PWAファイルの許可
+Allow: /manifest.json
+Allow: /service-worker.js
+
+# テストファイルのブロック
+Disallow: /tests/
+Disallow: /assets/sounds/
+
+# サイトマップの場所
+Sitemap: https://math-maze-puzzle.com/sitemap.xml
+
+# クロール間隔の推奨（秒）
+Crawl-delay: 1 

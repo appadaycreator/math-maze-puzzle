@@ -1,182 +1,161 @@
 {
   "app": {
-    "title": "Math Maze",
-    "subtitle": "A maze puzzle game to train your mental arithmetic",
-    "version": "1.0.0"
+    "title": "Math Maze Puzzle",
+    "description": "Fun math maze puzzle game",
+    "subtitle": "Learning game that combines math and maze"
   },
   "navigation": {
+    "home": "Home",
     "game": "Game",
     "howToPlay": "How to Play",
-    "terms": "Terms",
-    "privacy": "Privacy",
+    "about": "About",
     "contact": "Contact",
-    "serviceIntro": "Service Introduction"
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "function": "Functional Requirements",
+    "landingPage": "Service Introduction"
   },
   "game": {
     "start": "Start Game",
-    "retry": "Try Again",
-    "nextStage": "Next Stage",
     "pause": "Pause",
     "resume": "Resume",
+    "restart": "Restart",
     "quit": "Quit",
+    "next": "Next",
+    "submit": "Submit",
+    "skip": "Skip",
+    "hint": "Hint",
+    "problem": "Problem",
+    "answer": "Answer",
+    "correct": "Correct!",
+    "incorrect": "Incorrect",
+    "timeUp": "Time's Up",
+    "gameOver": "Game Over",
+    "gameComplete": "Game Complete!",
+    "score": "Score",
+    "time": "Time",
     "level": "Level",
     "stage": "Stage",
-    "time": "Time",
-    "score": "Score",
-    "question": "Question",
-    "timeUp": "Time's Up!",
-    "stageComplete": "Stage Complete!",
-    "gameOver": "Game Over",
-    "clearTime": "Clear Time",
-    "correctRate": "Accuracy",
-    "earnedScore": "Score Earned"
+    "player": "Player",
+    "goal": "Goal"
   },
   "levels": {
-    "beginner": "Beginner",
-    "intermediate": "Intermediate",
-    "advanced": "Advanced",
-    "master": "Master",
-    "beginnerDesc": "Addition & Subtraction",
-    "intermediateDesc": "Multiplication & Division",
-    "advancedDesc": "Decimals & Fractions",
-    "masterDesc": "Complex Calculations"
+    "level1": "Level 1: Addition",
+    "level2": "Level 2: Subtraction",
+    "level3": "Level 3: Multiplication",
+    "level4": "Level 4: Division",
+    "level5": "Level 5: Mixed Problems",
+    "stage": "Stage {number}",
+    "difficulty": {
+      "easy": "Easy",
+      "normal": "Normal",
+      "hard": "Hard"
+    }
   },
   "instructions": {
-    "welcome": "Welcome to Math Maze!",
-    "description": "Solve math problems while navigating through the maze within the time limit!",
-    "howToPlay": "How to Play",
-    "step1": "Math problems appear at maze intersections",
-    "step2": "Choose the correct path by solving the problem",
-    "step3": "Wrong answers restart the stage",
-    "step4": "Reach the goal within the time limit!"
+    "title": "How to Play",
+    "movePlayer": "Move Player",
+    "solveProblem": "Solve Problem",
+    "reachGoal": "Reach Goal",
+    "controls": "Controls",
+    "keyboard": "Keyboard",
+    "mouse": "Mouse",
+    "touch": "Touch"
   },
   "settings": {
-    "sound": "Sound Effects",
-    "hints": "Show Hints",
-    "fontSize": "Font Size",
+    "title": "Settings",
     "language": "Language",
-    "resetProgress": "Reset Progress",
-    "hintsRemaining": "{count} remaining"
+    "fontSize": "Font Size",
+    "sound": "Sound",
+    "darkMode": "Dark Mode",
+    "on": "On",
+    "off": "Off",
+    "small": "Small",
+    "medium": "Medium",
+    "large": "Large"
   },
   "statistics": {
-    "playCount": "Games Played",
-    "clearCount": "Stages Cleared",
-    "highScore": "High Score",
-    "accuracy": "Accuracy Rate",
-    "averageTime": "Average Time"
+    "title": "Statistics",
+    "totalScore": "Total Score",
+    "gamesPlayed": "Games Played",
+    "averageTime": "Average Time",
+    "bestScore": "Best Score",
+    "accuracy": "Accuracy",
+    "problemsSolved": "Problems Solved"
   },
   "share": {
-    "title": "Share with Friends",
-    "description": "Share your Math Maze results with friends!",
+    "title": "Share",
+    "shareScore": "Share Score",
     "twitter": "Share on Twitter",
     "facebook": "Share on Facebook",
     "line": "Share on LINE",
-    "copyUrl": "Copy URL",
-    "shareText": "Playing Math Maze! Cleared Level {level} Stage {stage}! Score: {score} points"
+    "copyLink": "Copy Link",
+    "copied": "Copied!"
   },
   "messages": {
-    "correct": "Correct!",
-    "incorrect": "Incorrect",
-    "tryAgain": "Let's try again",
-    "excellent": "Excellent!",
-    "goodJob": "Good job!",
-    "almostThere": "Almost there!",
-    "timeWarning": "Running out of time",
-    "urlCopied": "URL copied!",
-    "urlCopyFailed": "Failed to copy URL",
-    "gameInitialized": "Game initialized",
-    "errorOccurred": "An error occurred. Please reload the page."
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "save": "Save",
+    "reset": "Reset"
   },
   "hints": {
-    "operationHint": "This is a {operation} problem.",
-    "rangeHint": "The answer is between {min} and {max}.",
-    "stepHint": "Take your time and calculate step by step.",
-    "parenthesesHint": "Calculate inside the parentheses first.",
-    "orderHint": "Calculate multiplication and division first.",
-    "divisionHint": "Division is the opposite of multiplication.",
-    "subtractionHint": "Subtraction is the opposite of addition."
+    "calculation": "Calculation Hint",
+    "movement": "Movement Hint",
+    "strategy": "Strategy Hint",
+    "remaining": "Hints remaining: {count}"
   },
   "operations": {
     "addition": "Addition",
     "subtraction": "Subtraction",
     "multiplication": "Multiplication",
     "division": "Division",
-    "complex": "Complex Calculation"
+    "mixed": "Mixed"
   },
   "achievements": {
+    "title": "Achievements",
     "firstClear": "First Clear",
     "perfectScore": "Perfect Score",
-    "speedClear": "Speed Clear",
-    "levelMaster": "Level Master",
-    "calculator": "Calculator",
-    "persistent": "Persistent"
+    "speedRunner": "Speed Runner",
+    "mathematician": "Mathematician",
+    "explorer": "Explorer"
   },
   "errors": {
-    "levelNotFound": "Level not found",
-    "stageNotFound": "Stage not found",
-    "problemGenerationFailed": "Failed to generate problem",
-    "saveDataCorrupted": "Save data is corrupted",
-    "networkError": "Network error occurred",
-    "unknownError": "Unknown error occurred"
+    "networkError": "Network error",
+    "invalidInput": "Invalid input",
+    "gameNotFound": "Game not found",
+    "saveError": "Failed to save"
   },
   "accessibility": {
-    "skipToContent": "Skip to main content",
-    "closeModal": "Close modal",
+    "skipToContent": "Skip to content",
+    "closeMenu": "Close menu",
     "openMenu": "Open menu",
-    "languageSelector": "Language selector",
-    "fontSizeIncrease": "Increase font size",
-    "fontSizeDecrease": "Decrease font size",
-    "fontSizeDefault": "Default font size",
-    "playSound": "Play sound",
-    "pauseSound": "Pause sound"
+    "gameCanvas": "Game canvas",
+    "answerButton": "Answer button",
+    "navigationMenu": "Navigation menu"
   },
   "form": {
     "name": "Name",
     "email": "Email",
     "subject": "Subject",
     "message": "Message",
-    "inquiryType": "Inquiry Type",
-    "submit": "Submit",
+    "send": "Send",
     "required": "Required",
     "optional": "Optional",
-    "placeholder": {
-      "name": "John Doe",
-      "email": "example@email.com",
-      "subject": "Enter your inquiry subject",
-      "message": "Please provide detailed information. For bugs, include the situation and environment."
-    },
-    "inquiryTypes": {
-      "bug": "Bug Report",
-      "question": "Game Question",
-      "feature": "Feature Request",
-      "other": "Other"
-    }
+    "invalidEmail": "Invalid email format"
   },
   "footer": {
-    "description": "A maze puzzle game to train your mental arithmetic",
-    "siteMenu": "Site Menu",
-    "contactUs": "Contact Us",
-    "contactDescription": "Please feel free to send us your questions and feedback.",
-    "contactForm": "Contact Form",
-    "copyright": "© 2023 Math Maze All Rights Reserved.",
-    "poweredBy": "Powered by"
+    "copyright": "© 2024 Math Maze Puzzle. All rights reserved.",
+    "madeWith": "Made with ❤️",
+    "version": "Version 1.0.0"
   },
   "meta": {
-    "loading": "Loading...",
-    "retry": "Retry",
-    "cancel": "Cancel",
-    "confirm": "Confirm",
-    "close": "Close",
-    "save": "Save",
-    "reset": "Reset",
-    "edit": "Edit",
-    "delete": "Delete",
-    "yes": "Yes",
-    "no": "No",
-    "ok": "OK",
-    "back": "Back",
-    "next": "Next",
-    "previous": "Previous",
-    "finish": "Finish"
+    "keywords": "math, maze, puzzle, game, learning, education, arithmetic",
+    "ogDescription": "Fun math maze puzzle game for learning. Solve math problems while navigating through mazes!"
   }
 } 

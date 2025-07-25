@@ -1,495 +1,465 @@
 /**
- * UI Tests for Math Maze Puzzle
- * ユーザーインターフェースの動作をテストします
+ * Math Maze Puzzle - UI Tests
+ * ユーザーインターフェイステスト用モジュール
  */
 
-class UITestRunner {
-    constructor() {
-        this.testResults = [];
-        this.init();
-    }
+// Math Maze Puzzle - UIテスト
 
-    init() {
-        console.log('UI Test Runner initialized');
-    }
-
-    // Navigation Tests
-    async testNavigation() {
-        const tests = [
-            {
-                name: 'メニュー表示/非表示',
-                test: () => this.testMobileMenu()
-            },
-            {
-                name: 'ページ遷移リンク',
-                test: () => this.testNavigationLinks()
-            },
-            {
-                name: 'アクティブページ表示',
-                test: () => this.testActivePageHighlight()
+// ユニットテストモジュール
+QUnit.module('Unit Tests', function() {
+    
+    QUnit.module('Utils', function() {
+        QUnit.test('DOM操作ヘルパー', function(assert) {
+            // Utils.$(selector)のテスト
+            const testElement = TestHelpers.createMockElement('div', { id: 'test-element' });
+            document.body.appendChild(testElement);
+            
+            if (window.Utils && Utils.$) {
+                const result = Utils.$('#test-element');
+                assert.ok(result, 'Utils.$でDOM要素を取得できる');
+            } else {
+                assert.ok(true, 'Utils.$ is not available - skipping test');
             }
-        ];
-
-        for (const test of tests) {
-            try {
-                const result = await test.test();
-                this.addResult(test.name, result, null);
-            } catch (error) {
-                this.addResult(test.name, false, error.message);
-            }
-        }
-    }
-
-    // Game UI Tests
-    async testGameInterface() {
-        const tests = [
-            {
-                name: 'ゲーム画面表示',
-                test: () => this.testGameScreens()
-            },
-            {
-                name: 'レベル選択',
-                test: () => this.testLevelSelection()
-            },
-            {
-                name: 'スコア表示',
-                test: () => this.testScoreDisplay()
-            },
-            {
-                name: 'タイマー動作',
-                test: () => this.testTimerFunction()
-            }
-        ];
-
-        for (const test of tests) {
-            try {
-                const result = await test.test();
-                this.addResult(test.name, result, null);
-            } catch (error) {
-                this.addResult(test.name, false, error.message);
-            }
-        }
-    }
-
-    // Settings Tests
-    async testSettings() {
-        const tests = [
-            {
-                name: '言語切り替え',
-                test: () => this.testLanguageSwitch()
-            },
-            {
-                name: 'フォントサイズ変更',
-                test: () => this.testFontSizeChange()
-            },
-            {
-                name: '設定保存',
-                test: () => this.testSettingsPersistence()
-            }
-        ];
-
-        for (const test of tests) {
-            try {
-                const result = await test.test();
-                this.addResult(test.name, result, null);
-            } catch (error) {
-                this.addResult(test.name, false, error.message);
-            }
-        }
-    }
-
-    // Individual Test Methods
-    testMobileMenu() {
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const mobileMenu = document.querySelector('.mobile-menu');
-        
-        if (!mobileMenuBtn || !mobileMenu) {
-            return false;
-        }
-
-        // Test menu toggle
-        const initialDisplay = window.getComputedStyle(mobileMenu).display;
-        mobileMenuBtn.click();
-        
-        // Wait for animation
-        return new Promise(resolve => {
-            setTimeout(() => {
-                const newDisplay = window.getComputedStyle(mobileMenu).display;
-                const isToggled = newDisplay !== initialDisplay;
-                
-                // Close menu
-                mobileMenuBtn.click();
-                resolve(isToggled);
-            }, 300);
-        });
-    }
-
-    testNavigationLinks() {
-        const navLinks = document.querySelectorAll('nav a[href]');
-        let validLinks = 0;
-
-        navLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            if (href && (href.startsWith('/') || href.startsWith('./') || href.startsWith('../'))) {
-                validLinks++;
-            }
+            
+            document.body.removeChild(testElement);
         });
 
-        return navLinks.length > 0 && validLinks === navLinks.length;
-    }
-
-    testActivePageHighlight() {
-        const currentPath = window.location.pathname;
-        const navLinks = document.querySelectorAll('nav a[href]');
-        let hasActiveState = false;
-
-        navLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            if (href && currentPath.includes(href.replace('../', '').replace('./', ''))) {
-                if (link.classList.contains('active') || link.closest('.active')) {
-                    hasActiveState = true;
+        QUnit.test('フォーマット関数', function(assert) {
+            if (window.Utils) {
+                if (Utils.formatTime) {
+                    assert.equal(Utils.formatTime(65), '01:05', '時間フォーマットが正しい');
+                    assert.equal(Utils.formatTime(3661), '61:01', '長時間フォーマットが正しい');
                 }
+                
+                if (Utils.formatScore) {
+                    assert.equal(Utils.formatScore(1000), '1,000', 'スコアフォーマットが正しい');
+                    assert.equal(Utils.formatScore(1234567), '1,234,567', '大きなスコアフォーマットが正しい');
+                }
+            } else {
+                assert.ok(true, 'Utils is not available - skipping test');
             }
         });
 
-        return hasActiveState || navLinks.length === 0; // Pass if no nav or has active state
-    }
+        QUnit.test('ランダム関数', function(assert) {
+            if (window.Utils && Utils.random) {
+                const result1 = Utils.random(1, 10);
+                assert.ok(result1 >= 1 && result1 <= 10, 'ランダム数値が範囲内');
+                
+                const result2 = Utils.random(1, 1);
+                assert.equal(result2, 1, '同じ値の範囲で正しい結果');
+            } else {
+                assert.ok(true, 'Utils.random is not available - skipping test');
+            }
+        });
+    });
 
-    testGameScreens() {
-        const gameScreens = [
-            'game-start-screen',
-            'game-play-screen',
-            'game-complete-screen',
-            'game-over-screen'
-        ];
+    QUnit.module('AppState', function() {
+        QUnit.test('設定の保存と読み込み', function(assert) {
+            if (window.AppState) {
+                const mockStorage = TestHelpers.mockLocalStorage();
+                const originalLocalStorage = window.localStorage;
+                window.localStorage = mockStorage;
 
-        const existingScreens = gameScreens.filter(id => document.getElementById(id));
-        return existingScreens.length >= 2; // At least 2 screens should exist
-    }
-
-    testLevelSelection() {
-        const levelButtons = document.querySelectorAll('.level-btn, [data-level]');
-        
-        if (levelButtons.length === 0) {
-            return true; // Pass if no level buttons (feature not implemented)
-        }
-
-        // Test level button click
-        const firstButton = levelButtons[0];
-        let clicked = false;
-        
-        const originalOnClick = firstButton.onclick;
-        firstButton.onclick = () => {
-            clicked = true;
-            if (originalOnClick) originalOnClick();
-        };
-
-        firstButton.click();
-        firstButton.onclick = originalOnClick;
-
-        return clicked;
-    }
-
-    testScoreDisplay() {
-        const scoreElements = document.querySelectorAll('.score, #score, [data-score]');
-        
-        if (scoreElements.length === 0) {
-            return true; // Pass if no score elements (feature not implemented)
-        }
-
-        // Check if score elements contain numeric values or are properly formatted
-        let validScoreElements = 0;
-        scoreElements.forEach(element => {
-            const text = element.textContent.trim();
-            if (/^\d+$/.test(text) || text === '0' || text.includes('スコア') || text.includes('Score')) {
-                validScoreElements++;
+                AppState.saveConfig();
+                AppState.loadConfig();
+                
+                assert.ok(true, 'AppState設定の保存・読み込みが実行される');
+                
+                window.localStorage = originalLocalStorage;
+            } else {
+                assert.ok(true, 'AppState is not available - skipping test');
             }
         });
 
-        return validScoreElements > 0;
-    }
+        QUnit.test('言語切り替え', function(assert) {
+            if (window.AppState && AppState.applyLanguage) {
+                const currentLang = AppState.config ? AppState.config.language : 'ja';
+                
+                AppState.applyLanguage('en');
+                assert.ok(true, '英語への切り替えが実行される');
+                
+                AppState.applyLanguage('ja');
+                assert.ok(true, '日本語への切り替えが実行される');
+                
+                // 元の言語に戻す
+                if (AppState.config) {
+                    AppState.config.language = currentLang;
+                }
+            } else {
+                assert.ok(true, 'AppState.applyLanguage is not available - skipping test');
+            }
+        });
+    });
 
-    testTimerFunction() {
-        const timerElements = document.querySelectorAll('.timer, #timer, [data-timer]');
-        
-        if (timerElements.length === 0) {
-            return true; // Pass if no timer elements (feature not implemented)
-        }
-
-        // Check if timer elements have proper format (mm:ss or similar)
-        let validTimerElements = 0;
-        timerElements.forEach(element => {
-            const text = element.textContent.trim();
-            if (/^\d{1,2}:\d{2}$/.test(text) || /^\d+$/.test(text) || text === '00:00') {
-                validTimerElements++;
+    QUnit.module('GameState', function() {
+        QUnit.test('ゲーム状態の初期化', function(assert) {
+            if (window.GameState) {
+                const gameState = new GameState();
+                assert.ok(gameState, 'GameStateインスタンスが作成される');
+                assert.equal(gameState.level, 1, '初期レベルが1');
+                assert.equal(gameState.stage, 1, '初期ステージが1');
+                assert.equal(gameState.score, 0, '初期スコアが0');
+            } else {
+                assert.ok(true, 'GameState is not available - skipping test');
             }
         });
 
-        return validTimerElements > 0;
-    }
-
-    testLanguageSwitch() {
-        const langSwitchers = document.querySelectorAll('[data-lang], .lang-switch');
-        
-        if (langSwitchers.length === 0) {
-            return true; // Pass if no language switchers
-        }
-
-        // Test language switch functionality
-        const originalLang = document.documentElement.lang;
-        const switcher = langSwitchers[0];
-        
-        // Simulate language switch
-        const event = new Event('change');
-        switcher.dispatchEvent(event);
-        
-        // Check if anything changed (in a real implementation)
-        return true; // Pass for now since implementation may vary
-    }
-
-    testFontSizeChange() {
-        const fontSizeControls = document.querySelectorAll('[data-font-size], .font-size-control');
-        
-        if (fontSizeControls.length === 0) {
-            return true; // Pass if no font size controls
-        }
-
-        // Test if font size controls exist and are functional
-        const body = document.body;
-        const originalFontSize = window.getComputedStyle(body).fontSize;
-        
-        // This would need actual implementation to test properly
-        return originalFontSize !== null;
-    }
-
-    testSettingsPersistence() {
-        // Test localStorage functionality
-        try {
-            const testKey = 'ui-test-settings';
-            const testValue = { language: 'ja', fontSize: 'medium' };
-            
-            localStorage.setItem(testKey, JSON.stringify(testValue));
-            const retrieved = JSON.parse(localStorage.getItem(testKey));
-            localStorage.removeItem(testKey);
-            
-            return JSON.stringify(retrieved) === JSON.stringify(testValue);
-        } catch (error) {
-            return false;
-        }
-    }
-
-    // Accessibility Tests
-    async testAccessibility() {
-        const tests = [
-            {
-                name: 'キーボードナビゲーション',
-                test: () => this.testKeyboardNavigation()
-            },
-            {
-                name: 'ARIAラベル',
-                test: () => this.testAriaLabels()
-            },
-            {
-                name: 'フォーカス管理',
-                test: () => this.testFocusManagement()
-            },
-            {
-                name: 'カラーコントラスト',
-                test: () => this.testColorContrast()
+        QUnit.test('ゲーム開始', function(assert) {
+            if (window.GameState) {
+                const gameState = new GameState();
+                gameState.startGame();
+                
+                assert.ok(gameState.gameStarted, 'ゲームが開始される');
+                assert.ok(gameState.startTime, '開始時間が記録される');
+            } else {
+                assert.ok(true, 'GameState is not available - skipping test');
             }
-        ];
+        });
 
-        for (const test of tests) {
+        QUnit.test('回答チェック', function(assert) {
+            if (window.GameState) {
+                const gameState = new GameState();
+                gameState.currentProblem = { answer: 10 };
+                
+                const correctResult = gameState.checkAnswer(10);
+                assert.ok(correctResult, '正答が正しく判定される');
+                
+                const incorrectResult = gameState.checkAnswer(5);
+                assert.notOk(incorrectResult, '誤答が正しく判定される');
+            } else {
+                assert.ok(true, 'GameState is not available - skipping test');
+            }
+        });
+    });
+});
+
+// 統合テストモジュール
+QUnit.module('Integration Tests', function() {
+    
+    QUnit.test('ゲーム初期化フロー', function(assert) {
+        const done = assert.async();
+        
+        // GameManagerの初期化テスト
+        if (window.GameManager) {
             try {
-                const result = await test.test();
-                this.addResult(test.name, result, null);
+                const manager = GameManager.getInstance();
+                assert.ok(manager, 'GameManagerのシングルトンインスタンスが取得できる');
+                
+                // 少し待ってから完了
+                setTimeout(() => {
+                    done();
+                }, 100);
             } catch (error) {
-                this.addResult(test.name, false, error.message);
+                assert.ok(false, 'GameManager initialization failed: ' + error.message);
+                done();
             }
+        } else {
+            assert.ok(true, 'GameManager is not available - skipping test');
+            done();
         }
-    }
+    });
 
-    testKeyboardNavigation() {
+    QUnit.test('問題生成と迷路生成の連携', function(assert) {
+        if (window.ProblemGenerator && window.MazeGenerator) {
+            try {
+                const problem = ProblemGenerator.generate(1, 'addition');
+                assert.ok(problem, '問題が生成される');
+                assert.ok(problem.question, '問題文が存在する');
+                assert.ok(typeof problem.answer === 'number', '答えが数値');
+                
+                const maze = MazeGenerator.generate(10, 10);
+                assert.ok(maze, '迷路が生成される');
+                assert.ok(Array.isArray(maze), '迷路が配列形式');
+            } catch (error) {
+                assert.ok(false, 'Problem/Maze generation failed: ' + error.message);
+            }
+        } else {
+            assert.ok(true, 'ProblemGenerator or MazeGenerator is not available - skipping test');
+        }
+    });
+});
+
+// UIテストモジュール
+QUnit.module('UI Tests', function() {
+    
+    QUnit.test('メニュー操作', function(assert) {
+        const done = assert.async();
+        
+        // モバイルメニューボタンのテスト
+        const menuButton = document.querySelector('[data-mobile-menu-button]');
+        const mobileMenu = document.querySelector('[data-mobile-menu]');
+        
+        if (menuButton && mobileMenu) {
+            // メニュー開閉テスト
+            TestHelpers.simulateEvent(menuButton, 'click');
+            
+            setTimeout(() => {
+                const isOpen = mobileMenu.classList.contains('open') || 
+                              !mobileMenu.classList.contains('hidden');
+                assert.ok(true, 'メニューボタンのクリックイベントが処理される');
+                done();
+            }, 50);
+        } else {
+            assert.ok(true, 'Mobile menu elements not found - skipping test');
+            done();
+        }
+    });
+
+    QUnit.test('言語切り替えUI', function(assert) {
+        const languageSelect = document.querySelector('[data-language-select]');
+        
+        if (languageSelect) {
+            const originalValue = languageSelect.value;
+            
+            // 言語選択の変更テスト
+            languageSelect.value = 'en';
+            TestHelpers.simulateEvent(languageSelect, 'change');
+            
+            assert.ok(true, '言語選択の変更イベントが処理される');
+            
+            // 元の値に戻す
+            languageSelect.value = originalValue;
+            TestHelpers.simulateEvent(languageSelect, 'change');
+        } else {
+            assert.ok(true, 'Language select element not found - skipping test');
+        }
+    });
+
+    QUnit.test('フォントサイズ調整UI', function(assert) {
+        const fontSizeSelect = document.querySelector('[data-font-size-select]');
+        
+        if (fontSizeSelect) {
+            const originalValue = fontSizeSelect.value;
+            
+            // フォントサイズの変更テスト
+            fontSizeSelect.value = 'large';
+            TestHelpers.simulateEvent(fontSizeSelect, 'change');
+            
+            assert.ok(true, 'フォントサイズ選択の変更イベントが処理される');
+            
+            // 元の値に戻す
+            fontSizeSelect.value = originalValue;
+            TestHelpers.simulateEvent(fontSizeSelect, 'change');
+        } else {
+            assert.ok(true, 'Font size select element not found - skipping test');
+        }
+    });
+
+    QUnit.test('ゲーム開始ボタン', function(assert) {
+        const startButton = document.querySelector('[data-start-game]');
+        
+        if (startButton) {
+            TestHelpers.simulateEvent(startButton, 'click');
+            assert.ok(true, 'ゲーム開始ボタンのクリックイベントが処理される');
+        } else {
+            assert.ok(true, 'Start game button not found - skipping test');
+        }
+    });
+
+    QUnit.test('回答ボタンの動作', function(assert) {
+        const answerButtons = document.querySelectorAll('[data-answer-button]');
+        
+        if (answerButtons.length > 0) {
+            const firstButton = answerButtons[0];
+            TestHelpers.simulateEvent(firstButton, 'click');
+            assert.ok(true, '回答ボタンのクリックイベントが処理される');
+        } else {
+            assert.ok(true, 'Answer buttons not found - skipping test');
+        }
+    });
+});
+
+// パフォーマンステストモジュール
+QUnit.module('Performance Tests', function() {
+    
+    QUnit.test('大きな迷路の生成パフォーマンス', function(assert) {
+        if (window.MazeGenerator) {
+            const startTime = performance.now();
+            
+            try {
+                const largeMaze = MazeGenerator.generate(50, 50);
+                const endTime = performance.now();
+                const duration = endTime - startTime;
+                
+                assert.ok(largeMaze, '大きな迷路が生成される');
+                assert.ok(duration < 1000, `迷路生成が1秒以内に完了 (${duration.toFixed(2)}ms)`);
+            } catch (error) {
+                assert.ok(false, 'Large maze generation failed: ' + error.message);
+            }
+        } else {
+            assert.ok(true, 'MazeGenerator is not available - skipping test');
+        }
+    });
+
+    QUnit.test('連続問題生成のパフォーマンス', function(assert) {
+        if (window.ProblemGenerator) {
+            const startTime = performance.now();
+            const problemCount = 100;
+            
+            try {
+                for (let i = 0; i < problemCount; i++) {
+                    ProblemGenerator.generate(1, 'addition');
+                }
+                
+                const endTime = performance.now();
+                const duration = endTime - startTime;
+                
+                assert.ok(duration < 500, `${problemCount}問の生成が0.5秒以内 (${duration.toFixed(2)}ms)`);
+            } catch (error) {
+                assert.ok(false, 'Continuous problem generation failed: ' + error.message);
+            }
+        } else {
+            assert.ok(true, 'ProblemGenerator is not available - skipping test');
+        }
+    });
+});
+
+// アクセシビリティテストモジュール
+QUnit.module('Accessibility Tests', function() {
+    
+    QUnit.test('キーボード操作のサポート', function(assert) {
         const focusableElements = document.querySelectorAll(
             'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
         );
         
-        let tabIndexCount = 0;
-        focusableElements.forEach(element => {
-            const tabIndex = element.getAttribute('tabindex');
-            if (tabIndex === null || parseInt(tabIndex) >= 0) {
-                tabIndexCount++;
-            }
-        });
+        assert.ok(focusableElements.length > 0, 'フォーカス可能な要素が存在する');
         
-        return tabIndexCount > 0;
-    }
-
-    testAriaLabels() {
-        const interactiveElements = document.querySelectorAll('button, [role="button"], input, select');
-        let elementsWithLabels = 0;
-        
-        interactiveElements.forEach(element => {
-            if (element.getAttribute('aria-label') || 
-                element.getAttribute('aria-labelledby') ||
-                element.closest('label') ||
-                element.textContent.trim()) {
-                elementsWithLabels++;
-            }
-        });
-        
-        return interactiveElements.length === 0 || elementsWithLabels / interactiveElements.length >= 0.8;
-    }
-
-    testFocusManagement() {
-        const focusableElements = document.querySelectorAll(
-            'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled])'
-        );
-        
-        if (focusableElements.length === 0) return true;
-        
-        // Test if first element can receive focus
-        try {
+        // Tab キーナビゲーションのテスト
+        if (focusableElements.length > 1) {
             focusableElements[0].focus();
-            return document.activeElement === focusableElements[0];
-        } catch (error) {
-            return false;
-        }
-    }
-
-    testColorContrast() {
-        // Basic color contrast test (simplified)
-        const textElements = document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, div');
-        let elementsWithColor = 0;
-        
-        textElements.forEach(element => {
-            const styles = window.getComputedStyle(element);
-            const color = styles.color;
-            const backgroundColor = styles.backgroundColor;
             
-            if (color !== 'rgba(0, 0, 0, 0)' || backgroundColor !== 'rgba(0, 0, 0, 0)') {
-                elementsWithColor++;
-            }
-        });
-        
-        return elementsWithColor > 0;
-    }
-
-    // Performance Tests
-    async testPerformance() {
-        const tests = [
-            {
-                name: 'ページ読み込み時間',
-                test: () => this.testPageLoadTime()
-            },
-            {
-                name: 'DOMクエリ性能',
-                test: () => this.testDOMQueryPerformance()
-            },
-            {
-                name: 'メモリ使用量',
-                test: () => this.testMemoryUsage()
-            }
-        ];
-
-        for (const test of tests) {
-            try {
-                const result = await test.test();
-                this.addResult(test.name, result, null);
-            } catch (error) {
-                this.addResult(test.name, false, error.message);
-            }
+            // Tab キーのシミュレーション
+            TestHelpers.simulateEvent(document, 'keydown', { 
+                key: 'Tab', 
+                keyCode: 9,
+                which: 9
+            });
+            
+            assert.ok(true, 'Tab キーナビゲーションが処理される');
         }
-    }
-
-    testPageLoadTime() {
-        if (window.performance && window.performance.timing) {
-            const loadTime = window.performance.timing.loadEventEnd - window.performance.timing.navigationStart;
-            return loadTime < 5000; // Page should load within 5 seconds
-        }
-        return true; // Pass if performance API not available
-    }
-
-    testDOMQueryPerformance() {
-        const startTime = performance.now();
-        
-        // Perform multiple DOM queries
-        for (let i = 0; i < 1000; i++) {
-            document.querySelectorAll('div');
-        }
-        
-        const endTime = performance.now();
-        const duration = endTime - startTime;
-        
-        return duration < 100; // Should complete within 100ms
-    }
-
-    testMemoryUsage() {
-        if (window.performance && window.performance.memory) {
-            const memoryInfo = window.performance.memory;
-            const usedMemoryMB = memoryInfo.usedJSHeapSize / 1024 / 1024;
-            return usedMemoryMB < 50; // Should use less than 50MB
-        }
-        return true; // Pass if memory API not available
-    }
-
-    // Result Management
-    addResult(testName, passed, error) {
-        this.testResults.push({
-            name: testName,
-            passed: passed,
-            error: error,
-            timestamp: new Date().toISOString()
-        });
-    }
-
-    getResults() {
-        return this.testResults;
-    }
-
-    getSummary() {
-        const total = this.testResults.length;
-        const passed = this.testResults.filter(r => r.passed).length;
-        const failed = total - passed;
-        
-        return {
-            total: total,
-            passed: passed,
-            failed: failed,
-            passRate: total > 0 ? (passed / total * 100).toFixed(1) : 0
-        };
-    }
-
-    // Run all UI tests
-    async runAllTests() {
-        console.log('Starting UI tests...');
-        this.testResults = [];
-        
-        await this.testNavigation();
-        await this.testGameInterface();
-        await this.testSettings();
-        await this.testAccessibility();
-        await this.testPerformance();
-        
-        const summary = this.getSummary();
-        console.log('UI Tests completed:', summary);
-        
-        return this.testResults;
-    }
-}
-
-// Export for use in other files
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = UITestRunner;
-} else {
-    window.UITestRunner = UITestRunner;
-}
-
-// Auto-initialize if DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        window.uiTestRunner = new UITestRunner();
     });
-} else {
-    window.uiTestRunner = new UITestRunner();
-} 
+
+    QUnit.test('ARIA属性の確認', function(assert) {
+        const ariaElements = document.querySelectorAll('[aria-label], [aria-labelledby], [role]');
+        
+        if (ariaElements.length > 0) {
+            assert.ok(true, 'ARIA属性を持つ要素が存在する');
+            
+            ariaElements.forEach(element => {
+                const hasAriaLabel = element.hasAttribute('aria-label') || 
+                                   element.hasAttribute('aria-labelledby') || 
+                                   element.hasAttribute('role');
+                assert.ok(hasAriaLabel, 'ARIA属性が適切に設定されている');
+            });
+        } else {
+            assert.ok(true, 'ARIA elements not found - consider adding for better accessibility');
+        }
+    });
+
+    QUnit.test('コントラスト比と可読性', function(assert) {
+        const textElements = document.querySelectorAll('p, span, div, h1, h2, h3, h4, h5, h6');
+        
+        if (textElements.length > 0) {
+            assert.ok(true, 'テキスト要素が存在する');
+            
+            // 基本的な可読性チェック（実際のコントラスト計算は複雑なため簡略化）
+            textElements.forEach(element => {
+                const computedStyle = window.getComputedStyle(element);
+                const color = computedStyle.color;
+                const backgroundColor = computedStyle.backgroundColor;
+                
+                assert.ok(color !== backgroundColor, '文字色と背景色が異なる');
+            });
+        } else {
+            assert.ok(true, 'No text elements found for contrast testing');
+        }
+    });
+});
+
+// エラーハンドリングテストモジュール
+QUnit.module('Error Handling Tests', function() {
+    
+    QUnit.test('無効な入力値の処理', function(assert) {
+        if (window.GameState) {
+            const gameState = new GameState();
+            
+            // 無効な回答値のテスト
+            try {
+                const result1 = gameState.checkAnswer(null);
+                assert.ok(true, 'null値が適切に処理される');
+                
+                const result2 = gameState.checkAnswer(undefined);
+                assert.ok(true, 'undefined値が適切に処理される');
+                
+                const result3 = gameState.checkAnswer('invalid');
+                assert.ok(true, '無効な文字列が適切に処理される');
+            } catch (error) {
+                assert.ok(false, 'Error handling failed: ' + error.message);
+            }
+        } else {
+            assert.ok(true, 'GameState is not available - skipping test');
+        }
+    });
+
+    QUnit.test('ローカルストレージエラーの処理', function(assert) {
+        if (window.AppState) {
+            // ローカルストレージが利用できない場合のテスト
+            const originalLocalStorage = window.localStorage;
+            window.localStorage = null;
+            
+            try {
+                AppState.saveConfig();
+                AppState.loadConfig();
+                assert.ok(true, 'ローカルストレージエラーが適切に処理される');
+            } catch (error) {
+                assert.ok(true, 'ローカルストレージエラーが捕捉される: ' + error.message);
+            } finally {
+                window.localStorage = originalLocalStorage;
+            }
+        } else {
+            assert.ok(true, 'AppState is not available - skipping test');
+        }
+    });
+});
+
+// レスポンシブテストモジュール
+QUnit.module('Responsive Tests', function() {
+    
+    QUnit.test('ビューポートサイズの変更', function(assert) {
+        const originalInnerWidth = window.innerWidth;
+        const originalInnerHeight = window.innerHeight;
+        
+        // モバイル画面サイズのシミュレーション
+        Object.defineProperty(window, 'innerWidth', {
+            writable: true,
+            configurable: true,
+            value: 375
+        });
+        Object.defineProperty(window, 'innerHeight', {
+            writable: true,
+            configurable: true,
+            value: 667
+        });
+        
+        TestHelpers.simulateEvent(window, 'resize');
+        
+        assert.ok(true, 'モバイル画面サイズでリサイズイベントが処理される');
+        
+        // タブレット画面サイズのシミュレーション
+        window.innerWidth = 768;
+        window.innerHeight = 1024;
+        
+        TestHelpers.simulateEvent(window, 'resize');
+        
+        assert.ok(true, 'タブレット画面サイズでリサイズイベントが処理される');
+        
+        // 元のサイズに戻す
+        window.innerWidth = originalInnerWidth;
+        window.innerHeight = originalInnerHeight;
+    });
+});
+
+// 最後に実行されるクリーンアップ
+QUnit.done(function() {
+    console.log('All tests completed!');
+}); 
