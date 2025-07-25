@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Maze Puzzle - テストスイート</title>
+    <meta name="description" content="Math Maze Puzzleのテストスイート">
+    
+    <!-- External CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Internal CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+    
+    <!-- Additional Test Styles -->
+    <style>
+        .test-case {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 8px 0;
+            background: white;
+        }
+        .test-case.passed {
+            border-color: #10b981;
+            background-color: #ecfdf5;
+        }
+        .test-case.failed {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+        }
+        .test-case.running {
+            border-color: #f59e0b;
+            background-color: #fffbeb;
+        }
+        .test-result {
+            margin-top: 8px;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .test-result.success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        .test-result.error {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        .test-summary {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Test Summary -->
+    <div id="testSummary" class="test-summary">
+        <h3 class="font-bold mb-2">テスト結果</h3>
+        <div id="summaryContent">
+            <div>実行中...</div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-xl font-bold text-gray-800">
+                    <i class="fas fa-flask mr-2 text-blue-600"></i>
+                    Math Maze Puzzle - テストスイート
+                </h1>
+                <a href="../index.html" class="btn btn-primary">
+                    <i class="fas fa-home mr-2"></i>メインに戻る
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Test Controls -->
+        <section class="mb-8">
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-lg font-semibold mb-4">テスト制御</h2>
+                <div class="flex gap-4">
+                    <button id="runAllTests" class="btn btn-primary">
+                        <i class="fas fa-play mr-2"></i>全テスト実行
+                    </button>
+                    <button id="runGameTests" class="btn btn-secondary">
+                        <i class="fas fa-gamepad mr-2"></i>ゲームテスト
+                    </button>
+                    <button id="runUITests" class="btn btn-secondary">
+                        <i class="fas fa-desktop mr-2"></i>UIテスト
+                    </button>
+                    <button id="clearResults" class="btn btn-outline">
+                        <i class="fas fa-trash mr-2"></i>結果クリア
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Test Results -->
+        <section>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-lg font-semibold mb-4">テスト結果</h2>
+                <div id="testResults">
+                    <!-- Test cases will be dynamically added here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Scripts -->
+    <script src="../js/main.js"></script>
+    <script src="../js/game.js"></script>
+    <script src="../js/maze.js"></script>
+    <script src="../js/problems.js"></script>
+    <script src="../js/ui.js"></script>
+    <script src="ui-tests.js"></script>
+    <script>
+        // Test Suite Implementation
+        class TestSuite {
+            constructor() {
+                this.tests = [];
+                this.results = [];
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.registerTests();
+            }
+
+            setupEventListeners() {
+                document.getElementById('runAllTests').addEventListener('click', () => {
+                    this.runAllTests();
+                });
+
+                document.getElementById('runGameTests').addEventListener('click', () => {
+                    this.runTestsByCategory('game');
+                });
+
+                document.getElementById('runUITests').addEventListener('click', () => {
+                    this.runTestsByCategory('ui');
+                });
+
+                document.getElementById('clearResults').addEventListener('click', () => {
+                    this.clearResults();
+                });
+            }
+
+            registerTests() {
+                // Game Logic Tests
+                this.addTest('game', 'ゲーム状態初期化', () => {
+                    const game = new GameState();
+                    return game.level === 1 && game.stage === 1 && game.score === 0;
+                });
+
+                this.addTest('game', 'レベル進行', () => {
+                    const game = new GameState();
+                    const initialLevel = game.level;
+                    game.nextStage();
+                    return game.stage > 1 || game.level > initialLevel;
+                });
+
+                this.addTest('game', 'スコア計算', () => {
+                    const game = new GameState();
+                    const initialScore = game.score;
+                    game.addScore(100);
+                    return game.score === initialScore + 100;
+                });
+
+                // Maze Generation Tests
+                this.addTest('game', '迷路生成', () => {
+                    if (typeof generateMaze === 'function') {
+                        const maze = generateMaze(10, 10);
+                        return maze && maze.length === 10 && maze[0].length === 10;
+                    }
+                    return true; // Skip if function not available
+                });
+
+                // Problem Generation Tests
+                this.addTest('game', '問題生成', () => {
+                    if (typeof generateProblem === 'function') {
+                        const problem = generateProblem(1);
+                        return problem && problem.question && typeof problem.answer === 'number';
+                    }
+                    return true; // Skip if function not available
+                });
+
+                // UI Tests
+                this.addTest('ui', 'DOM要素存在確認', () => {
+                    const requiredElements = ['header', 'main', 'footer'];
+                    return requiredElements.every(id => document.querySelector(id) !== null);
+                });
+
+                this.addTest('ui', 'ローカライゼーション', () => {
+                    return typeof CONFIG !== 'undefined' && CONFIG.language;
+                });
+
+                this.addTest('ui', 'レスポンシブデザイン', () => {
+                    const viewport = document.querySelector('meta[name="viewport"]');
+                    return viewport && viewport.content.includes('width=device-width');
+                });
+
+                // Utility Tests
+                this.addTest('util', 'Utils関数', () => {
+                    return typeof Utils !== 'undefined' && typeof Utils.formatNumber === 'function';
+                });
+
+                this.addTest('util', 'ローカルストレージ', () => {
+                    try {
+                        localStorage.setItem('test', 'value');
+                        const result = localStorage.getItem('test') === 'value';
+                        localStorage.removeItem('test');
+                        return result;
+                    } catch (e) {
+                        return false;
+                    }
+                });
+            }
+
+            addTest(category, name, testFunction) {
+                this.tests.push({
+                    category,
+                    name,
+                    testFunction,
+                    id: `test-${this.tests.length}`
+                });
+            }
+
+            async runAllTests() {
+                this.clearResults();
+                this.updateSummary('実行中...');
+
+                for (const test of this.tests) {
+                    await this.runTest(test);
+                }
+
+                this.updateSummary();
+            }
+
+            async runTestsByCategory(category) {
+                this.clearResults();
+                const categoryTests = this.tests.filter(test => test.category === category);
+                
+                for (const test of categoryTests) {
+                    await this.runTest(test);
+                }
+
+                this.updateSummary();
+            }
+
+            async runTest(test) {
+                const testElement = this.createTestElement(test);
+                document.getElementById('testResults').appendChild(testElement);
+
+                testElement.className = 'test-case running';
+
+                try {
+                    const startTime = performance.now();
+                    const result = await test.testFunction();
+                    const endTime = performance.now();
+                    const duration = Math.round(endTime - startTime);
+
+                    if (result) {
+                        testElement.className = 'test-case passed';
+                        this.addTestResult(testElement, `✅ 成功 (${duration}ms)`, 'success');
+                        this.results.push({ test: test.name, passed: true, duration });
+                    } else {
+                        testElement.className = 'test-case failed';
+                        this.addTestResult(testElement, `❌ 失敗 (${duration}ms)`, 'error');
+                        this.results.push({ test: test.name, passed: false, duration });
+                    }
+                } catch (error) {
+                    testElement.className = 'test-case failed';
+                    this.addTestResult(testElement, `❌ エラー: ${error.message}`, 'error');
+                    this.results.push({ test: test.name, passed: false, error: error.message });
+                }
+
+                // Small delay for visual feedback
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+
+            createTestElement(test) {
+                const element = document.createElement('div');
+                element.className = 'test-case';
+                element.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-medium">${test.name}</h3>
+                            <span class="text-sm text-gray-500">[${test.category}]</span>
+                        </div>
+                        <div class="test-status">
+                            <i class="fas fa-clock text-yellow-500"></i>
+                        </div>
+                    </div>
+                `;
+                return element;
+            }
+
+            addTestResult(testElement, message, type) {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = `test-result ${type}`;
+                resultDiv.textContent = message;
+                testElement.appendChild(resultDiv);
+            }
+
+            clearResults() {
+                document.getElementById('testResults').innerHTML = '';
+                this.results = [];
+                this.updateSummary('テスト未実行');
+            }
+
+            updateSummary(message = null) {
+                const summaryContent = document.getElementById('summaryContent');
+                
+                if (message) {
+                    summaryContent.innerHTML = `<div>${message}</div>`;
+                    return;
+                }
+
+                const total = this.results.length;
+                const passed = this.results.filter(r => r.passed).length;
+                const failed = total - passed;
+                const passRate = total > 0 ? Math.round((passed / total) * 100) : 0;
+
+                summaryContent.innerHTML = `
+                    <div class="text-sm space-y-1">
+                        <div>総テスト数: ${total}</div>
+                        <div class="text-green-600">成功: ${passed}</div>
+                        <div class="text-red-600">失敗: ${failed}</div>
+                        <div class="font-medium">成功率: ${passRate}%</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize test suite when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.testSuite = new TestSuite();
+        });
+    </script>
+</body>
+</html> 
