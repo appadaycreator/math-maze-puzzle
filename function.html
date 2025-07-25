@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Maze Puzzle - 機能要件書</title>
+    <meta name="description" content="Math Maze Puzzleの機能要件書 - システム仕様、機能一覧、技術要件を詳細に記載">
+    <meta name="keywords" content="機能要件書,仕様書,システム設計,Math Maze Puzzle">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <style>
+        .requirement-section {
+            border-left: 4px solid #3B82F6;
+            padding-left: 1rem;
+            margin: 1.5rem 0;
+        }
+        .feature-item {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+        }
+        .priority-high { border-left: 4px solid #EF4444; }
+        .priority-medium { border-left: 4px solid #F59E0B; }
+        .priority-low { border-left: 4px solid #10B981; }
+        .tech-spec {
+            background: #1F2937;
+            color: #F9FAFB;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        .version-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        .toc {
+            background: #F1F5F9;
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        .toc ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .toc ul ul {
+            padding-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        .toc a {
+            color: #3B82F6;
+            text-decoration: none;
+            padding: 0.25rem 0;
+            display: block;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header id="header" class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-4">
+                    <img src="assets/icons/favicon.svg" alt="Math Maze Puzzle" class="w-8 h-8">
+                    <h1 class="text-xl font-bold text-gray-800">Math Maze Puzzle</h1>
+                </div>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="index.html" class="text-gray-600 hover:text-blue-600 transition-colors">ゲーム</a>
+                    <a href="lp.html" class="text-gray-600 hover:text-blue-600 transition-colors">サービス紹介</a>
+                    <a href="about.html" class="text-gray-600 hover:text-blue-600 transition-colors">遊び方</a>
+                    <a href="function.html" class="text-blue-600 font-medium">機能要件書</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- バージョン情報 -->
+        <div class="version-info">
+            <h1 class="text-3xl font-bold mb-2">Math Maze Puzzle - 機能要件書</h1>
+            <div class="flex flex-wrap gap-4 text-sm">
+                <span><i class="fas fa-calendar"></i> 作成日: 2024年12月</span>
+                <span><i class="fas fa-tag"></i> バージョン: 1.0.0</span>
+                <span><i class="fas fa-user"></i> ステータス: アクティブ</span>
+            </div>
+        </div>
+
+        <!-- 目次 -->
+        <div class="toc">
+            <h2 class="text-xl font-semibold mb-4"><i class="fas fa-list"></i> 目次</h2>
+            <ul>
+                <li><a href="#overview">1. プロジェクト概要</a></li>
+                <li><a href="#functional-requirements">2. 機能要件</a>
+                    <ul>
+                        <li><a href="#core-features">2.1 コア機能</a></li>
+                        <li><a href="#user-interface">2.2 ユーザーインターフェース</a></li>
+                        <li><a href="#game-mechanics">2.3 ゲームメカニクス</a></li>
+                    </ul>
+                </li>
+                <li><a href="#non-functional-requirements">3. 非機能要件</a></li>
+                <li><a href="#technical-specifications">4. 技術仕様</a></li>
+                <li><a href="#user-stories">5. ユーザーストーリー</a></li>
+                <li><a href="#acceptance-criteria">6. 受け入れ基準</a></li>
+            </ul>
+        </div>
+
+        <!-- 1. プロジェクト概要 -->
+        <section id="overview" class="requirement-section">
+            <h2 class="text-2xl font-bold mb-4">1. プロジェクト概要</h2>
+            
+            <div class="feature-item">
+                <h3 class="text-lg font-semibold mb-2">1.1 プロジェクト目的</h3>
+                <p>数学学習を楽しくゲーム化したWebアプリケーション「Math Maze Puzzle」の開発。迷路を進みながら数学問題を解くことで、計算能力と論理的思考力を同時に鍛えることを目的とする。</p>
+            </div>
+
+            <div class="feature-item">
+                <h3 class="text-lg font-semibold mb-2">1.2 ターゲットユーザー</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>小学生（6-12歳）</strong>: 基本的な四則演算の練習</li>
+                    <li><strong>中学生（13-15歳）</strong>: より複雑な数学問題への挑戦</li>
+                    <li><strong>高校生・大人</strong>: 脳トレーニングとしての活用</li>
+                    <li><strong>教育関係者</strong>: 授業での補助教材として</li>
+                </ul>
+            </div>
+
+            <div class="feature-item">
+                <h3 class="text-lg font-semibold mb-2">1.3 ビジネス目標</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>月間アクティブユーザー 10,000人の達成</li>
+                    <li>ユーザー継続率 70%以上の維持</li>
+                    <li>教育機関での採用促進</li>
+                    <li>多言語対応による国際展開</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 2. 機能要件 -->
+        <section id="functional-requirements" class="requirement-section">
+            <h2 class="text-2xl font-bold mb-4">2. 機能要件</h2>
+
+            <!-- 2.1 コア機能 -->
+            <div id="core-features" class="mb-6">
+                <h3 class="text-xl font-semibold mb-4">2.1 コア機能</h3>
+
+                <div class="feature-item priority-high">
+                    <h4 class="font-semibold mb-2"><i class="fas fa-gamepad"></i> 迷路ゲーム機能</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>ランダム生成される迷路マップ</li>
+                        <li>キーボード・タッチ操作でのプレイヤー移動</li>
+                        <li>ゴール到達による次ステージ進行</li>
+                        <li>壁の衝突判定とアニメーション</li>
+                    </ul>
+                </div>
+
+                <div class="feature-item priority-high">
+                    <h4 class="font-semibold mb-2"><i class="fas fa-calculator"></i> 数学問題システム</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>レベル別の問題難易度調整</li>
+                        <li>四則演算（+, -, ×, ÷）問題の生成</li>
+                        <li>選択式回答システム（4択）</li>
+                        <li>正解・不正解の即時フィードバック</li>
+                        <li>ヒント機能（回数制限付き）</li>
+                    </ul>
+                </div>
+
+                <div class="feature-item priority-high">
+                    <h4 class="font-semibold mb-2"><i class="fas fa-trophy"></i> スコアリングシステム</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>時間ボーナス計算</li>
+                        <li>正解率による得点調整</li>
+                        <li>コンボボーナス（連続正解）</li>
+                        <li>総合スコアランキング</li>
+                        <li>レベル別最高スコア記録</li>
+                    </ul>
+                </div>
+
+                <div class="feature-item priority-medium">
+                    <h4 class="font-semibold mb-2"><i class="fas fa-save"></i> 進行状況保存</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>ローカルストレージでの自動保存</li>
+                        <li>レベル・ステージ進行度の記録</li>
+                        <li>設定情報の永続化</li>
+                        <li>統計データの蓄積</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 2.2 ユーザーインターフェース -->
+            <div id="user-interface" class="mb-6">
+                <h3 class="text-xl font-semibold mb-4">2.2 ユーザーインターフェース</h3>
+
+                <div class="feature-item priority-high">
+                    <h4 class="font-semibold mb-2"><i class="fas fa-mobile-alt"></i> レスポンシブデザイン</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>モバイル、タブレット、デスクトップ対応</li>
+                        <li>タッチ操作とキーボード操作の両対応</li>
+                        <li>画面サイズに応じたUI調整</li>
+                        <li>横画面・縦画面の最適化</li>
+                    </ul>
+                </div>
+
+                <div class="feature-item priority-medium">
+                    <h4 class="font-semibold mb-2"><i class="fas fa-language"></i> 多言語対応</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>日本語・英語の切り替え機能</li>
+                        <li>動的言語リソース読み込み</li>
+                        <li>数字・記号の地域化対応</li>
+                    </ul>
+                </div>
+
+                <div class="feature-item priority-medium">
+                    <h4 class="font-semibold mb-2"><i class="fas fa-universal-access"></i> アクセシビリティ</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>キーボードナビゲーション</li>
+                        <li>ハイコントラストモード</li>
+                        <li>フォントサイズ調整機能</li>
+                        <li>スクリーンリーダー対応</li>
+                        <li>カラーバリアフリー配色</li>
+                    </ul>
+                </div>
+
+                <div class="feature-item priority-low">
+                    <h4 class="font-semibold mb-2"><i class="fas fa-palette"></i> カスタマイゼーション</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>ダークモード・ライトモード切り替え</li>
+                        <li>UI効果音のON/OFF</li>
+                        <li>アニメーション速度調整</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 2.3 ゲームメカニクス -->
+            <div id="game-mechanics" class="mb-6">
+                <h3 class="text-xl font-semibold mb-4">2.3 ゲームメカニクス</h3>
+
+                <div class="feature-item priority-high">
+                    <h4 class="font-semibold mb-2"><i class="fas fa-layer-group"></i> レベル・ステージシステム</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>3つの難易度レベル（簡単・普通・難しい）</li>
+                        <li>各レベル10ステージの構成</li>
+                        <li>段階的な難易度上昇</li>
+                        <li>アンロック式ステージ進行</li>
+                    </ul>
+                </div>
+
+                <div class="feature-item priority-medium">
+                    <h4 class="font-semibold mb-2"><i class="fas fa-clock"></i> タイマーシステム</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>ステージ別制限時間</li>
+                        <li>残り時間の視覚的表示</li>
+                        <li>時間切れによるゲームオーバー</li>
+                        <li>一時停止・再開機能</li>
+                    </ul>
+                </div>
+
+                <div class="feature-item priority-medium">
+                    <h4 class="font-semibold mb-2"><i class="fas fa-lightbulb"></i> ヒントシステム</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>ステージ毎の使用回数制限</li>
+                        <li>段階的ヒント表示</li>
+                        <li>ヒント使用によるスコア減点</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 非機能要件 -->
+        <section id="non-functional-requirements" class="requirement-section">
+            <h2 class="text-2xl font-bold mb-4">3. 非機能要件</h2>
+
+            <div class="feature-item priority-high">
+                <h3 class="text-lg font-semibold mb-2">3.1 パフォーマンス要件</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>ページ読み込み時間</strong>: 3秒以内（3G接続環境下）</li>
+                    <li><strong>レスポンス時間</strong>: ユーザー操作から1秒以内の反応</li>
+                    <li><strong>FPS</strong>: ゲーム画面で30FPS以上を維持</li>
+                    <li><strong>メモリ使用量</strong>: 50MB以下（モバイルデバイス）</li>
+                </ul>
+            </div>
+
+            <div class="feature-item priority-high">
+                <h3 class="text-lg font-semibold mb-2">3.2 互換性要件</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>ブラウザ対応</strong>: Chrome, Firefox, Safari, Edge（最新2バージョン）</li>
+                    <li><strong>モバイルOS</strong>: iOS 12+, Android 8+</li>
+                    <li><strong>画面解像度</strong>: 320px以上の幅に対応</li>
+                </ul>
+            </div>
+
+            <div class="feature-item priority-medium">
+                <h3 class="text-lg font-semibold mb-2">3.3 セキュリティ要件</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>ローカルストレージデータの暗号化</li>
+                    <li>XSS攻撃対策</li>
+                    <li>CSP（Content Security Policy）の実装</li>
+                </ul>
+            </div>
+
+            <div class="feature-item priority-medium">
+                <h3 class="text-lg font-semibold mb-2">3.4 可用性要件</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>オフライン対応（PWA）</li>
+                    <li>サービスワーカーによるキャッシュ機能</li>
+                    <li>ネットワーク断線時の適切なエラーハンドリング</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 4. 技術仕様 -->
+        <section id="technical-specifications" class="requirement-section">
+            <h2 class="text-2xl font-bold mb-4">4. 技術仕様</h2>
+
+            <div class="feature-item">
+                <h3 class="text-lg font-semibold mb-2">4.1 フロントエンド技術スタック</h3>
+                <div class="tech-spec">
+HTML5 (Canvas API, Web Storage API, Service Worker API)
+CSS3 (Flexbox, Grid, CSS Variables, Media Queries)
+JavaScript ES6+ (Modules, Classes, Async/Await, Fetch API)
+Progressive Web App (PWA) 対応
+                </div>
+            </div>
+
+            <div class="feature-item">
+                <h3 class="text-lg font-semibold mb-2">4.2 外部ライブラリ・フレームワーク</h3>
+                <div class="tech-spec">
+Tailwind CSS 2.2.19 (UIフレームワーク)
+Font Awesome 6.4.0 (アイコンライブラリ)
+Google Fonts (Noto Sans JP) (日本語フォント)
+                </div>
+            </div>
+
+            <div class="feature-item">
+                <h3 class="text-lg font-semibold mb-2">4.3 アーキテクチャパターン</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Module Pattern</strong>: JavaScript機能のカプセル化</li>
+                    <li><strong>Singleton Pattern</strong>: ゲーム状態管理</li>
+                    <li><strong>Observer Pattern</strong>: UI状態変更の通知</li>
+                    <li><strong>Strategy Pattern</strong>: 迷路生成アルゴリズム</li>
+                </ul>
+            </div>
+
+            <div class="feature-item">
+                <h3 class="text-lg font-semibold mb-2">4.4 ファイル構成</h3>
+                <div class="tech-spec">
+math-maze-puzzle/
+├── index.html           # メインゲーム画面
+├── lp.html             # ランディングページ
+├── about.html          # 遊び方ページ
+├── terms.html          # 利用規約
+├── privacy.html        # プライバシーポリシー
+├── contact.html        # お問い合わせ
+├── function.html       # 機能要件書
+├── manifest.json       # PWAマニフェスト
+├── service-worker.js   # サービスワーカー
+├── sitemap.xml         # サイトマップ
+├── robots.txt          # ロボット制御
+├── css/
+│   ├── style.css       # 共通スタイル
+│   ├── game.css        # ゲーム専用スタイル
+│   └── responsive.css  # レスポンシブ対応
+├── js/
+│   ├── main.js         # メインアプリケーション
+│   ├── game.js         # ゲームロジック
+│   ├── maze.js         # 迷路生成
+│   ├── problems.js     # 問題生成
+│   └── ui.js          # UI操作
+├── assets/
+│   ├── icons/          # アイコン類
+│   ├── images/         # 画像ファイル
+│   └── sounds/         # 効果音ファイル
+├── locales/
+│   ├── ja.json         # 日本語リソース
+│   └── en.json         # 英語リソース
+└── tests/
+    ├── test-suite.html # テストスイート
+    └── ui-tests.js     # UIテスト
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. ユーザーストーリー -->
+        <section id="user-stories" class="requirement-section">
+            <h2 class="text-2xl font-bold mb-4">5. ユーザーストーリー</h2>
+
+            <div class="feature-item">
+                <h3 class="text-lg font-semibold mb-2">学習者として</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>「楽しみながら数学を学習したいので、ゲーム要素のある学習アプリを使いたい」</li>
+                    <li>「自分のペースで学習したいので、進行状況を保存できる機能がほしい」</li>
+                    <li>「苦手な分野を克服したいので、間違えた問題を復習できる機能がほしい」</li>
+                </ul>
+            </div>
+
+            <div class="feature-item">
+                <h3 class="text-lg font-semibold mb-2">保護者として</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>「子供の学習進度を確認したいので、統計情報を見られる機能がほしい」</li>
+                    <li>「安全に使わせたいので、適切な時間制限やコンテンツ管理機能がほしい」</li>
+                </ul>
+            </div>
+
+            <div class="feature-item">
+                <h3 class="text-lg font-semibold mb-2">教育者として</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>「授業で活用したいので、生徒の学習状況を把握できる機能がほしい」</li>
+                    <li>「カリキュラムに合わせたいので、問題の難易度を調整できる機能がほしい」</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 6. 受け入れ基準 -->
+        <section id="acceptance-criteria" class="requirement-section">
+            <h2 class="text-2xl font-bold mb-4">6. 受け入れ基準</h2>
+
+            <div class="feature-item priority-high">
+                <h3 class="text-lg font-semibold mb-2">6.1 機能的受け入れ基準</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>全ての基本機能が仕様通りに動作する</li>
+                    <li>ゲームフローが中断なく完了できる</li>
+                    <li>問題生成が適切な難易度で実行される</li>
+                    <li>スコア計算が正確に行われる</li>
+                    <li>進行状況の保存・復元が正常に機能する</li>
+                </ul>
+            </div>
+
+            <div class="feature-item priority-high">
+                <h3 class="text-lg font-semibold mb-2">6.2 非機能的受け入れ基準</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>全対象ブラウザでの動作確認完了</li>
+                    <li>モバイルデバイスでの操作性確認完了</li>
+                    <li>ページ読み込み時間が要件を満たす</li>
+                    <li>アクセシビリティガイドラインに準拠</li>
+                    <li>セキュリティ脆弱性がない</li>
+                </ul>
+            </div>
+
+            <div class="feature-item priority-medium">
+                <h3 class="text-lg font-semibold mb-2">6.3 ユーザビリティ受け入れ基準</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>初回ユーザーが迷わずゲームを開始できる</li>
+                    <li>操作方法が直感的で説明不要</li>
+                    <li>エラー発生時の適切なメッセージ表示</li>
+                    <li>ゲーム中断・再開がスムーズに行える</li>
+                </ul>
+            </div>
+
+            <div class="feature-item priority-medium">
+                <h3 class="text-lg font-semibold mb-2">6.4 テスト受け入れ基準</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>ユニットテストのカバレッジ80%以上</li>
+                    <li>統合テストが全て成功</li>
+                    <li>パフォーマンステストが要件を満たす</li>
+                    <li>ユーザビリティテストで問題なし</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 更新履歴 -->
+        <section class="requirement-section">
+            <h2 class="text-2xl font-bold mb-4">更新履歴</h2>
+            <div class="feature-item">
+                <table class="w-full border-collapse border border-gray-300">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="border border-gray-300 px-4 py-2">バージョン</th>
+                            <th class="border border-gray-300 px-4 py-2">日付</th>
+                            <th class="border border-gray-300 px-4 py-2">変更内容</th>
+                            <th class="border border-gray-300 px-4 py-2">担当者</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border border-gray-300 px-4 py-2">1.0.0</td>
+                            <td class="border border-gray-300 px-4 py-2">2024-12</td>
+                            <td class="border border-gray-300 px-4 py-2">初版作成</td>
+                            <td class="border border-gray-300 px-4 py-2">開発チーム</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer id="footer" class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Math Maze Puzzle</h3>
+                    <p class="text-gray-300">楽しく学べる数学パズルゲーム</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-3">リンク</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-300 hover:text-white transition-colors">ゲーム</a></li>
+                        <li><a href="about.html" class="text-gray-300 hover:text-white transition-colors">遊び方</a></li>
+                        <li><a href="terms.html" class="text-gray-300 hover:text-white transition-colors">利用規約</a></li>
+                        <li><a href="privacy.html" class="text-gray-300 hover:text-white transition-colors">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-3">サポート</h4>
+                    <ul class="space-y-2">
+                        <li><a href="contact.html" class="text-gray-300 hover:text-white transition-colors">お問い合わせ</a></li>
+                        <li><a href="function.html" class="text-gray-300 hover:text-white transition-colors">機能要件書</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-3">技術仕様</h4>
+                    <ul class="space-y-2">
+                        <li class="text-gray-300">HTML5 / CSS3</li>
+                        <li class="text-gray-300">JavaScript ES6+</li>
+                        <li class="text-gray-300">PWA対応</li>
+                        <li class="text-gray-300">レスポンシブデザイン</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-300">
+                <p>&copy; 2024 Math Maze Puzzle. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+</body>
+</html> 

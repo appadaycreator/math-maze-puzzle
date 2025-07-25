@@ -4,270 +4,249 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Math Maze Puzzle - テストスイート</title>
+    <meta name="description" content="Math Maze Puzzleのテストスイート">
+    <meta name="keywords" content="テスト,自動テスト,品質保証,Math Maze Puzzle">
+    <meta name="author" content="Math Maze Puzzle Team">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../assets/icons/favicon.svg">
+    
+    <!-- External CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Internal CSS -->
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    
     <style>
-        .test-result {
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
         }
+        
+        .test-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+        }
+        
+        .test-result {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            margin: 0.25rem 0;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
         .test-pass {
             background-color: #d4edda;
-            border: 1px solid #c3e6cb;
             color: #155724;
+            border-left: 4px solid #28a745;
         }
+        
         .test-fail {
             background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
             color: #721c24;
+            border-left: 4px solid #dc3545;
         }
-        .test-pending {
+        
+        .test-running {
             background-color: #fff3cd;
-            border: 1px solid #ffeaa7;
             color: #856404;
+            border-left: 4px solid #ffc107;
         }
+        
         .test-stats {
-            font-size: 1.2em;
-            font-weight: bold;
-            margin: 20px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
-        .test-group {
-            margin: 20px 0;
-            padding: 15px;
-            border: 1px solid #ddd;
+        
+        .stat-card {
+            background: white;
+            padding: 1rem;
             border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
         }
-        .test-group h3 {
-            margin-top: 0;
-            color: #333;
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
         }
-        #test-progress {
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .run-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .run-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .run-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .progress-bar {
             width: 100%;
-            height: 20px;
-            background-color: #f0f0f0;
-            border-radius: 10px;
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
             overflow: hidden;
-            margin: 10px 0;
+            margin: 1rem 0;
         }
-        #test-progress-bar {
+        
+        .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #4CAF50, #45a049);
-            width: 0%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
             transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        .console-output {
+            background: #1a1a1a;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            padding: 1rem;
+            border-radius: 4px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
         }
     </style>
 </head>
 <body class="bg-gray-50">
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-center mb-8">Math Maze Puzzle - テストスイート</h1>
-        
-        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 class="text-xl font-semibold mb-4">テスト実行状況</h2>
-            <div id="test-progress">
-                <div id="test-progress-bar"></div>
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <img src="../assets/icons/favicon.svg" alt="Math Maze Puzzle" class="w-8 h-8">
+                <h1 class="text-xl font-bold text-gray-800">Math Maze Puzzle - テストスイート</h1>
             </div>
-            <div id="test-stats" class="test-stats">
-                準備中...
+            <nav class="hidden md:flex space-x-6">
+                <a href="../index.html" class="text-gray-600 hover:text-blue-600 transition-colors">
+                    <i class="fas fa-home mr-2"></i>ホーム
+                </a>
+                <a href="../about.html" class="text-gray-600 hover:text-blue-600 transition-colors">
+                    <i class="fas fa-question-circle mr-2"></i>遊び方
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="test-container">
+        <!-- Test Stats -->
+        <div class="test-stats">
+            <div class="stat-card">
+                <div class="stat-number text-green-500" id="passed-count">0</div>
+                <div class="stat-label">成功</div>
             </div>
-            <div class="flex gap-4 mb-4">
-                <button id="run-all-tests" class="btn btn-primary">全テスト実行</button>
-                <button id="run-unit-tests" class="btn btn-secondary">ユニットテスト実行</button>
-                <button id="run-integration-tests" class="btn btn-secondary">統合テスト実行</button>
-                <button id="clear-results" class="btn btn-outline">結果クリア</button>
+            <div class="stat-card">
+                <div class="stat-number text-red-500" id="failed-count">0</div>
+                <div class="stat-label">失敗</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number text-blue-500" id="total-count">0</div>
+                <div class="stat-label">総テスト数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number text-purple-500" id="coverage">0%</div>
+                <div class="stat-label">カバレッジ</div>
             </div>
         </div>
 
-        <!-- ユニットテスト -->
-        <div class="test-group bg-white rounded-lg shadow-md p-6">
-            <h3>ユニットテスト</h3>
-            <div id="unit-test-results"></div>
+        <!-- Control Panel -->
+        <div class="test-section">
+            <h2 class="text-xl font-bold mb-4">テスト実行</h2>
+            <div class="flex flex-wrap gap-4 mb-4">
+                <button class="run-button" id="run-all-btn">
+                    <i class="fas fa-play mr-2"></i>全テスト実行
+                </button>
+                <button class="run-button" id="run-unit-btn">
+                    <i class="fas fa-cog mr-2"></i>ユニットテスト
+                </button>
+                <button class="run-button" id="run-integration-btn">
+                    <i class="fas fa-link mr-2"></i>統合テスト
+                </button>
+                <button class="run-button" id="run-ui-btn">
+                    <i class="fas fa-desktop mr-2"></i>UIテスト
+                </button>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div id="test-status" class="text-gray-600 mt-2">テスト準備完了</div>
         </div>
 
-        <!-- 統合テスト -->
-        <div class="test-group bg-white rounded-lg shadow-md p-6">
-            <h3>統合テスト</h3>
-            <div id="integration-test-results"></div>
+        <!-- Test Results -->
+        <div class="test-section">
+            <h2 class="text-xl font-bold mb-4">テスト結果</h2>
+            <div id="test-results" class="space-y-2">
+                <!-- テスト結果がここに表示されます -->
+            </div>
         </div>
 
-        <!-- UIテスト -->
-        <div class="test-group bg-white rounded-lg shadow-md p-6">
-            <h3>UIテスト</h3>
-            <div id="ui-test-results"></div>
+        <!-- Console Output -->
+        <div class="test-section">
+            <h2 class="text-xl font-bold mb-4">コンソール出力</h2>
+            <div class="console-output" id="console-output">
+テストランナー準備完了...
+実行するテストスイートを選択してください。
+            </div>
         </div>
 
-        <!-- パフォーマンステスト -->
-        <div class="test-group bg-white rounded-lg shadow-md p-6">
-            <h3>パフォーマンステスト</h3>
-            <div id="performance-test-results"></div>
-        </div>
-
-        <!-- テスト詳細ログ -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <h3>詳細ログ</h3>
-            <div id="test-log" class="bg-gray-100 p-4 rounded text-sm font-mono" style="height: 200px; overflow-y: auto;"></div>
+        <!-- Test Details -->
+        <div class="test-section">
+            <h2 class="text-xl font-bold mb-4">テスト詳細</h2>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                    <h3 class="font-semibold mb-2">ユニットテスト</h3>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>数学問題生成</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>迷路生成アルゴリズム</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>スコア計算</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>ゲーム状態管理</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>ユーティリティ関数</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-2">UIテスト</h3>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>ページ読み込み</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>ゲーム開始</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>問題解答</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>レスポンシブ表示</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>アクセシビリティ</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- テストスクリプト -->
+    <!-- Scripts -->
     <script src="../js/main.js"></script>
-    <script src="../js/game.js"></script>
-    <script src="../js/maze.js"></script>
-    <script src="../js/problems.js"></script>
-    <script src="../js/ui.js"></script>
     <script src="ui-tests.js"></script>
-    <script>
-        // テストスイート管理
-        class TestSuite {
-            constructor() {
-                this.tests = [];
-                this.results = [];
-                this.currentTest = 0;
-                this.isRunning = false;
-                this.setupEventListeners();
-            }
-
-            setupEventListeners() {
-                document.getElementById('run-all-tests').addEventListener('click', () => this.runAllTests());
-                document.getElementById('run-unit-tests').addEventListener('click', () => this.runTestGroup('unit'));
-                document.getElementById('run-integration-tests').addEventListener('click', () => this.runTestGroup('integration'));
-                document.getElementById('clear-results').addEventListener('click', () => this.clearResults());
-            }
-
-            addTest(name, group, testFn, description = '') {
-                this.tests.push({
-                    name,
-                    group,
-                    testFn,
-                    description,
-                    status: 'pending'
-                });
-            }
-
-            async runAllTests() {
-                if (this.isRunning) return;
-                this.isRunning = true;
-                this.clearResults();
-                this.log('全テストを開始...');
-
-                const startTime = performance.now();
-                
-                for (let i = 0; i < this.tests.length; i++) {
-                    this.currentTest = i;
-                    await this.runTest(this.tests[i]);
-                    this.updateProgress();
-                }
-
-                const endTime = performance.now();
-                this.log(`全テスト完了 (${Math.round(endTime - startTime)}ms)`);
-                this.updateStats();
-                this.isRunning = false;
-            }
-
-            async runTestGroup(group) {
-                if (this.isRunning) return;
-                this.isRunning = true;
-                this.clearResults();
-                this.log(`${group}テストを開始...`);
-
-                const groupTests = this.tests.filter(test => test.group === group);
-                const startTime = performance.now();
-
-                for (let i = 0; i < groupTests.length; i++) {
-                    await this.runTest(groupTests[i]);
-                }
-
-                const endTime = performance.now();
-                this.log(`${group}テスト完了 (${Math.round(endTime - startTime)}ms)`);
-                this.updateStats();
-                this.isRunning = false;
-            }
-
-            async runTest(test) {
-                this.log(`実行中: ${test.name}`);
-                const startTime = performance.now();
-                
-                try {
-                    await test.testFn();
-                    const endTime = performance.now();
-                    test.status = 'pass';
-                    test.duration = Math.round(endTime - startTime);
-                    this.log(`✓ ${test.name} (${test.duration}ms)`);
-                    this.addResult(test, 'pass');
-                } catch (error) {
-                    const endTime = performance.now();
-                    test.status = 'fail';
-                    test.duration = Math.round(endTime - startTime);
-                    test.error = error.message;
-                    this.log(`✗ ${test.name} - ${error.message} (${test.duration}ms)`);
-                    this.addResult(test, 'fail', error.message);
-                }
-            }
-
-            addResult(test, status, error = '') {
-                const resultElement = document.createElement('div');
-                resultElement.className = `test-result test-${status}`;
-                resultElement.innerHTML = `
-                    <strong>${test.name}</strong> 
-                    <span class="text-sm">(${test.duration}ms)</span>
-                    ${test.description ? `<br><small>${test.description}</small>` : ''}
-                    ${error ? `<br><code>${error}</code>` : ''}
-                `;
-
-                const container = document.getElementById(`${test.group}-test-results`);
-                if (container) {
-                    container.appendChild(resultElement);
-                }
-                
-                this.results.push({ test, status, error });
-            }
-
-            updateProgress() {
-                const progress = ((this.currentTest + 1) / this.tests.length) * 100;
-                document.getElementById('test-progress-bar').style.width = `${progress}%`;
-            }
-
-            updateStats() {
-                const passed = this.results.filter(r => r.status === 'pass').length;
-                const failed = this.results.filter(r => r.status === 'fail').length;
-                const total = this.results.length;
-                
-                document.getElementById('test-stats').innerHTML = `
-                    合計: ${total} | 成功: ${passed} | 失敗: ${failed} | 成功率: ${Math.round((passed/total)*100)}%
-                `;
-            }
-
-            clearResults() {
-                this.results = [];
-                ['unit', 'integration', 'ui', 'performance'].forEach(group => {
-                    const container = document.getElementById(`${group}-test-results`);
-                    if (container) {
-                        container.innerHTML = '';
-                    }
-                });
-                document.getElementById('test-log').innerHTML = '';
-                document.getElementById('test-stats').innerHTML = '準備中...';
-                document.getElementById('test-progress-bar').style.width = '0%';
-            }
-
-            log(message) {
-                const logElement = document.getElementById('test-log');
-                const timestamp = new Date().toLocaleTimeString();
-                logElement.innerHTML += `[${timestamp}] ${message}\n`;
-                logElement.scrollTop = logElement.scrollHeight;
-            }
-        }
-
-        // テストスイートのインスタンス化
-        const testSuite = new TestSuite();
-
-        // テスト定義の読み込み
-        if (typeof UITests !== 'undefined') {
-            UITests.registerTests(testSuite);
-        }
-
-        // 初期化完了のログ
-        testSuite.log('テストスイートが初期化されました');
-    </script>
 </body>
 </html> 

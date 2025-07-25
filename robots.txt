@@ -1,16 +1,18 @@
-# Math Maze Puzzle - robots.txt
+# Math Maze Puzzle - Robots.txt
+# 楽しく学べる数学パズルゲーム
 
-# すべてのクローラーに対する指示
+# すべてのクローラーに対する設定
 User-agent: *
 
-# 許可されたページ
+# クロール許可ページ
 Allow: /
+Allow: /index.html
 Allow: /lp.html
 Allow: /about.html
-Allow: /function.html
 Allow: /terms.html
 Allow: /privacy.html
 Allow: /contact.html
+Allow: /function.html
 
 # 静的リソースの許可
 Allow: /css/
@@ -18,16 +20,75 @@ Allow: /js/
 Allow: /assets/
 Allow: /locales/
 
-# PWAファイルの許可
+# PWA関連ファイルの許可
 Allow: /manifest.json
 Allow: /service-worker.js
 
-# テストファイルのブロック
+# クロール禁止ディレクトリ・ファイル
+# テストファイル（本番環境では削除推奨）
 Disallow: /tests/
-Disallow: /assets/sounds/
+
+# 開発・設定ファイル
+Disallow: /.git/
+Disallow: /.gitignore
+Disallow: /node_modules/
+Disallow: /package.json
+Disallow: /package-lock.json
+Disallow: /README.md
+
+# 一時ファイル・ログファイル
+Disallow: /tmp/
+Disallow: /logs/
+Disallow: /*.log
+
+# 管理者用ファイル（存在する場合）
+Disallow: /admin/
+Disallow: /config/
+Disallow: /private/
+
+# 特定ファイルタイプの制限
+Disallow: /*.bak
+Disallow: /*.backup
+Disallow: /*.old
+Disallow: /*.tmp
+
+# Googlebot用の設定
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Bingbot用の設定
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
+
+# その他の主要クローラー
+User-agent: Slurp
+Allow: /
+Crawl-delay: 2
+
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 1
+
+# 悪質なボット・スクレイパーの制限
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
 
 # サイトマップの場所
-Sitemap: https://math-maze-puzzle.com/sitemap.xml
+Sitemap: https://mathmaze.example.com/sitemap.xml
 
-# クロール間隔の推奨（秒）
-Crawl-delay: 1 
+# 注記:
+# - 本ファイルは検索エンジンへの指示であり、法的拘束力はありません
+# - 悪意のあるボットは無視する可能性があります
+# - 重要なファイルは別途アクセス制御を実装してください
+# - 本番環境では適切なドメインに変更してください 
