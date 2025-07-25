@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="暗算力を鍛える迷路型パズルゲーム「計算の迷宮」。制限時間内に計算問題を解きながら迷路を進め、ゴールを目指そう！脳トレしながら楽しく計算力アップ！">
+    <meta name="keywords" content="計算パズル,脳トレ,暗算,迷路ゲーム,数学ゲーム,計算練習,脳トレーニング">
+    <title>計算の迷宮 - 暗算力を鍛える迷路型パズルゲーム</title>
+    
+    <!-- favicon -->
+    <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+    
+    <!-- PWA support -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    
+    <!-- OGP -->
+    <meta property="og:title" content="計算の迷宮 - 暗算力を鍛える迷路型パズルゲーム">
+    <meta property="og:description" content="暗算力を鍛える迷路型パズルゲーム。制限時間内に計算問題を解きながら迷路を進め、ゴールを目指そう！">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://appadaycreator.github.io/math-maze-puzzle/">
+    <meta property="og:image" content="https://appadaycreator.github.io/math-maze-puzzle/assets/images/ogp.png">
+    <meta property="og:site_name" content="計算の迷宮">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/game.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-TXQGZRF9');</script>
+    <!-- End Google Tag Manager -->
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQGZRF9"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-600 to-green-500 text-white shadow-md fixed w-full z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="index.html" class="flex items-center">
+                    <svg class="w-8 h-8 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 17L12 22L22 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 12L12 17L22 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="text-xl font-bold">計算の迷宮</span>
+                </a>
+            </div>
+            
+            <!-- PC Navigation -->
+            <nav class="hidden md:flex">
+                <ul class="flex space-x-6">
+                    <li><a href="index.html" class="hover:text-blue-200 font-medium">ゲーム</a></li>
+                    <li><a href="about.html" class="hover:text-blue-200">使い方</a></li>
+                    <li><a href="terms.html" class="hover:text-blue-200">利用規約</a></li>
+                    <li><a href="privacy.html" class="hover:text-blue-200">プライバシー</a></li>
+                    <li><a href="contact.html" class="hover:text-blue-200">お問い合わせ</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Language & Font Size Controls (PC) -->
+            <div class="hidden md:flex items-center space-x-4">
+                <div class="flex border rounded-lg overflow-hidden">
+                    <button id="ja-btn" class="px-2 py-1 bg-white text-blue-600">JP</button>
+                    <button id="en-btn" class="px-2 py-1 bg-transparent text-white">EN</button>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button id="font-decrease" class="text-sm hover:text-blue-200" aria-label="文字サイズを小さく">A-</button>
+                    <button id="font-default" class="hover:text-blue-200" aria-label="標準の文字サイズ">A</button>
+                    <button id="font-increase" class="text-lg hover:text-blue-200" aria-label="文字サイズを大きく">A+</button>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden flex items-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+    
+    <!-- Mobile Side Menu -->
+    <div id="mobile-menu" class="fixed top-0 right-0 h-full w-64 bg-white shadow-xl transform translate-x-full transition-transform duration-300 ease-in-out z-50">
+        <div class="flex justify-between items-center p-4 border-b">
+            <h2 class="text-xl font-bold text-blue-600">メニュー</h2>
+            <button id="close-mobile-menu" class="text-gray-500 hover:text-gray-800">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <nav class="p-4">
+            <ul class="space-y-3">
+                <li><a href="index.html" class="block py-2 px-4 text-blue-600 bg-blue-100 rounded">ゲーム</a></li>
+                <li><a href="about.html" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">使い方</a></li>
+                <li><a href="terms.html" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">利用規約</a></li>
+                <li><a href="privacy.html" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">プライバシー</a></li>
+                <li><a href="contact.html" class="block py-2 px-4 text-gray-700 hover:bg-gray-100 rounded">お問い合わせ</a></li>
+            </ul>
+            
+            <div class="mt-6 border-t pt-4">
+                <p class="text-sm text-gray-600 mb-2">言語切替</p>
+                <div class="flex border rounded-lg overflow-hidden mb-4">
+                    <button id="ja-btn-mobile" class="flex-1 px-3 py-1 bg-blue-600 text-white">日本語</button>
+                    <button id="en-btn-mobile" class="flex-1 px-3 py-1 bg-transparent text-gray-700">English</button>
+                </div>
+                
+                <p class="text-sm text-gray-600 mb-2">文字サイズ</p>
+                <div class="flex items-center justify-between">
+                    <button id="font-xs" class="px-2 py-1 text-xs border rounded">極小</button>
+                    <button id="font-sm" class="px-2 py-1 text-sm border rounded">小</button>
+                    <button id="font-md" class="px-2 py-1 border rounded">標準</button>
+                    <button id="font-lg" class="px-2 py-1 text-lg border rounded">大</button>
+                    <button id="font-xl" class="px-2 py-1 text-xl border rounded">特大</button>
+                </div>
+            </div>
+        </nav>
+    </div>
+    
+    <!-- Left Sidebar (PC only) -->
+    <aside class="hidden md:block fixed left-0 top-16 w-52 h-full bg-white border-r z-40">
+        <div class="p-4">
+            <h3 class="font-bold text-gray-700 mb-3">レベル選択</h3>
+            <ul class="space-y-1">
+                <li><button class="level-btn w-full text-left p-2 rounded bg-blue-100 text-blue-700 hover:bg-blue-200" data-level="1">初級: 足し算・引き算</button></li>
+                <li><button class="level-btn w-full text-left p-2 rounded text-gray-700 hover:bg-gray-100" data-level="2">中級: 掛け算・割り算</button></li>
+                <li><button class="level-btn w-full text-left p-2 rounded text-gray-700 hover:bg-gray-100" data-level="3">上級: 小数・分数</button></li>
+                <li><button class="level-btn w-full text-left p-2 rounded text-gray-700 hover:bg-gray-100" data-level="4">マスター: 複合計算</button></li>
+            </ul>
+            
+            <div class="mt-6 border-t pt-4">
+                <h3 class="font-bold text-gray-700 mb-3">ステージ</h3>
+                <div class="grid grid-cols-5 gap-1">
+                    <button class="stage-btn w-8 h-8 bg-blue-500 text-white rounded flex items-center justify-center" data-stage="1">1</button>
+                    <button class="stage-btn w-8 h-8 bg-gray-200 text-gray-700 rounded flex items-center justify-center" data-stage="2">2</button>
+                    <button class="stage-btn w-8 h-8 bg-gray-200 text-gray-700 rounded flex items-center justify-center" data-stage="3">3</button>
+                    <button class="stage-btn w-8 h-8 bg-gray-200 text-gray-700 rounded flex items-center justify-center" data-stage="4">4</button>
+                    <button class="stage-btn w-8 h-8 bg-gray-200 text-gray-700 rounded flex items-center justify-center" data-stage="5">5</button>
+                    <button class="stage-btn w-8 h-8 bg-gray-200 text-gray-700 rounded flex items-center justify-center" data-stage="6">6</button>
+                    <button class="stage-btn w-8 h-8 bg-gray-200 text-gray-700 rounded flex items-center justify-center" data-stage="7">7</button>
+                    <button class="stage-btn w-8 h-8 bg-gray-200 text-gray-700 rounded flex items-center justify-center" data-stage="8">8</button>
+                    <button class="stage-btn w-8 h-8 bg-gray-200 text-gray-700 rounded flex items-center justify-center" data-stage="9">9</button>
+                    <button class="stage-btn w-8 h-8 bg-gray-200 text-gray-700 rounded flex items-center justify-center" data-stage="10">10</button>
+                </div>
+                <p class="text-xs text-gray-500 mt-2">ステージ 11-100 は<br>Coming Soon!</p>
+            </div>
+            
+            <div class="mt-6 border-t pt-4">
+                <h3 class="font-bold text-gray-700 mb-2">統計</h3>
+                <div class="text-sm">
+                    <p>プレイ回数: <span id="play-count" class="font-medium">0</span></p>
+                    <p>クリア回数: <span id="clear-count" class="font-medium">0</span></p>
+                    <p>最高スコア: <span id="high-score" class="font-medium">0</span></p>
+                </div>
+            </div>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="pt-16 md:pl-52">
+        <div class="container mx-auto px-4 py-6">
+            <!-- Game Info Bar -->
+            <div class="flex flex-wrap justify-between items-center mb-4">
+                <div class="w-full md:w-auto mb-2 md:mb-0">
+                    <h1 class="text-2xl font-bold text-gray-800">計算の迷宮</h1>
+                    <p class="text-sm text-gray-600">暗算力を鍛える迷路型パズルゲーム</p>
+                </div>
+                <div class="flex space-x-4">
+                    <div class="bg-white rounded-lg shadow px-4 py-2">
+                        <p class="text-xs text-gray-600">レベル</p>
+                        <p id="current-level" class="font-bold text-blue-600">初級</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow px-4 py-2">
+                        <p class="text-xs text-gray-600">ステージ</p>
+                        <p id="current-stage" class="font-bold text-blue-600">1</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow px-4 py-2">
+                        <p class="text-xs text-gray-600">タイム</p>
+                        <p id="game-timer" class="font-bold text-blue-600">03:00</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow px-4 py-2">
+                        <p class="text-xs text-gray-600">スコア</p>
+                        <p id="game-score" class="font-bold text-blue-600">0</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Game Area -->
+            <div id="game-container" class="bg-white rounded-xl shadow-lg p-4 mb-6">
+                <!-- Game Start Screen -->
+                <div id="start-screen" class="text-center py-10">
+                    <h2 class="text-3xl font-bold text-blue-600 mb-4">計算の迷宮へようこそ!</h2>
+                    <p class="text-lg mb-6">制限時間内に計算問題を解きながら迷路を進め、ゴールを目指そう！</p>
+                    <div class="mb-8">
+                        <h3 class="font-bold text-gray-700 mb-3">遊び方</h3>
+                        <ul class="text-left inline-block">
+                            <li class="mb-2 flex items-start">
+                                <span class="text-blue-500 mr-2">①</span> 
+                                <span>迷路の分岐点で計算問題が表示されます</span>
+                            </li>
+                            <li class="mb-2 flex items-start">
+                                <span class="text-blue-500 mr-2">②</span> 
+                                <span>正解の道を選んで進みましょう</span>
+                            </li>
+                            <li class="mb-2 flex items-start">
+                                <span class="text-blue-500 mr-2">③</span> 
+                                <span>間違えると最初からやり直し</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-500 mr-2">④</span> 
+                                <span>制限時間内にゴールを目指せ！</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <button id="start-game-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transform transition hover:scale-105">
+                        ゲームスタート
+                    </button>
+                </div>
+                
+                <!-- Game Maze Canvas -->
+                <div id="game-play-area" class="hidden">
+                    <canvas id="maze-canvas" class="mx-auto border rounded-lg"></canvas>
+                    
+                    <!-- Math Problem Display -->
+                    <div id="problem-display" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-xl shadow-xl z-50">
+                        <h3 class="text-xl font-bold text-center mb-3">問題</h3>
+                        <div id="problem-text" class="text-2xl text-center font-bold mb-4">7 + 8 = ?</div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button class="answer-btn bg-blue-100 hover:bg-blue-200 text-blue-800 py-3 px-4 rounded-lg">12</button>
+                            <button class="answer-btn bg-blue-100 hover:bg-blue-200 text-blue-800 py-3 px-4 rounded-lg">15</button>
+                            <button class="answer-btn bg-blue-100 hover:bg-blue-200 text-blue-800 py-3 px-4 rounded-lg">16</button>
+                            <button class="answer-btn bg-blue-100 hover:bg-blue-200 text-blue-800 py-3 px-4 rounded-lg">14</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game Complete Screen -->
+                <div id="complete-screen" class="hidden text-center py-10">
+                    <h2 class="text-3xl font-bold text-green-600 mb-4">ステージクリア!</h2>
+                    <div class="flex justify-center mb-6">
+                        <svg class="w-20 h-20 text-yellow-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zm7-10a1 1 0 01.707.293l.707.707L15.707 2A1 1 0 0118 3.293l-1.293 1.293-.707.707A1 1 0 0114.293 7l.707.707L16.293 9A1 1 0 0115 10.293l-1.293-1.293-.707-.707a1 1 0 01-.707-.293l-.707-.707L10.293 6A1 1 0 0112 4.707l1.293 1.293.707.707z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <div class="bg-blue-50 rounded-lg p-4 mb-6 inline-block">
+                        <p class="mb-2">クリアタイム: <span id="clear-time" class="font-bold">02:45</span></p>
+                        <p class="mb-2">正答率: <span id="correct-rate" class="font-bold">80%</span></p>
+                        <p>獲得スコア: <span id="earned-score" class="font-bold text-xl text-blue-600">850</span></p>
+                    </div>
+                    <div class="flex justify-center space-x-4 mb-6">
+                        <button id="share-result-btn" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg flex items-center">
+                            <i class="fas fa-share-alt mr-2"></i> 結果をシェア
+                        </button>
+                        <button id="next-stage-btn" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg flex items-center">
+                            次のステージ <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Game Over Screen -->
+                <div id="game-over-screen" class="hidden text-center py-10">
+                    <h2 class="text-3xl font-bold text-red-600 mb-4">タイムアップ!</h2>
+                    <p class="text-lg mb-6">制限時間内にゴールできませんでした...</p>
+                    <button id="retry-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg">
+                        もう一度チャレンジ
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Share & Controls Section -->
+            <div class="flex flex-wrap -mx-2 mb-8">
+                <!-- Share Section -->
+                <div class="w-full md:w-1/2 px-2 mb-4 md:mb-0">
+                    <div class="bg-white rounded-xl shadow p-4 h-full">
+                        <h3 class="font-bold text-lg mb-3">友達にシェア</h3>
+                        <p class="text-sm mb-4">計算の迷宮で遊んだ結果を友達とシェアしよう！</p>
+                        <div class="flex space-x-3">
+                            <a href="#" class="share-btn bg-blue-500 hover:bg-blue-600 text-white p-2 rounded" data-platform="twitter" aria-label="Twitterでシェア">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="share-btn bg-blue-700 hover:bg-blue-800 text-white p-2 rounded" data-platform="facebook" aria-label="Facebookでシェア">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="share-btn bg-green-500 hover:bg-green-600 text-white p-2 rounded" data-platform="line" aria-label="LINEでシェア">
+                                <i class="fab fa-line"></i>
+                            </a>
+                            <button id="copy-url-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 p-2 rounded flex items-center">
+                                <i class="fas fa-link mr-2"></i> URLをコピー
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Controls Section -->
+                <div class="w-full md:w-1/2 px-2">
+                    <div class="bg-white rounded-xl shadow p-4 h-full">
+                        <h3 class="font-bold text-lg mb-3">ゲーム設定</h3>
+                        <div class="mb-3">
+                            <label for="sound-toggle" class="flex items-center cursor-pointer">
+                                <div class="relative">
+                                    <input type="checkbox" id="sound-toggle" class="sr-only" checked>
+                                    <div class="block bg-gray-300 w-10 h-6 rounded-full"></div>
+                                    <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition"></div>
+                                </div>
+                                <div class="ml-3 text-gray-700">効果音</div>
+                            </label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="hint-toggle" class="flex items-center cursor-pointer">
+                                <div class="relative">
+                                    <input type="checkbox" id="hint-toggle" class="sr-only">
+                                    <div class="block bg-gray-300 w-10 h-6 rounded-full"></div>
+                                    <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition"></div>
+                                </div>
+                                <div class="ml-3 text-gray-700">ヒント表示（残り<span id="hint-count">3</span>回）</div>
+                            </label>
+                        </div>
+                        <div>
+                            <button id="reset-progress-btn" class="text-sm text-red-600 hover:text-red-800">
+                                <i class="fas fa-redo-alt mr-1"></i> 進捗をリセット
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recommendation Section -->
+            <section class="mb-8">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">おすすめの計算ドリル・脳トレ教材</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex items-center justify-center h-40 bg-gray-100 rounded mb-3">
+                            <span class="text-gray-400">商品画像</span>
+                        </div>
+                        <h3 class="font-bold mb-1">小学生の計算力トレーニングドリル</h3>
+                        <p class="text-sm text-gray-600 mb-2">基礎から応用まで、段階的に計算力を鍛える問題集</p>
+                        <a href="#" class="block text-center bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded">
+                            詳細を見る
+                        </a>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex items-center justify-center h-40 bg-gray-100 rounded mb-3">
+                            <span class="text-gray-400">商品画像</span>
+                        </div>
+                        <h3 class="font-bold mb-1">脳を鍛える大人のパズル本</h3>
+                        <p class="text-sm text-gray-600 mb-2">数字・図形・言語パズルで脳の活性化をサポート</p>
+                        <a href="#" class="block text-center bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded">
+                            詳細を見る
+                        </a>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex items-center justify-center h-40 bg-gray-100 rounded mb-3">
+                            <span class="text-gray-400">商品画像</span>
+                        </div>
+                        <h3 class="font-bold mb-1">算数力向上アプリ年間サブスク</h3>
+                        <p class="text-sm text-gray-600 mb-2">オンラインで毎日続けられる計算トレーニング</p>
+                        <a href="#" class="block text-center bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded">
+                            詳細を見る
+                        </a>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-2">※ 広告を含みます</p>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap">
+                <div class="w-full md:w-1/3 mb-6 md:mb-0">
+                    <h3 class="text-xl font-bold mb-3">計算の迷宮</h3>
+                    <p class="text-gray-400 mb-4">暗算力を鍛える迷路型パズルゲーム</p>
+                    <div class="flex space-x-4">
+                        <a href="#" aria-label="Twitter" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" aria-label="Facebook" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" aria-label="Instagram" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/3 mb-6 md:mb-0">
+                    <h4 class="font-bold mb-3">サイトメニュー</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white">ゲーム</a></li>
+                        <li><a href="about.html" class="text-gray-400 hover:text-white">使い方</a></li>
+                        <li><a href="lp.html" class="text-gray-400 hover:text-white">サービス紹介</a></li>
+                        <li><a href="terms.html" class="text-gray-400 hover:text-white">利用規約</a></li>
+                        <li><a href="privacy.html" class="text-gray-400 hover:text-white">プライバシーポリシー</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white">お問い合わせ</a></li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-1/3">
+                    <h4 class="font-bold mb-3">お問い合わせ</h4>
+                    <p class="text-gray-400 mb-4">ご質問・ご感想はこちらからお寄せください。</p>
+                    <a href="contact.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
+                        お問い合わせフォーム
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-sm text-gray-500">
+                <p>© 2023 計算の迷宮 All Rights Reserved.</p>
+                <p class="mt-2">Powered by <a href="https://github.com/appadaycreator/math-maze-puzzle" target="_blank" rel="noopener" class="text-blue-400 hover:underline">GitHub Pages</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/maze.js"></script>
+    <script src="js/problems.js"></script>
+    <script src="js/ui.js"></script>
+    
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('translate-x-full');
+        });
+        
+        document.getElementById('close-mobile-menu').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.add('translate-x-full');
+        });
+        
+        // Sound toggle styling
+        document.getElementById('sound-toggle').addEventListener('change', function() {
+            const parent = this.parentElement;
+            if(this.checked) {
+                parent.querySelector('.dot').classList.add('translate-x-4');
+                parent.querySelector('.block').classList.add('bg-blue-600');
+                parent.querySelector('.block').classList.remove('bg-gray-300');
+                console.log('Sound enabled');
+            } else {
+                parent.querySelector('.dot').classList.remove('translate-x-4');
+                parent.querySelector('.block').classList.remove('bg-blue-600');
+                parent.querySelector('.block').classList.add('bg-gray-300');
+                console.log('Sound disabled');
+            }
+        });
+        
+        document.getElementById('hint-toggle').addEventListener('change', function() {
+            const parent = this.parentElement;
+            if(this.checked) {
+                parent.querySelector('.dot').classList.add('translate-x-4');
+                parent.querySelector('.block').classList.add('bg-blue-600');
+                parent.querySelector('.block').classList.remove('bg-gray-300');
+                console.log('Hints enabled');
+            } else {
+                parent.querySelector('.dot').classList.remove('translate-x-4');
+                parent.querySelector('.block').classList.remove('bg-blue-600');
+                parent.querySelector('.block').classList.add('bg-gray-300');
+                console.log('Hints disabled');
+            }
+        });
+        
+        // Trigger the change event once to set the initial state
+        document.getElementById('sound-toggle').dispatchEvent(new Event('change'));
+        
+        // Game initialization placeholder
+        document.getElementById('start-game-btn').addEventListener('click', function() {
+            console.log('Game started');
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('game-play-area').classList.remove('hidden');
+            
+            // Here you would call the actual game initialization function
+            // For demonstration, we'll just show the problem after a delay
+            setTimeout(function() {
+                document.getElementById('problem-display').classList.remove('hidden');
+            }, 2000);
+        });
+        
+        // Simple service worker registration for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('service-worker.js').then(function(registration) {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function(err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+        
+        // Initialize game settings
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Game initialized');
+            // Load user progress from localStorage
+            const userProgress = JSON.parse(localStorage.getItem('mathMazeProgress')) || {
+                playCount: 0,
+                clearCount: 0,
+                highScore: 0,
+                currentLevel: 1,
+                currentStage: 1,
+                unlockedStages: [1],
+                hintCount: 3
+            };
+            
+            // Update display with user progress
+            document.getElementById('play-count').textContent = userProgress.playCount;
+            document.getElementById('clear-count').textContent = userProgress.clearCount;
+            document.getElementById('high-score').textContent = userProgress.highScore;
+            document.getElementById('hint-count').textContent = userProgress.hintCount;
+            
+            // Log for debugging
+            console.log('User progress loaded:', userProgress);
+        });
+    </script>
+    
+    <!-- PWA Service Worker -->
+    <script>
+        // This ensures the page is only cached when it's finally loaded
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('service-worker.js').then(function(registration) {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function(err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
