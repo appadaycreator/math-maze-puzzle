@@ -3,85 +3,59 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
                            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-
-    <!-- メインゲームページ -->
-    <url>
-        <loc>https://mathmaze.example.com/</loc>
-        <lastmod>2024-12-19</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>1.0</priority>
-    </url>
-
-    <!-- インデックスページ（明示的） -->
-    <url>
-        <loc>https://mathmaze.example.com/index.html</loc>
-        <lastmod>2024-12-19</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>1.0</priority>
-    </url>
-
-    <!-- ランディングページ -->
-    <url>
-        <loc>https://mathmaze.example.com/lp.html</loc>
-        <lastmod>2024-12-19</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.9</priority>
-    </url>
-
-    <!-- 遊び方ページ -->
-    <url>
-        <loc>https://mathmaze.example.com/about.html</loc>
-        <lastmod>2024-12-19</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
-    <!-- 機能要件書 -->
-    <url>
-        <loc>https://mathmaze.example.com/function.html</loc>
-        <lastmod>2024-12-19</lastmod>
-        <changefreq>yearly</changefreq>
-        <priority>0.5</priority>
-    </url>
-
-    <!-- 利用規約 -->
-    <url>
-        <loc>https://mathmaze.example.com/terms.html</loc>
-        <lastmod>2024-12-19</lastmod>
-        <changefreq>yearly</changefreq>
-        <priority>0.4</priority>
-    </url>
-
-    <!-- プライバシーポリシー -->
-    <url>
-        <loc>https://mathmaze.example.com/privacy.html</loc>
-        <lastmod>2024-12-19</lastmod>
-        <changefreq>yearly</changefreq>
-        <priority>0.4</priority>
-    </url>
-
-    <!-- お問い合わせ -->
-    <url>
-        <loc>https://mathmaze.example.com/contact.html</loc>
-        <lastmod>2024-12-19</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-    </url>
-
-    <!-- テストスイート（開発者向け） -->
-    <url>
-        <loc>https://mathmaze.example.com/tests/test-suite.html</loc>
-        <lastmod>2024-12-19</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <!-- PWAマニフェスト -->
-    <url>
-        <loc>https://mathmaze.example.com/manifest.json</loc>
-        <lastmod>2024-12-19</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.3</priority>
-    </url>
-
+  <!-- メインページ -->
+  <url>
+    <loc>https://mathmaze.example.com/</loc>
+    <lastmod>2024-01-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- ランディングページ -->
+  <url>
+    <loc>https://mathmaze.example.com/lp.html</loc>
+    <lastmod>2024-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- 遊び方 -->
+  <url>
+    <loc>https://mathmaze.example.com/about.html</loc>
+    <lastmod>2024-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- 機能要件書 -->
+  <url>
+    <loc>https://mathmaze.example.com/function.html</loc>
+    <lastmod>2024-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- 利用規約 -->
+  <url>
+    <loc>https://mathmaze.example.com/terms.html</loc>
+    <lastmod>2024-01-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  
+  <!-- プライバシーポリシー -->
+  <url>
+    <loc>https://mathmaze.example.com/privacy.html</loc>
+    <lastmod>2024-01-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  
+  <!-- お問い合わせ -->
+  <url>
+    <loc>https://mathmaze.example.com/contact.html</loc>
+    <lastmod>2024-01-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
 </urlset> 
