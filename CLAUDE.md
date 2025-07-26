@@ -5,6 +5,43 @@
 
 ## 最新の修正内容（2025-07-26）
 
+### JavaScriptコンソールエラーの修正
+
+#### 修正した内容
+1. **ui.js: TooltipSystemのエラー修正**
+   - エラー: `TypeError: e.target.closest is not a function`
+   - 原因: イベントターゲットがElement型でない場合にclosestメソッドを呼び出していた
+   - 修正: e.targetがElement型であることを確認してからclosestメソッドを呼び出すように変更
+   ```javascript
+   // 修正前
+   const target = e.target.closest('[data-tooltip]');
+   
+   // 修正後
+   if (!e.target || typeof e.target.closest !== 'function') return;
+   const target = e.target.closest('[data-tooltip]');
+   ```
+
+2. **maze.js: CellクラスのメソッドエラーΔ正**
+   - エラー: `TypeError: cell.getNeighborPosition is not a function`
+   - 原因: CellクラスにgetNeighborPositionメソッドが実装されていなかった
+   - 修正: getNeighborPositionメソッドを追加実装
+   ```javascript
+   getNeighborPosition(direction) {
+       const dir = DIRECTIONS[direction];
+       return {
+           x: this.x + dir.x,
+           y: this.y + dir.y
+       };
+   }
+   ```
+
+#### 技術的改善
+- イベントハンドラーの堅牢性向上
+- 型チェックによるランタイムエラーの防止
+- メソッドの完全性確保
+
+## 以前の修正内容（2025-07-26）
+
 ### responsive.cssの全面改修とレスポンシブデザインの最適化
 
 #### 実装した内容
