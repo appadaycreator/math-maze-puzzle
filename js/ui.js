@@ -420,6 +420,9 @@ class TooltipSystem {
     }
 
     handleMouseEnter(e) {
+        // e.targetがElement型であることを確認
+        if (!e.target || typeof e.target.closest !== 'function') return;
+        
         const target = e.target.closest('[data-tooltip]');
         if (!target) return;
 
@@ -432,6 +435,9 @@ class TooltipSystem {
     }
 
     handleMouseLeave(e) {
+        // e.targetがElement型であることを確認
+        if (!e.target || typeof e.target.closest !== 'function') return;
+        
         const target = e.target.closest('[data-tooltip]');
         if (target === this.currentTarget) {
             this.hide();

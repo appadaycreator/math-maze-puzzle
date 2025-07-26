@@ -48,6 +48,14 @@ class Cell {
         this.walls[direction] = false;
     }
 
+    getNeighborPosition(direction) {
+        const dir = DIRECTIONS[direction];
+        return {
+            x: this.x + dir.x,
+            y: this.y + dir.y
+        };
+    }
+
     hasWall(direction) {
         return this.walls[direction];
     }
