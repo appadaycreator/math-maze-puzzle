@@ -18,6 +18,7 @@
   --panel-bg: #ffffff; /* パネル背景 */
   --shadow-color: rgba(0, 0, 0, 0.1); /* 影の色 */
   --bg-accent: #f3f4f6; /* アクセント背景色 */
+  --bg-secondary: #f9fafb; /* セカンダリ背景色 */
   --text-secondary: #6b7280; /* セカンダリテキスト色 */
   --text-muted: #9ca3af; /* ミュートテキスト色 */
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* 中サイズの影 */
@@ -702,6 +703,7 @@ footer a:hover {
     --game-border: #4a5568;
     --border-color: #4a5568;
     --bg-accent: #374151;
+    --bg-secondary: #4b5563;
     --text-secondary: #9ca3af;
     --text-muted: #6b7280;
   }

@@ -1,598 +1,344 @@
-/* 計算の迷宮 - レスポンシブデザイン */
-/* style.cssのレスポンシブスタイルを拡張・補完 */
+/* responsive.css - レスポンシブデザイン用スタイル */
 
-/* ブレークポイント定義 */
-/* xs: 0px */
-/* sm: 640px */
-/* md: 768px */
-/* lg: 1024px */
-/* xl: 1280px */
-/* 2xl: 1536px */
+/* ベースとなるメディアクエリ変数 */
+:root {
+  --mobile-breakpoint: 576px;
+  --tablet-breakpoint: 768px;
+  --desktop-breakpoint: 992px;
+  --large-desktop-breakpoint: 1200px;
+}
 
-/* レスポンシブ変数の上書き */
-@media (max-width: 767px) {
-  :root {
-    --container-padding: 0.75rem;
-    --header-height: 56px;
+/* モバイルファースト設計: デフォルトはモバイル向け */
+/* ===== モバイル共通スタイル (576px未満) ===== */
+
+/* ハンバーガーメニューの表示 */
+.hamburger {
+  display: block;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 8px;
+  transition: opacity 0.3s ease;
+}
+
+.hamburger:hover {
+  opacity: 0.8;
+}
+
+@media (min-width: 768px) {
+  .hamburger {
+    display: none;
   }
 }
 
-/* コンテナの基本設定 */
-.container {
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: var(--container-padding);
-  padding-right: var(--container-padding);
-}
-
-/* ヘッダーのレスポンシブ対応 */
-header {
+/* モバイルメニュー */
+#mobile-menu {
   position: fixed;
   top: 0;
-  left: 0;
   right: 0;
-  z-index: 50;
-  height: var(--header-height);
+  width: 280px;
+  height: 100vh;
+  background-color: var(--bg-secondary);
+  z-index: 999;
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
-/* メインコンテンツのレスポンシブ対応 */
-main {
-  padding-top: var(--header-height);
-  margin-left: var(--sidebar-width);
-  min-height: calc(100vh - var(--header-height));
+#mobile-menu.translate-x-full {
+  transform: translateX(100%);
 }
 
-/* モバイル専用スタイル（〜767px） */
+/* ナビゲーション制御 */
 @media (max-width: 767px) {
-  :root {
-    --container-padding: 0.75rem;
-    --header-height: 56px;
+  .nav-menu {
+    display: none;
   }
+}
 
-  /* ヘッダー */
-  header .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
+/* サイドバー制御 */
+aside {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  aside {
+    display: block;
   }
+}
 
-  header .text-xl {
-    font-size: 1.125rem;
-  }
+/* メインコンテンツフルワイド */
+main {
+  margin-left: 0;
+  padding: 10px;
+}
 
-  /* ナビゲーション - PC版を非表示 */
-  header nav.hidden.md\:flex {
-    display: none !important;
-  }
+/* ゲーム画面サイズ調整 */
+#game-container {
+  width: 100%;
+  min-height: 400px;
+}
 
-  /* サイドメニュー */
-  #mobile-menu {
-    width: 280px;
-  }
+#maze-canvas {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+}
 
-  /* ゲームコンテナ */
+/* 問題表示エリア */
+#problem-display {
+  font-size: 1rem;
+  padding: 10px;
+}
+
+/* コントロールエリア */
+.game-controls {
+  flex-direction: column;
+  gap: 10px;
+}
+
+.level-selector {
+  width: 100%;
+}
+
+/* ステータス表示 */
+.game-status {
+  flex-direction: column;
+}
+
+/* フッターコンテンツ縦並び */
+footer .footer-content {
+  flex-direction: column;
+  gap: 15px;
+  text-align: center;
+}
+
+/* ===== タブレット向けスタイル (576px以上) ===== */
+@media screen and (min-width: 576px) {
   #game-container {
-    margin: 0 -0.75rem;
-    border-radius: 0;
+    min-height: 450px;
   }
-
-  /* 迷路キャンバス */
+  
   #maze-canvas {
-    max-width: 100%;
-    max-height: 60vh;
-    width: auto !important;
-    height: auto !important;
+    max-width: 450px;
   }
-
-  /* 問題表示 */
+  
   #problem-display {
-    max-width: 95vw;
-    margin: 0 2.5vw;
-    padding: 1rem;
+    font-size: 1.1rem;
   }
-
-  #problem-text {
-    font-size: 1.25rem !important;
-  }
-
-  .answer-btn {
-    font-size: 0.875rem !important;
-    padding: 0.75rem 0.5rem !important;
-    min-height: 48px;
-  }
-
-  /* ゲーム情報バー */
-  .game-info-bar {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .game-info-card {
-    padding: 0.5rem 0.75rem;
-    text-align: center;
-  }
-
-  .game-info-card p:first-child {
-    font-size: 0.75rem;
-  }
-
-  .game-info-card p:last-child {
-    font-size: 0.875rem;
-  }
-
-  /* カードグリッド */
-  .grid.grid-cols-1.md\:grid-cols-3 {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .grid.grid-cols-1.md\:grid-cols-2 {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  /* フォーム */
-  .form-input,
-  .form-select,
-  .form-textarea {
-    font-size: 16px; /* iOS ズーム防止 */
-  }
-
-  /* ボタン */
-  .btn {
-    min-height: 44px;
-    padding: 0.75rem 1rem;
-  }
-
-  .btn-lg {
-    min-height: 48px;
-    padding: 1rem 1.25rem;
-  }
-
-  /* テキストサイズ調整 */
-  .text-4xl {
-    font-size: 2rem;
-  }
-
-  .text-3xl {
-    font-size: 1.5rem;
-  }
-
-  .text-2xl {
-    font-size: 1.25rem;
-  }
-
-  /* パディング・マージン調整 */
-  .py-20 {
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-  }
-
-  .py-16 {
-    padding-top: 2.5rem;
-    padding-bottom: 2.5rem;
-  }
-
-  .py-8 {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-  }
-
-  /* カード内パディング */
-  .card,
-  .bg-white.rounded-xl.shadow-lg {
-    padding: 1rem;
-  }
-
-  /* フッター */
-  footer .flex.flex-wrap > div {
-    width: 100%;
-    margin-bottom: 2rem;
-    text-align: center;
-  }
-
-  footer .flex.flex-wrap > div:last-child {
-    margin-bottom: 0;
-  }
-}
-
-/* タブレット専用スタイル（768px〜1023px） */
-@media (min-width: 768px) and (max-width: 1023px) {
-  :root {
-    --container-padding: 1rem;
-    --header-height: 64px;
-  }
-
-  .container {
-    max-width: 768px;
-  }
-
-  /* サイドバー非表示 */
-  aside.hidden.md\:block {
-    display: none !important;
-  }
-
-  main.md\:pl-52 {
-    padding-left: 0 !important;
-  }
-
-  /* 迷路キャンバス */
-  #maze-canvas {
-    max-width: 600px;
-    max-height: 70vh;
-  }
-
-  /* 問題表示 */
-  #problem-display {
-    max-width: 480px;
-  }
-
-  /* ゲーム情報バー */
-  .game-info-bar {
+  
+  /* コントロールエリアは横並び可能に */
+  .game-controls {
+    flex-direction: row;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.75rem;
   }
-
-  /* グリッドレイアウト調整 */
-  .grid.grid-cols-1.lg\:grid-cols-4 {
-    grid-template-columns: repeat(2, 1fr);
+  
+  .level-selector {
+    width: auto;
   }
-
-  .grid.grid-cols-1.lg\:grid-cols-3 {
-    grid-template-columns: repeat(2, 1fr);
+  
+  /* ステータス表示も横並び */
+  .game-status {
+    flex-direction: row;
+    justify-content: space-between;
   }
 }
 
-/* デスクトップ専用スタイル（1024px〜） */
-@media (min-width: 1024px) {
-  :root {
-    --container-padding: 1.5rem;
-    --header-height: 64px;
-    --sidebar-width: 208px; /* 52 * 0.25rem */
+/* ===== 中型タブレット向けスタイル (768px以上) ===== */
+@media screen and (min-width: 768px) {
+  /* ヘッダーに余裕をもたせる */
+  header {
+    padding: 15px 20px;
   }
-
-  .container {
-    max-width: 1024px;
+  
+  #game-container {
+    min-height: 500px;
   }
-
-  /* モバイルメニューボタン非表示 */
-  #mobile-menu-button {
-    display: none !important;
-  }
-
-  /* サイドバー表示 */
-  aside.hidden.md\:block {
-    display: block !important;
-    width: var(--sidebar-width);
-  }
-
-  /* 迷路キャンバス */
+  
   #maze-canvas {
-    max-width: 700px;
-    max-height: 80vh;
-  }
-
-  /* 問題表示 */
-  #problem-display {
     max-width: 500px;
   }
-}
-
-/* 大型デスクトップ（1280px〜） */
-@media (min-width: 1280px) {
-  .container {
-    max-width: 1280px;
+  
+  /* フッターコンテンツは横並び */
+  footer .footer-content {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
   }
-
-  /* 迷路キャンバス */
-  #maze-canvas {
-    max-width: 800px;
-  }
-}
-
-/* 超大型デスクトップ（1536px〜） */
-@media (min-width: 1536px) {
-  .container {
-    max-width: 1536px;
-  }
-
-  :root {
-    --container-padding: 2rem;
+  
+  /* 2カラムレイアウト対応 */
+  .two-column-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
   }
 }
 
-/* 横向きスマートフォン対応 */
-@media (max-width: 1023px) and (orientation: landscape) {
-  :root {
-    --header-height: 48px;
+/* ===== デスクトップ向けスタイル (992px以上) ===== */
+@media screen and (min-width: 992px) {
+  /* ハンバーガーメニュー非表示 */
+  .hamburger {
+    display: none;
   }
-
-  /* ヘッダーを小さく */
-  header {
-    height: var(--header-height);
+  
+  /* モバイルメニュー非表示 */
+  #mobile-menu {
+    display: none;
   }
-
-  header .py-3 {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+  
+  /* PCナビゲーション表示 */
+  .nav-menu {
+    display: flex;
   }
-
-  header .text-xl {
-    font-size: 1rem;
+  
+  /* メインコンテンツに左マージン */
+  main {
+    margin-left: 220px;
+    padding: 20px;
   }
-
-  /* 迷路キャンバス */
-  #maze-canvas {
-    max-height: 50vh;
-  }
-
-  /* ゲームコンテナ */
+  
+  /* ゲーム画面サイズ拡大 */
   #game-container {
-    padding: 1rem;
+    min-height: 600px;
   }
-
-  /* 問題表示 */
+  
+  #maze-canvas {
+    max-width: 600px;
+  }
+  
   #problem-display {
-    max-width: 90vw;
-    max-height: 80vh;
-    overflow-y: auto;
+    font-size: 1.2rem;
+    padding: 15px;
   }
+  
+  /* 3カラムレイアウト対応 */
+  .three-column-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+}
+
+/* ===== 大型デスクトップ向けスタイル (1200px以上) ===== */
+@media screen and (min-width: 1200px) {
+  /* サイドバー調整 */
+  aside {
+    width: 250px;
+  }
+  
+  main {
+    margin-left: 250px;
+    padding: 30px;
+  }
+  
+  /* ゲーム画面最大サイズ */
+  #game-container {
+    min-height: 700px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  #maze-canvas {
+    max-width: 700px;
+  }
+  
+  #problem-display {
+    font-size: 1.3rem;
+  }
+  
+  /* 4カラムレイアウト対応 */
+  .four-column-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 20px;
+  }
+}
+
+/* ===== 文字サイズ変更機能 ===== */
+/* JS連携: data-font-size属性で制御 */
+body[data-font-size="xs"] {
+  font-size: 0.8rem;
+}
+
+body[data-font-size="s"] {
+  font-size: 0.9rem;
+}
+
+body[data-font-size="m"] {
+  font-size: 1rem;
+}
+
+body[data-font-size="l"] {
+  font-size: 1.1rem;
+}
+
+body[data-font-size="xl"] {
+  font-size: 1.2rem;
 }
 
 /* 印刷用スタイル */
 @media print {
-  :root {
-    --header-height: 0px;
-    --sidebar-width: 0px;
-  }
-
-  header,
-  footer,
-  #mobile-menu,
-  aside,
   .no-print {
     display: none !important;
   }
-
+  
   main {
-    padding-top: 0;
-    margin-left: 0;
-  }
-
-  body {
-    background: white !important;
-    color: black !important;
-    font-size: 12pt;
-  }
-
-  .container {
-    max-width: none;
+    margin: 0;
     padding: 0;
   }
-
-  .card,
-  .bg-white {
-    background: white !important;
-    box-shadow: none !important;
-    border: 1px solid #000 !important;
+  
+  aside,
+  #mobile-menu,
+  .hamburger {
+    display: none;
   }
-
-  a::after {
-    content: " (" attr(href) ")";
-    font-size: 10pt;
-    color: #666;
+  
+  /* 印刷時のコントラスト確保 */
+  body {
+    background: white;
+    color: black;
   }
-
-  .page-break {
-    page-break-before: always;
-  }
-}
-
-/* タッチデバイス対応 */
-@media (hover: none) and (pointer: coarse) {
-  /* タッチターゲットサイズ最小44px確保 */
-  button,
-  .btn,
-  a[role="button"],
-  input[type="button"],
-  input[type="submit"],
-  .answer-btn,
-  .stage-btn,
-  .level-btn {
-    min-height: 44px;
-    min-width: 44px;
-  }
-
-  /* ホバー効果を無効化 */
-  .hover\:bg-blue-700:hover,
-  .hover\:text-blue-200:hover,
-  .hover\:bg-gray-100:hover,
-  .hover\:underline:hover,
-  .hover\:scale-105:hover {
-    background-color: inherit;
-    color: inherit;
-    text-decoration: inherit;
-    transform: inherit;
-  }
-
-  /* フォーカススタイル強化 */
-  button:focus,
-  .btn:focus,
-  input:focus,
-  select:focus,
-  textarea:focus {
-    outline: 3px solid #3b82f6;
-    outline-offset: 2px;
+  
+  a {
+    color: blue;
   }
 }
 
-/* 高コントラストモード */
+/* アクセシビリティ対応 - ハイコントラストモード */
 @media (prefers-contrast: high) {
   :root {
-    --border-color: #000000;
-    --text-secondary: #000000;
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+    --primary-color: #0000EE;
+    --secondary-color: #990000;
+    --text-color: #000000;
+    --bg-color: #FFFFFF;
+    --bg-secondary: #F0F0F0;
   }
-
-  .card,
-  .bg-white {
-    border: 2px solid #000000 !important;
-  }
-
-  button,
-  .btn {
-    border: 2px solid #000000 !important;
+  
+  * {
+    border-color: black !important;
   }
 }
 
-/* アニメーション削減 */
+/* アニメーション無効化設定 */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-
-  #start-screen::before {
+  * {
+    transition: none !important;
     animation: none !important;
   }
+}
 
-  .answer-btn:hover {
-    transform: none !important;
-  }
-
-  .stage-btn:hover,
-  .level-btn:hover {
-    transform: none !important;
+/* 方向転換対応（縦向き/横向き） */
+@media screen and (orientation: portrait) {
+  .orientation-specific-layout {
+    flex-direction: column;
   }
 }
 
-/* カスタムスクロールバー（Webkit系ブラウザ） */
-@media (min-width: 1024px) {
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: 4px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 4px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+@media screen and (orientation: landscape) {
+  .orientation-specific-layout {
+    flex-direction: row;
   }
 }
-
-/* フォーカス可能要素のスタイル */
-@media (prefers-reduced-motion: no-preference) {
-  [tabindex]:focus,
-  button:focus,
-  a:focus,
-  input:focus,
-  select:focus,
-  textarea:focus {
-    animation: focusPulse 0.3s ease-in-out;
-  }
-
-  @keyframes focusPulse {
-    0% {
-      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
-    }
-    70% {
-      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
-    }
-  }
-}
-
-/* ユーティリティクラス - レスポンシブ対応 */
-/* モバイル非表示 */
-@media (max-width: 767px) {
-  .hidden-mobile {
-    display: none !important;
-  }
-}
-
-/* タブレット非表示 */
-@media (min-width: 768px) and (max-width: 1023px) {
-  .hidden-tablet {
-    display: none !important;
-  }
-}
-
-/* デスクトップ非表示 */
-@media (min-width: 1024px) {
-  .hidden-desktop {
-    display: none !important;
-  }
-}
-
-/* レスポンシブテキストサイズ */
-.text-responsive-sm {
-  font-size: 0.75rem;
-}
-
-.text-responsive-base {
-  font-size: 0.875rem;
-}
-
-.text-responsive-lg {
-  font-size: 1rem;
-}
-
-@media (min-width: 768px) {
-  .text-responsive-sm {
-    font-size: 0.875rem;
-  }
-
-  .text-responsive-base {
-    font-size: 1rem;
-  }
-
-  .text-responsive-lg {
-    font-size: 1.125rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .text-responsive-sm {
-    font-size: 1rem;
-  }
-
-  .text-responsive-base {
-    font-size: 1.125rem;
-  }
-
-  .text-responsive-lg {
-    font-size: 1.25rem;
-  }
-}
-
-/* レスポンシブ間隔 */
-.spacing-responsive {
-  padding: 1rem;
-}
-
-@media (min-width: 768px) {
-  .spacing-responsive {
-    padding: 1.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .spacing-responsive {
-    padding: 2rem;
-  }
-} 
