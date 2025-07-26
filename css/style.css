@@ -12,10 +12,16 @@
   --text-color: #2c3e50; /* テキスト色：ダークブルー */
   --header-bg: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); /* ヘッダーグラデーション */
   --game-border: #bdc3c7; /* ゲームボードの境界線 */
+  --border-color: #e5e7eb; /* 一般的な境界線色 */
   --correct-color: #27ae60; /* 正解を示す緑 */
   --wrong-color: #e74c3c; /* 不正解を示す赤 */
   --panel-bg: #ffffff; /* パネル背景 */
   --shadow-color: rgba(0, 0, 0, 0.1); /* 影の色 */
+  --bg-accent: #f3f4f6; /* アクセント背景色 */
+  --text-secondary: #6b7280; /* セカンダリテキスト色 */
+  --text-muted: #9ca3af; /* ミュートテキスト色 */
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* 中サイズの影 */
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* 大サイズの影 */
   
   /* フォントサイズ変数（テキストサイズ変更機能用） */
   --font-size-xs: 0.75rem; /* 極小 */
@@ -694,6 +700,10 @@ footer a:hover {
     --text-color: #e2e8f0;
     --panel-bg: #2d3748;
     --game-border: #4a5568;
+    --border-color: #4a5568;
+    --bg-accent: #374151;
+    --text-secondary: #9ca3af;
+    --text-muted: #6b7280;
   }
   
   .form-control {
