@@ -7,7 +7,7 @@
 
 // ゲーム設定
 const GAME_CONFIG = {
-    TIME_LIMIT: 120, // 2分間
+    TIME_LIMIT: 60, // 1分間
     SCORE_CORRECT: 10,
     SCORE_BONUS: 5, // 連続正解ボーナス
     LEVELS: {
