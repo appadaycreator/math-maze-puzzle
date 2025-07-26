@@ -7,10 +7,10 @@
 
 // グローバル設定
 const CONFIG = {
-    APP_NAME: '計算の迷宮',
+    APP_NAME: '計算チャレンジ',
     VERSION: '1.0.0',
-    STORAGE_KEY: 'mathMazeConfig',
-    PROGRESS_KEY: 'mathMazeProgress',
+    STORAGE_KEY: 'mathChallengeConfig',
+    PROGRESS_KEY: 'mathChallengeProgress',
     SUPPORTED_LANGUAGES: ['ja', 'en'],
     DEFAULT_LANGUAGE: 'ja',
     FONT_SIZES: ['xs', 'sm', 'base', 'lg', 'xl'],

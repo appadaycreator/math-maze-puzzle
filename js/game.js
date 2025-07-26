@@ -1,30 +1,20 @@
 /**
- * 計算の迷宮 - ゲームロジック
- * ゲームの状態管理、レベル制御、スコア計算を担当
+ * 計算チャレンジ - ゲームロジック
+ * シンプルな計算問題ゲーム
  */
 
 'use strict';
 
 // ゲーム設定
 const GAME_CONFIG = {
+    TIME_LIMIT: 120, // 2分間
+    SCORE_CORRECT: 10,
+    SCORE_BONUS: 5, // 連続正解ボーナス
     LEVELS: {
-        1: { name: '初級', timeLimit: 180, operations: ['+', '-'], maxNumber: 20 },
-        2: { name: '中級', timeLimit: 240, operations: ['*', '/'], maxNumber: 12 },
-        3: { name: '上級', timeLimit: 300, operations: ['+', '-', '*', '/'], maxNumber: 15, decimals: true },
-        4: { name: 'マスター', timeLimit: 360, operations: ['+', '-', '*', '/'], maxNumber: 20, complex: true }
-    },
-    STAGES_PER_LEVEL: 10,
-    MAZE_SIZES: {
-        1: { width: 15, height: 15 },
-        2: { width: 17, height: 17 },
-        3: { width: 19, height: 19 },
-        4: { width: 21, height: 21 }
-    },
-    SCORING: {
-        baseScore: 100,
-        timeBonus: 10,
-        accuracyBonus: 50,
-        perfectBonus: 200
+        1: { name: '初級', operations: ['+', '-'], maxNumber: 20 },
+        2: { name: '中級', operations: ['*', '/'], maxNumber: 12 },
+        3: { name: '上級', operations: ['+', '-', '*', '/'], maxNumber: 15 },
+        4: { name: 'マスター', operations: ['+', '-', '*', '/'], maxNumber: 20 }
     }
 };
 
@@ -32,20 +22,14 @@ const GAME_CONFIG = {
 class GameState {
     constructor() {
         this.currentLevel = 1;
-        this.currentStage = 1;
         this.score = 0;
+        this.questionCount = 0;
+        this.correctCount = 0;
+        this.consecutiveCorrect = 0;
         this.timeRemaining = 0;
         this.isPlaying = false;
-        this.isPaused = false;
-        this.correctAnswers = 0;
-        this.totalQuestions = 0;
-        this.startTime = null;
-        this.playerPosition = null;
-        this.goalPosition = null;
-        this.currentProblem = null;
-        this.hintsUsed = 0;
-        
         this.gameTimer = null;
+        this.currentProblem = null;
         
         this.initializeElements();
         this.loadGameState();
@@ -53,29 +37,34 @@ class GameState {
 
     initializeElements() {
         this.elements = {
+            // 画面
             startScreen: document.getElementById('start-screen'),
             gamePlayArea: document.getElementById('game-play-area'),
             completeScreen: document.getElementById('complete-screen'),
             gameOverScreen: document.getElementById('game-over-screen'),
+            
+            // ゲーム要素
             problemDisplay: document.getElementById('problem-display'),
-            mazeCanvas: document.getElementById('maze-canvas'),
+            problemNumber: document.getElementById('problem-number'),
+            problemText: document.getElementById('problem-text'),
+            feedbackMessage: document.getElementById('feedback-message'),
+            feedbackText: document.getElementById('feedback-text'),
             
-            // UI elements
+            // スコア表示
+            questionCountDisplay: document.getElementById('question-count'),
+            correctCountDisplay: document.getElementById('correct-count'),
+            currentScoreDisplay: document.getElementById('current-score'),
+            
+            // UI要素
             currentLevel: document.getElementById('current-level'),
-            currentStage: document.getElementById('current-stage'),
             gameTimer: document.getElementById('game-timer'),
-            gameScore: document.getElementById('game-score'),
             
-            // Buttons
+            // ボタン
             startGameBtn: document.getElementById('start-game-btn'),
             retryBtn: document.getElementById('retry-btn'),
-            nextStageBtn: document.getElementById('next-stage-btn'),
+            playAgainBtn: document.getElementById('play-again-btn'),
             
-            // Problem elements
-            problemText: document.getElementById('problem-text'),
-            answerBtns: document.querySelectorAll('.answer-btn'),
-            
-            // Results
+            // 結果表示
             clearTime: document.getElementById('clear-time'),
             correctRate: document.getElementById('correct-rate'),
             earnedScore: document.getElementById('earned-score')
@@ -95,12 +84,12 @@ class GameState {
             this.elements.retryBtn.addEventListener('click', () => this.restartGame());
         }
 
-        // 次のステージボタン
-        if (this.elements.nextStageBtn) {
-            this.elements.nextStageBtn.addEventListener('click', () => this.nextStage());
+        // もう一度プレイボタン
+        if (this.elements.playAgainBtn) {
+            this.elements.playAgainBtn.addEventListener('click', () => this.restartGame());
         }
 
-        // レベル選択ボタン
+        // レベル選択
         document.querySelectorAll('.level-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const level = parseInt(e.target.getAttribute('data-level'));
@@ -108,44 +97,24 @@ class GameState {
             });
         });
 
-        // ステージ選択ボタン
-        document.querySelectorAll('.stage-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const stage = parseInt(e.target.getAttribute('data-stage'));
-                this.selectStage(stage);
-            });
-        });
-
-        // 回答ボタン（イベント委譲を使用）
+        // 回答ボタン（イベント委譲）
         if (this.elements.problemDisplay) {
             this.elements.problemDisplay.addEventListener('click', (e) => {
-                if (e.target.classList.contains('answer-btn')) {
-                    console.log('Answer button clicked:', e.target.textContent);
+                if (e.target.classList.contains('answer-btn') && !e.target.disabled) {
                     const answer = e.target.textContent.trim();
                     this.submitAnswer(answer);
                 }
             });
         }
-        
-        // 既存のボタンにもリスナーを設定（念のため）
-        console.log('Answer buttons found:', this.elements.answerBtns.length);
-        this.elements.answerBtns.forEach((btn, index) => {
-            console.log(`Setting up answer button ${index}:`, btn);
-            btn.addEventListener('click', (e) => {
-                console.log('Answer button clicked (direct):', e.target.textContent);
-                const answer = e.target.textContent.trim();
-                this.submitAnswer(answer);
-            });
-        });
 
         // キーボード入力（1-4キー）
         document.addEventListener('keydown', (e) => {
             if (this.isPlaying && this.currentProblem) {
                 const num = parseInt(e.key);
                 if (num >= 1 && num <= 4) {
-                    const answerBtn = this.elements.answerBtns[num - 1];
-                    if (answerBtn) {
-                        this.submitAnswer(answerBtn.textContent.trim());
+                    const answerBtns = this.elements.problemDisplay.querySelectorAll('.answer-btn');
+                    if (answerBtns[num - 1] && !answerBtns[num - 1].disabled) {
+                        this.submitAnswer(answerBtns[num - 1].textContent.trim());
                     }
                 }
             }
@@ -155,25 +124,14 @@ class GameState {
     loadGameState() {
         if (appState && appState.progress) {
             this.currentLevel = appState.progress.currentLevel || 1;
-            this.currentStage = appState.progress.currentStage || 1;
             this.updateUI();
-        }
-    }
-
-    saveGameState() {
-        if (appState) {
-            appState.progress.currentLevel = this.currentLevel;
-            appState.progress.currentStage = this.currentStage;
-            appState.saveProgress();
         }
     }
 
     selectLevel(level) {
         if (level >= 1 && level <= 4) {
             this.currentLevel = level;
-            this.currentStage = 1;
             this.updateUI();
-            this.saveGameState();
             
             // レベルボタンのスタイル更新
             document.querySelectorAll('.level-btn').forEach(btn => {
@@ -185,53 +143,28 @@ class GameState {
         }
     }
 
-    selectStage(stage) {
-        // ステージのロック状態をチェック
-        const unlockedStages = appState?.progress?.unlockedStages || [1];
-        if (unlockedStages.includes(stage)) {
-            this.currentStage = stage;
-            this.updateUI();
-            this.saveGameState();
-        }
-    }
-
     startGame() {
         this.isPlaying = true;
         this.score = 0;
-        this.correctAnswers = 0;
-        this.totalQuestions = 0;
-        this.hintsUsed = 0;
-        this.startTime = Date.now();
-
-        const level = GAME_CONFIG.LEVELS[this.currentLevel];
-        this.timeRemaining = level.timeLimit;
-
-        // 迷路の生成
-        if (window.mazeGenerator) {
-            const size = GAME_CONFIG.MAZE_SIZES[this.currentLevel];
-            window.mazeGenerator.generateMaze(size.width, size.height);
-            this.playerPosition = window.mazeGenerator.getStartPosition();
-            this.goalPosition = window.mazeGenerator.getGoalPosition();
-        }
+        this.questionCount = 0;
+        this.correctCount = 0;
+        this.consecutiveCorrect = 0;
+        this.timeRemaining = GAME_CONFIG.TIME_LIMIT;
 
         // 画面切り替え
         Utils.hide(this.elements.startScreen);
         Utils.show(this.elements.gamePlayArea);
 
+        // スコア表示を初期化
+        this.updateScoreDisplay();
+
         // タイマー開始
         this.startTimer();
 
-        // 進捗更新
-        if (appState) {
-            appState.progress.playCount++;
-            appState.saveProgress();
-        }
-
-        this.updateUI();
-        console.log(`ゲーム開始: レベル${this.currentLevel} ステージ${this.currentStage}`);
-        
         // 最初の問題を生成
         this.generateNextProblem();
+        
+        console.log(`ゲーム開始: レベル${this.currentLevel}`);
     }
 
     startTimer() {
@@ -241,10 +174,6 @@ class GameState {
 
             if (this.timeRemaining <= 0) {
                 this.gameOver();
-            } else if (this.timeRemaining <= 30) {
-                this.elements.gameTimer?.classList.add('danger');
-            } else if (this.timeRemaining <= 60) {
-                this.elements.gameTimer?.classList.add('warning');
             }
         }, 1000);
     }
@@ -256,95 +185,122 @@ class GameState {
         }
     }
 
-    pauseGame() {
-        if (this.isPlaying && !this.isPaused) {
-            this.isPaused = true;
-            this.stopTimer();
-            console.log('ゲーム一時停止');
+    generateNextProblem() {
+        this.questionCount++;
+        
+        if (window.problemGenerator) {
+            this.currentProblem = window.problemGenerator.generateProblem(this.currentLevel);
+            this.displayProblem(this.currentProblem);
         }
     }
 
-    resumeGame() {
-        if (this.isPlaying && this.isPaused) {
-            this.isPaused = false;
-            this.startTimer();
-            console.log('ゲーム再開');
-        }
-    }
-
-    restartGame() {
-        this.stopTimer();
-        this.isPlaying = false;
-        this.isPaused = false;
-        
-        // 画面を初期状態に戻す
-        Utils.hide(this.elements.gamePlayArea);
-        Utils.hide(this.elements.completeScreen);
-        Utils.hide(this.elements.gameOverScreen);
-        Utils.show(this.elements.startScreen);
-        
-        this.resetUI();
-    }
-
-    nextStage() {
-        if (this.currentStage < GAME_CONFIG.STAGES_PER_LEVEL) {
-            this.currentStage++;
-        } else if (this.currentLevel < 4) {
-            this.currentLevel++;
-            this.currentStage = 1;
+    displayProblem(problem) {
+        // 問題番号
+        if (this.elements.problemNumber) {
+            this.elements.problemNumber.textContent = `問題 ${this.questionCount}`;
         }
         
-        this.saveGameState();
-        this.restartGame();
+        // 問題文
+        if (this.elements.problemText) {
+            this.elements.problemText.textContent = problem.question;
+        }
+
+        // 選択肢
+        const answerBtns = this.elements.problemDisplay.querySelectorAll('.answer-btn');
+        answerBtns.forEach((btn, index) => {
+            if (problem.choices[index]) {
+                btn.textContent = problem.choices[index];
+                btn.disabled = false;
+                btn.className = 'answer-btn bg-blue-100 hover:bg-blue-200 text-blue-800 py-4 px-6 rounded-lg text-xl font-semibold transition-all';
+            }
+        });
+
+        // フィードバックメッセージを非表示
+        Utils.hide(this.elements.feedbackMessage);
     }
 
     submitAnswer(answer) {
-        console.log('submitAnswer called:', answer, this.currentProblem);
-        if (!this.isPlaying || !this.currentProblem) {
-            console.log('Game not playing or no current problem');
-            return;
-        }
+        if (!this.isPlaying || !this.currentProblem) return;
 
-        this.totalQuestions++;
         const isCorrect = this.checkAnswer(answer, this.currentProblem.correctAnswer);
-        console.log('Answer check:', answer, 'vs', this.currentProblem.correctAnswer, '=', isCorrect);
+        
+        // ボタンを無効化
+        const answerBtns = this.elements.problemDisplay.querySelectorAll('.answer-btn');
+        answerBtns.forEach(btn => btn.disabled = true);
 
         if (isCorrect) {
-            this.correctAnswers++;
-            this.addScore(GAME_CONFIG.SCORING.baseScore);
-            this.movePlayer();
-            this.playSound('correct');
-            
-            // 正解エフェクト
-            this.showAnswerFeedback(true, answer);
-            
-            if (this.checkGoalReached()) {
-                this.completeStage();
-            } else {
-                this.generateNextProblem();
-            }
+            this.handleCorrectAnswer();
         } else {
-            this.playSound('incorrect');
-            this.showAnswerFeedback(false, answer);
-            
-            // 間違いの場合は最初からやり直し
-            setTimeout(() => {
-                this.restartCurrentStage();
-            }, 1500);
+            this.handleIncorrectAnswer(answer);
+        }
+
+        // 次の問題へ
+        setTimeout(() => {
+            this.generateNextProblem();
+        }, 1500);
+    }
+
+    handleCorrectAnswer() {
+        this.correctCount++;
+        this.consecutiveCorrect++;
+        
+        // スコア計算
+        let points = GAME_CONFIG.SCORE_CORRECT;
+        if (this.consecutiveCorrect > 1) {
+            points += GAME_CONFIG.SCORE_BONUS * (this.consecutiveCorrect - 1);
+        }
+        this.score += points;
+
+        // フィードバック表示
+        this.showFeedback('正解！', 'correct');
+        this.showAnswerFeedback(true);
+        this.updateScoreDisplay();
+        
+        // 効果音
+        this.playSound('correct');
+    }
+
+    handleIncorrectAnswer(userAnswer) {
+        this.consecutiveCorrect = 0;
+        
+        // フィードバック表示
+        this.showFeedback('残念...', 'incorrect');
+        this.showAnswerFeedback(false, userAnswer);
+        
+        // 効果音
+        this.playSound('incorrect');
+    }
+
+    showFeedback(message, type) {
+        if (this.elements.feedbackText && this.elements.feedbackMessage) {
+            this.elements.feedbackText.textContent = message;
+            this.elements.feedbackText.className = type === 'correct' 
+                ? 'text-xl font-bold text-green-600' 
+                : 'text-xl font-bold text-red-600';
+            Utils.show(this.elements.feedbackMessage);
         }
     }
 
+    showAnswerFeedback(isCorrect, userAnswer) {
+        const buttons = this.elements.problemDisplay.querySelectorAll('.answer-btn');
+        
+        buttons.forEach(btn => {
+            if (btn.textContent.trim() === this.currentProblem.correctAnswer.toString()) {
+                btn.classList.add('correct');
+            } else if (!isCorrect && btn.textContent.trim() === userAnswer) {
+                btn.classList.add('incorrect');
+            }
+        });
+    }
+
     checkAnswer(userAnswer, correctAnswer) {
-        // 文字列として正規化
         const userStr = userAnswer.toString().trim();
         const correctStr = correctAnswer.toString().trim();
         
-        // まず文字列として比較
         if (userStr === correctStr) {
             return true;
         }
         
-        // 数値として比較（小数点の誤差も考慮）
         const user = parseFloat(userStr);
         const correct = parseFloat(correctStr);
         
@@ -355,155 +311,70 @@ class GameState {
         return false;
     }
 
-    movePlayer() {
-        // 迷路内でプレイヤーを移動
-        if (window.mazeGenerator) {
-            const newPosition = window.mazeGenerator.movePlayer();
-            this.playerPosition = newPosition;
+    updateScoreDisplay() {
+        if (this.elements.questionCountDisplay) {
+            this.elements.questionCountDisplay.textContent = this.questionCount;
         }
-    }
-
-    checkGoalReached() {
-        return this.playerPosition && this.goalPosition &&
-               this.playerPosition.x === this.goalPosition.x &&
-               this.playerPosition.y === this.goalPosition.y;
-    }
-
-    generateNextProblem() {
-        console.log('generateNextProblem called');
-        if (window.problemGenerator) {
-            this.currentProblem = window.problemGenerator.generateProblem(this.currentLevel);
-            console.log('Generated problem:', this.currentProblem);
-            this.displayProblem(this.currentProblem);
-        } else {
-            console.error('problemGenerator not found');
+        if (this.elements.correctCountDisplay) {
+            this.elements.correctCountDisplay.textContent = this.correctCount;
         }
-    }
-
-    displayProblem(problem) {
-        if (this.elements.problemText) {
-            this.elements.problemText.textContent = problem.question;
+        if (this.elements.currentScoreDisplay) {
+            this.elements.currentScoreDisplay.textContent = this.score;
         }
-
-        // 毎回最新の回答ボタンを取得
-        const answerBtns = this.elements.problemDisplay.querySelectorAll('.answer-btn');
-        answerBtns.forEach((btn, index) => {
-            if (problem.choices[index]) {
-                btn.textContent = problem.choices[index];
-                btn.style.display = 'block';
-                btn.className = 'answer-btn bg-blue-100 hover:bg-blue-200 text-blue-800 py-3 px-4 rounded-lg';
-            } else {
-                btn.style.display = 'none';
-            }
-        });
-
-        Utils.show(this.elements.problemDisplay);
-    }
-
-    showAnswerFeedback(isCorrect, userAnswer) {
-        // 毎回最新の回答ボタンを取得
-        const buttons = this.elements.problemDisplay.querySelectorAll('.answer-btn');
-        
-        buttons.forEach(btn => {
-            btn.disabled = true;
-            if (btn.textContent.trim() === this.currentProblem.correctAnswer.toString()) {
-                btn.classList.add('correct');
-            } else if (!isCorrect && btn.textContent.trim() === userAnswer) {
-                btn.classList.add('incorrect');
-            }
-        });
-
-        setTimeout(() => {
-            Utils.hide(this.elements.problemDisplay);
-            buttons.forEach(btn => {
-                btn.disabled = false;
-                btn.classList.remove('correct', 'incorrect');
-            });
-        }, 1500);
-    }
-
-    restartCurrentStage() {
-        // 現在のステージを最初からやり直し
-        this.playerPosition = window.mazeGenerator?.getStartPosition();
-        this.generateNextProblem();
-    }
-
-    completeStage() {
-        this.stopTimer();
-        this.isPlaying = false;
-
-        // スコア計算
-        const completionTime = GAME_CONFIG.LEVELS[this.currentLevel].timeLimit - this.timeRemaining;
-        const timeBonus = Math.max(0, this.timeRemaining * GAME_CONFIG.SCORING.timeBonus);
-        const accuracyRate = this.totalQuestions > 0 ? this.correctAnswers / this.totalQuestions : 0;
-        const accuracyBonus = Math.floor(accuracyRate * GAME_CONFIG.SCORING.accuracyBonus);
-        const perfectBonus = accuracyRate === 1 ? GAME_CONFIG.SCORING.perfectBonus : 0;
-
-        this.score += timeBonus + accuracyBonus + perfectBonus;
-
-        // 進捗更新
-        if (appState) {
-            appState.progress.clearCount++;
-            if (this.score > appState.progress.highScore) {
-                appState.progress.highScore = this.score;
-            }
-            
-            // 次のステージをアンロック
-            const nextStage = this.currentStage + 1;
-            if (nextStage <= GAME_CONFIG.STAGES_PER_LEVEL && 
-                !appState.progress.unlockedStages.includes(nextStage)) {
-                appState.progress.unlockedStages.push(nextStage);
-            }
-            
-            appState.saveProgress();
-        }
-
-        // 結果表示
-        this.showResults(completionTime, accuracyRate);
-        
-        // 画面切り替え
-        Utils.hide(this.elements.gamePlayArea);
-        Utils.show(this.elements.completeScreen);
-        
-        this.playSound('complete');
     }
 
     gameOver() {
         this.stopTimer();
         this.isPlaying = false;
         
-        Utils.hide(this.elements.gamePlayArea);
-        Utils.show(this.elements.gameOverScreen);
+        // 正答率計算
+        const accuracyRate = this.questionCount > 0 ? 
+            Math.round((this.correctCount / this.questionCount) * 100) : 0;
         
-        this.playSound('gameover');
-        console.log('ゲームオーバー');
-    }
-
-    showResults(completionTime, accuracyRate) {
+        // 結果表示
         if (this.elements.clearTime) {
-            this.elements.clearTime.textContent = Utils.formatTime(completionTime);
+            const timeUsed = GAME_CONFIG.TIME_LIMIT - this.timeRemaining;
+            this.elements.clearTime.textContent = Utils.formatTime(timeUsed);
         }
         
         if (this.elements.correctRate) {
-            this.elements.correctRate.textContent = Math.round(accuracyRate * 100) + '%';
+            this.elements.correctRate.textContent = accuracyRate + '%';
         }
         
         if (this.elements.earnedScore) {
             this.elements.earnedScore.textContent = this.score;
         }
+        
+        // 画面切り替え
+        Utils.hide(this.elements.gamePlayArea);
+        
+        // タイムアップかゲーム終了かで表示を分ける
+        if (this.timeRemaining <= 0) {
+            Utils.show(this.elements.gameOverScreen);
+        } else {
+            Utils.show(this.elements.completeScreen);
+        }
+        
+        // ハイスコア更新
+        if (appState && this.score > appState.progress.highScore) {
+            appState.progress.highScore = this.score;
+            appState.saveProgress();
+        }
+        
+        this.playSound('complete');
     }
 
-    addScore(points) {
-        this.score += points;
+    restartGame() {
+        this.stopTimer();
+        this.isPlaying = false;
         
-        // スコア表示にアニメーション
-        if (this.elements.gameScore) {
-            this.elements.gameScore.textContent = this.score;
-            this.elements.gameScore.classList.add('score-animation');
-            setTimeout(() => {
-                this.elements.gameScore.classList.remove('score-animation');
-            }, 800);
-        }
+        // 画面を初期状態に戻す
+        Utils.hide(this.elements.gamePlayArea);
+        Utils.hide(this.elements.completeScreen);
+        Utils.hide(this.elements.gameOverScreen);
+        Utils.show(this.elements.startScreen);
+        
+        this.resetUI();
     }
 
     updateUI() {
@@ -511,16 +382,6 @@ class GameState {
             const levelName = GAME_CONFIG.LEVELS[this.currentLevel]?.name || this.currentLevel;
             this.elements.currentLevel.textContent = levelName;
         }
-        
-        if (this.elements.currentStage) {
-            this.elements.currentStage.textContent = this.currentStage;
-        }
-        
-        if (this.elements.gameScore) {
-            this.elements.gameScore.textContent = this.score;
-        }
-        
-        this.updateTimerDisplay();
     }
 
     updateTimerDisplay() {
@@ -529,9 +390,9 @@ class GameState {
             
             // タイマーの色を時間に応じて変更
             this.elements.gameTimer.classList.remove('warning', 'danger');
-            if (this.timeRemaining <= 30) {
+            if (this.timeRemaining <= 10) {
                 this.elements.gameTimer.classList.add('danger');
-            } else if (this.timeRemaining <= 60) {
+            } else if (this.timeRemaining <= 30) {
                 this.elements.gameTimer.classList.add('warning');
             }
         }
@@ -541,8 +402,6 @@ class GameState {
         if (this.elements.gameTimer) {
             this.elements.gameTimer.classList.remove('warning', 'danger');
         }
-        
-        Utils.hide(this.elements.problemDisplay);
     }
 
     playSound(type) {
@@ -550,36 +409,9 @@ class GameState {
             window.audioManager.play(type);
         }
     }
-
-    // デバッグ用メソッド
-    getGameState() {
-        return {
-            currentLevel: this.currentLevel,
-            currentStage: this.currentStage,
-            score: this.score,
-            timeRemaining: this.timeRemaining,
-            isPlaying: this.isPlaying,
-            isPaused: this.isPaused,
-            correctAnswers: this.correctAnswers,
-            totalQuestions: this.totalQuestions,
-            accuracy: this.totalQuestions > 0 ? this.correctAnswers / this.totalQuestions : 0
-        };
-    }
-
-    // チート機能（開発用）
-    skipToGoal() {
-        if (this.isPlaying) {
-            this.completeStage();
-        }
-    }
-
-    addTime(seconds) {
-        this.timeRemaining += seconds;
-        this.updateTimerDisplay();
-    }
 }
 
-// ゲームマネージャー（シングルトン）
+// ゲームマネージャー
 class GameManager {
     constructor() {
         this.gameState = null;
@@ -588,16 +420,6 @@ class GameManager {
 
     initialize() {
         this.gameState = new GameState();
-        
-        // デバッグ用のグローバル参照
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            window.gameDebug = {
-                gameState: this.gameState,
-                skipToGoal: () => this.gameState.skipToGoal(),
-                addTime: (seconds) => this.gameState.addTime(seconds),
-                getState: () => this.gameState.getGameState()
-            };
-        }
     }
 
     getGameState() {
@@ -616,4 +438,4 @@ document.addEventListener('DOMContentLoaded', () => {
 // エクスポート
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { GameState, GameManager, GAME_CONFIG };
-} 
+}

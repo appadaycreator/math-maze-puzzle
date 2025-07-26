@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="暗算力を鍛える迷路型パズルゲーム「計算の迷宮」。制限時間内に計算問題を解きながら迷路を進め、ゴールを目指そう！脳トレしながら楽しく計算力アップ！">
+    <meta name="description" content="暗算力を鍛えるシンプルなゲーム「計算チャレンジ」。制限時間内にどれだけ計算問題を解けるか挑戦しよう！脳トレしながら楽しく計算力アップ！">
     <meta name="keywords" content="計算パズル,脳トレ,暗算,迷路ゲーム,数学ゲーム,計算練習,脳トレーニング">
-    <title>計算の迷宮 - 暗算力を鍛える迷路型パズルゲーム</title>
+    <title>計算チャレンジ - 暗算力を鍛えるシンプルゲーム</title>
     
     <!-- favicon -->
     <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
@@ -16,12 +16,12 @@
     <meta name="theme-color" content="#2563eb">
     
     <!-- OGP -->
-    <meta property="og:title" content="計算の迷宮 - 暗算力を鍛える迷路型パズルゲーム">
+    <meta property="og:title" content="計算チャレンジ - 暗算力を鍛えるシンプルゲーム">
     <meta property="og:description" content="暗算力を鍛える迷路型パズルゲーム。制限時間内に計算問題を解きながら迷路を進め、ゴールを目指そう！">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://appadaycreator.github.io/math-maze-puzzle/">
     <meta property="og:image" content="https://appadaycreator.github.io/math-maze-puzzle/assets/images/ogp.png">
-    <meta property="og:site_name" content="計算の迷宮">
+    <meta property="og:site_name" content="計算チャレンジ">
     <meta name="twitter:card" content="summary_large_image">
     
     <!-- CSS -->
@@ -57,7 +57,7 @@
                         <path d="M2 17L12 22L22 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         <path d="M2 12L12 17L22 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <span>計算の迷宮</span>
+                    <span>計算チャレンジ</span>
                 </a>
             </div>
             
@@ -175,7 +175,7 @@
             <!-- Game Info Bar -->
             <div class="flex flex-wrap justify-between items-center mb-4">
                 <div class="w-full md:w-auto mb-2 md:mb-0">
-                    <h1 class="text-2xl font-bold text-gray-800">計算の迷宮</h1>
+                    <h1 class="text-2xl font-bold text-gray-800">計算チャレンジ</h1>
                     <p class="text-sm text-gray-600">暗算力を鍛える迷路型パズルゲーム</p>
                 </div>
                 <div class="flex space-x-4">
@@ -202,26 +202,26 @@
             <div id="game-container" class="bg-white rounded-xl shadow-lg p-4 mb-6">
                 <!-- Game Start Screen -->
                 <div id="start-screen" class="text-center py-10">
-                    <h2 class="text-3xl font-bold text-blue-600 mb-4">計算の迷宮へようこそ!</h2>
-                    <p class="text-lg mb-6">制限時間内に計算問題を解きながら迷路を進め、ゴールを目指そう！</p>
+                    <h2 class="text-3xl font-bold text-blue-600 mb-4">計算チャレンジへようこそ!</h2>
+                    <p class="text-lg mb-6">制限時間内にたくさんの計算問題を解こう！</p>
                     <div class="mb-8">
                         <h3 class="font-bold text-gray-700 mb-3">遊び方</h3>
                         <ul class="text-left inline-block">
                             <li class="mb-2 flex items-start">
                                 <span class="text-blue-500 mr-2">①</span> 
-                                <span>迷路の分岐点で計算問題が表示されます</span>
+                                <span>画面に計算問題が表示されます</span>
                             </li>
                             <li class="mb-2 flex items-start">
                                 <span class="text-blue-500 mr-2">②</span> 
-                                <span>正解の道を選んで進みましょう</span>
+                                <span>4つの選択肢から正解を選びましょう</span>
                             </li>
                             <li class="mb-2 flex items-start">
                                 <span class="text-blue-500 mr-2">③</span> 
-                                <span>間違えると最初からやり直し</span>
+                                <span>正解すると得点！次の問題へ</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="text-blue-500 mr-2">④</span> 
-                                <span>制限時間内にゴールを目指せ！</span>
+                                <span>制限時間内に高得点を目指せ！</span>
                             </li>
                         </ul>
                     </div>
@@ -230,26 +230,45 @@
                     </button>
                 </div>
                 
-                <!-- Game Maze Canvas -->
+                <!-- Game Play Area -->
                 <div id="game-play-area" class="hidden">
-                    <canvas id="maze-canvas" class="mx-auto border rounded-lg"></canvas>
+                    <!-- Score Display -->
+                    <div class="flex justify-between mb-6">
+                        <div class="bg-blue-100 px-4 py-2 rounded-lg">
+                            <span class="text-gray-600">問題数:</span>
+                            <span id="question-count" class="font-bold text-xl ml-2">0</span>
+                        </div>
+                        <div class="bg-green-100 px-4 py-2 rounded-lg">
+                            <span class="text-gray-600">正解数:</span>
+                            <span id="correct-count" class="font-bold text-xl ml-2">0</span>
+                        </div>
+                        <div class="bg-purple-100 px-4 py-2 rounded-lg">
+                            <span class="text-gray-600">スコア:</span>
+                            <span id="current-score" class="font-bold text-xl ml-2">0</span>
+                        </div>
+                    </div>
                     
                     <!-- Math Problem Display -->
-                    <div id="problem-display" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-xl shadow-xl z-50">
-                        <h3 class="text-xl font-bold text-center mb-3">問題</h3>
-                        <div id="problem-text" class="text-2xl text-center font-bold mb-4">7 + 8 = ?</div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <button class="answer-btn bg-blue-100 hover:bg-blue-200 text-blue-800 py-3 px-4 rounded-lg">12</button>
-                            <button class="answer-btn bg-blue-100 hover:bg-blue-200 text-blue-800 py-3 px-4 rounded-lg">15</button>
-                            <button class="answer-btn bg-blue-100 hover:bg-blue-200 text-blue-800 py-3 px-4 rounded-lg">16</button>
-                            <button class="answer-btn bg-blue-100 hover:bg-blue-200 text-blue-800 py-3 px-4 rounded-lg">14</button>
+                    <div id="problem-display" class="bg-white p-8 rounded-xl shadow-lg">
+                        <div id="problem-number" class="text-sm text-gray-600 text-center mb-2">問題 1</div>
+                        <div id="problem-text" class="text-3xl text-center font-bold mb-8">7 + 8 = ?</div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button class="answer-btn bg-blue-100 hover:bg-blue-200 text-blue-800 py-4 px-6 rounded-lg text-xl font-semibold transition-all">12</button>
+                            <button class="answer-btn bg-blue-100 hover:bg-blue-200 text-blue-800 py-4 px-6 rounded-lg text-xl font-semibold transition-all">15</button>
+                            <button class="answer-btn bg-blue-100 hover:bg-blue-200 text-blue-800 py-4 px-6 rounded-lg text-xl font-semibold transition-all">16</button>
+                            <button class="answer-btn bg-blue-100 hover:bg-blue-200 text-blue-800 py-4 px-6 rounded-lg text-xl font-semibold transition-all">14</button>
+                        </div>
+                        
+                        <!-- Feedback Message -->
+                        <div id="feedback-message" class="hidden mt-6 text-center">
+                            <p id="feedback-text" class="text-xl font-bold"></p>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Game Complete Screen -->
                 <div id="complete-screen" class="hidden text-center py-10">
-                    <h2 class="text-3xl font-bold text-green-600 mb-4">ステージクリア!</h2>
+                    <h2 class="text-3xl font-bold text-green-600 mb-4">ゲーム終了!</h2>
                     <div class="flex justify-center mb-6">
                         <svg class="w-20 h-20 text-yellow-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zm7-10a1 1 0 01.707.293l.707.707L15.707 2A1 1 0 0118 3.293l-1.293 1.293-.707.707A1 1 0 0114.293 7l.707.707L16.293 9A1 1 0 0115 10.293l-1.293-1.293-.707-.707a1 1 0 01-.707-.293l-.707-.707L10.293 6A1 1 0 0112 4.707l1.293 1.293.707.707z" clip-rule="evenodd"></path>
@@ -264,8 +283,8 @@
                         <button id="share-result-btn" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg flex items-center">
                             <i class="fas fa-share-alt mr-2"></i> 結果をシェア
                         </button>
-                        <button id="next-stage-btn" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg flex items-center">
-                            次のステージ <i class="fas fa-arrow-right ml-2"></i>
+                        <button id="play-again-btn" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg flex items-center">
+                            もう一度プレイ <i class="fas fa-redo ml-2"></i>
                         </button>
                     </div>
                 </div>
@@ -273,7 +292,7 @@
                 <!-- Game Over Screen -->
                 <div id="game-over-screen" class="hidden text-center py-10">
                     <h2 class="text-3xl font-bold text-red-600 mb-4">タイムアップ!</h2>
-                    <p class="text-lg mb-6">制限時間内にゴールできませんでした...</p>
+                    <p class="text-lg mb-6">お疲れさまでした！</p>
                     <button id="retry-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg">
                         もう一度チャレンジ
                     </button>
@@ -286,7 +305,7 @@
                 <div class="w-full md:w-1/2 px-2 mb-4 md:mb-0">
                     <div class="bg-white rounded-xl shadow p-4 h-full">
                         <h3 class="font-bold text-lg mb-3">友達にシェア</h3>
-                        <p class="text-sm mb-4">計算の迷宮で遊んだ結果を友達とシェアしよう！</p>
+                        <p class="text-sm mb-4">計算チャレンジで遊んだ結果を友達とシェアしよう！</p>
                         <div class="flex space-x-3">
                             <a href="#" class="share-btn bg-blue-500 hover:bg-blue-600 text-white p-2 rounded" data-platform="twitter" aria-label="Twitterでシェア">
                                 <i class="fab fa-twitter"></i>
@@ -382,8 +401,8 @@
         <div class="container">
             <div class="flex flex-wrap">
                 <div class="w-full md:w-1/3 mb-6 md:mb-0">
-                    <h3 class="text-xl font-bold mb-3">計算の迷宮</h3>
-                    <p class="text-gray-400 mb-4">暗算力を鍛える迷路型パズルゲーム</p>
+                    <h3 class="text-xl font-bold mb-3">計算チャレンジ</h3>
+                    <p class="text-gray-400 mb-4">暗算力を鍛えるシンプルゲーム</p>
                     <div class="flex space-x-4">
                         <a href="#" aria-label="Twitter" class="text-gray-400 hover:text-white">
                             <i class="fab fa-twitter"></i>
@@ -416,7 +435,7 @@
                 </div>
             </div>
             <div class="border-t border-gray-700 mt-8 pt-6 text-sm text-gray-500">
-                <p>© 2023 計算の迷宮 All Rights Reserved.</p>
+                <p>© 2023 計算チャレンジ All Rights Reserved.</p>
                 <p class="mt-2">Powered by <a href="https://github.com/appadaycreator/math-maze-puzzle" target="_blank" rel="noopener" class="text-blue-400 hover:underline">GitHub Pages</a></p>
             </div>
         </div>
@@ -426,7 +445,6 @@
     <script src="js/audio-generator.js"></script>
     <script src="js/fallback-loader.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/maze.js"></script>
     <script src="js/problems.js"></script>
     <script src="js/game.js"></script>
     <script src="js/ui.js"></script>
