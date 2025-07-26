@@ -116,9 +116,23 @@ class GameState {
             });
         });
 
-        // 回答ボタン
-        this.elements.answerBtns.forEach(btn => {
+        // 回答ボタン（イベント委譲を使用）
+        if (this.elements.problemDisplay) {
+            this.elements.problemDisplay.addEventListener('click', (e) => {
+                if (e.target.classList.contains('answer-btn')) {
+                    console.log('Answer button clicked:', e.target.textContent);
+                    const answer = e.target.textContent.trim();
+                    this.submitAnswer(answer);
+                }
+            });
+        }
+        
+        // 既存のボタンにもリスナーを設定（念のため）
+        console.log('Answer buttons found:', this.elements.answerBtns.length);
+        this.elements.answerBtns.forEach((btn, index) => {
+            console.log(`Setting up answer button ${index}:`, btn);
             btn.addEventListener('click', (e) => {
+                console.log('Answer button clicked (direct):', e.target.textContent);
                 const answer = e.target.textContent.trim();
                 this.submitAnswer(answer);
             });
@@ -215,6 +229,9 @@ class GameState {
 
         this.updateUI();
         console.log(`ゲーム開始: レベル${this.currentLevel} ステージ${this.currentStage}`);
+        
+        // 最初の問題を生成
+        this.generateNextProblem();
     }
 
     startTimer() {
@@ -299,7 +316,7 @@ class GameState {
             this.playSound('correct');
             
             // 正解エフェクト
-            this.showAnswerFeedback(true);
+            this.showAnswerFeedback(true, answer);
             
             if (this.checkGoalReached()) {
                 this.completeStage();
@@ -308,7 +325,7 @@ class GameState {
             }
         } else {
             this.playSound('incorrect');
-            this.showAnswerFeedback(false);
+            this.showAnswerFeedback(false, answer);
             
             // 間違いの場合は最初からやり直し
             setTimeout(() => {
@@ -318,15 +335,24 @@ class GameState {
     }
 
     checkAnswer(userAnswer, correctAnswer) {
-        // 数値として比較（小数点の誤差も考慮）
-        const user = parseFloat(userAnswer);
-        const correct = parseFloat(correctAnswer);
+        // 文字列として正規化
+        const userStr = userAnswer.toString().trim();
+        const correctStr = correctAnswer.toString().trim();
         
-        if (isNaN(user) || isNaN(correct)) {
-            return userAnswer.toString() === correctAnswer.toString();
+        // まず文字列として比較
+        if (userStr === correctStr) {
+            return true;
         }
         
-        return Math.abs(user - correct) < 0.001;
+        // 数値として比較（小数点の誤差も考慮）
+        const user = parseFloat(userStr);
+        const correct = parseFloat(correctStr);
+        
+        if (!isNaN(user) && !isNaN(correct)) {
+            return Math.abs(user - correct) < 0.001;
+        }
+        
+        return false;
     }
 
     movePlayer() {
@@ -359,7 +385,9 @@ class GameState {
             this.elements.problemText.textContent = problem.question;
         }
 
-        this.elements.answerBtns.forEach((btn, index) => {
+        // 毎回最新の回答ボタンを取得
+        const answerBtns = this.elements.problemDisplay.querySelectorAll('.answer-btn');
+        answerBtns.forEach((btn, index) => {
             if (problem.choices[index]) {
                 btn.textContent = problem.choices[index];
                 btn.style.display = 'block';
@@ -372,15 +400,15 @@ class GameState {
         Utils.show(this.elements.problemDisplay);
     }
 
-    showAnswerFeedback(isCorrect) {
-        const buttons = this.elements.answerBtns;
+    showAnswerFeedback(isCorrect, userAnswer) {
+        // 毎回最新の回答ボタンを取得
+        const buttons = this.elements.problemDisplay.querySelectorAll('.answer-btn');
         
         buttons.forEach(btn => {
             btn.disabled = true;
             if (btn.textContent.trim() === this.currentProblem.correctAnswer.toString()) {
                 btn.classList.add('correct');
-            } else if (!isCorrect && btn.textContent.trim() === 
-                      (event.target ? event.target.textContent.trim() : '')) {
+            } else if (!isCorrect && btn.textContent.trim() === userAnswer) {
                 btn.classList.add('incorrect');
             }
         });

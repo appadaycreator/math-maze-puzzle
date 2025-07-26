@@ -498,6 +498,26 @@ footer a:hover {
   margin: 20px auto;
 }
 
+/* 回答ボタンのフィードバック */
+.answer-btn.correct {
+  background-color: #10b981 !important;
+  color: white !important;
+  transform: scale(1.05);
+  transition: all 0.3s ease;
+}
+
+.answer-btn.incorrect {
+  background-color: #ef4444 !important;
+  color: white !important;
+  animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
