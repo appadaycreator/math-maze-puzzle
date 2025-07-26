@@ -153,8 +153,8 @@ class MazeGenerator {
                 stack.push(current);
                 
                 this.removeWallBetween(current, next);
-                next.visited = true;
-                current = next;
+                next.cell.visited = true;
+                current = next.cell;
             } else if (stack.length > 0) {
                 current = stack.pop();
             } else {
@@ -168,6 +168,12 @@ class MazeGenerator {
 
     getUnvisitedNeighbors(cell) {
         const neighbors = [];
+        
+        // cellがCellクラスのインスタンスであることを確認
+        if (!cell || typeof cell.getNeighborPosition !== 'function') {
+            console.error('Invalid cell object:', cell);
+            return neighbors;
+        }
         
         Object.keys(DIRECTIONS).forEach(direction => {
             const pos = cell.getNeighborPosition(direction);

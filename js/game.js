@@ -282,10 +282,15 @@ class GameState {
     }
 
     submitAnswer(answer) {
-        if (!this.isPlaying || !this.currentProblem) return;
+        console.log('submitAnswer called:', answer, this.currentProblem);
+        if (!this.isPlaying || !this.currentProblem) {
+            console.log('Game not playing or no current problem');
+            return;
+        }
 
         this.totalQuestions++;
         const isCorrect = this.checkAnswer(answer, this.currentProblem.correctAnswer);
+        console.log('Answer check:', answer, 'vs', this.currentProblem.correctAnswer, '=', isCorrect);
 
         if (isCorrect) {
             this.correctAnswers++;
@@ -339,9 +344,13 @@ class GameState {
     }
 
     generateNextProblem() {
+        console.log('generateNextProblem called');
         if (window.problemGenerator) {
             this.currentProblem = window.problemGenerator.generateProblem(this.currentLevel);
+            console.log('Generated problem:', this.currentProblem);
             this.displayProblem(this.currentProblem);
+        } else {
+            console.error('problemGenerator not found');
         }
     }
 
