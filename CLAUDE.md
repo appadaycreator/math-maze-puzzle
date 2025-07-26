@@ -5,6 +5,35 @@
 
 ## 最新の修正内容（2025-07-26）
 
+### ゲームロジックの修正とデバッグ機能の追加
+
+#### 修正した内容
+1. **JavaScript読み込み順序の修正**
+   - 問題: game.jsがmaze.jsとproblems.jsより先に読み込まれていた
+   - 修正: 依存関係を考慮して正しい順序に変更
+   ```html
+   <script src="js/main.js"></script>
+   <script src="js/maze.js"></script>
+   <script src="js/problems.js"></script>
+   <script src="js/game.js"></script>
+   <script src="js/ui.js"></script>
+   ```
+
+2. **デバッグ機能の追加**
+   - submitAnswerメソッドにコンソールログを追加
+   - generateNextProblemメソッドに問題生成の確認ログを追加
+   - 正しい数字を選んだ時の処理フローを可視化
+
+3. **追加のバグ修正**
+   - getUnvisitedNeighborsメソッドに型チェックを追加
+   - generateWithBacktrackingのバグ修正（next.visitedをnext.cell.visitedに修正）
+
+### 使い方ページの実装確認
+- about.htmlにすべての必要な機能が実装済みであることを確認
+- クイックスタートガイド、詳しい遊び方、FAQ等すべて実装済み
+
+## 以前の修正内容（2025-07-26）
+
 ### JavaScriptコンソールエラーの修正
 
 #### 修正した内容
