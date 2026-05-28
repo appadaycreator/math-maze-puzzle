@@ -1,5 +1,9 @@
 {
   "devDependencies": {
     "puppeteer": "^24.15.0"
+  },
+  "scripts": {
+    "test": "npx playwright test",
+    "test:e2e": "npx playwright test tests/e2e/"
   }
 }

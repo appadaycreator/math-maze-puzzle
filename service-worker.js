@@ -3,9 +3,9 @@
  * PWA機能、オフラインサポート、キャッシュ管理
  */
 
-const CACHE_NAME = 'math-maze-v1.0.0';
-const STATIC_CACHE_NAME = 'math-maze-static-v1.0.0';
-const DYNAMIC_CACHE_NAME = 'math-maze-dynamic-v1.0.0';
+const CACHE_NAME = 'math-maze-v1.0.1';
+const STATIC_CACHE_NAME = 'math-maze-static-v1.0.1';
+const DYNAMIC_CACHE_NAME = 'math-maze-dynamic-v1.0.1';
 
 // キャッシュするファイルリスト
 const STATIC_FILES = [
@@ -30,7 +30,6 @@ const STATIC_FILES = [
   '/manifest.json',
   // 外部リソース
   'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css',
-  'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css',
   'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap'
 ];
 
