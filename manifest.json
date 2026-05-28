@@ -3,12 +3,12 @@
   "short_name": "Math Challenge",
   "description": "暗算力を鍛えるシンプルな計算ゲーム - A simple math game to train your mental arithmetic",
   "version": "1.0.0",
-  "start_url": "/",
+  "start_url": "/math-maze-puzzle/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "theme_color": "#2563eb",
   "background_color": "#f9fafb",
-  "scope": "/",
+  "scope": "/math-maze-puzzle/",
   "lang": "ja",
   "icons": [
     {
@@ -91,4 +91,4 @@
   },
   "handle_links": "preferred",
   "capture_links": "existing-client-navigate"
-} 
+}
