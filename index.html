@@ -273,7 +273,7 @@ select,input[type=text],input[type=number],input[type=email],textarea{min-height
                     </div>
                     <div class="bg-white rounded-lg shadow px-4 py-2">
                         <p class="text-xs text-gray-600">タイム</p>
-                        <p id="game-timer" class="font-bold text-blue-600">03:00</p>
+                        <p id="game-timer" class="font-bold text-blue-600">02:00</p>
                     </div>
                     <div class="bg-white rounded-lg shadow px-4 py-2">
                         <p class="text-xs text-gray-600">スコア</p>
@@ -287,7 +287,7 @@ select,input[type=text],input[type=number],input[type=email],textarea{min-height
                 <!-- Game Start Screen -->
                 <div id="start-screen" class="text-center py-10">
                     <h2 class="text-3xl font-bold text-blue-600 mb-4">計算チャレンジへようこそ!</h2>
-                    <p class="text-lg mb-6">制限時間内にたくさんの計算問題を解こう！</p>
+                    <p class="text-lg mb-6">2分間でできるだけ多くの計算問題を解こう！</p>
                     <div class="mb-8">
                         <h3 class="font-bold text-gray-700 mb-3">遊び方</h3>
                         <ul class="text-left inline-block">
@@ -316,6 +316,11 @@ select,input[type=text],input[type=number],input[type=email],textarea{min-height
                 
                 <!-- Game Play Area -->
                 <div id="game-play-area" class="hidden">
+                    <!-- タイマープログレスバー -->
+                    <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
+                        <div id="timer-progress-bar" class="bg-green-500 h-3 rounded-full transition-all duration-1000" style="width: 100%"></div>
+                    </div>
+
                     <!-- Score Display -->
                     <div class="flex justify-between mb-6">
                         <div class="bg-blue-100 px-4 py-2 rounded-lg">
@@ -342,24 +347,28 @@ select,input[type=text],input[type=number],input[type=email],textarea{min-height
                             <button class="answer-btn bg-blue-100 hover:bg-blue-200 text-blue-800 py-4 px-6 rounded-lg text-xl font-semibold transition-all">16</button>
                             <button class="answer-btn bg-blue-100 hover:bg-blue-200 text-blue-800 py-4 px-6 rounded-lg text-xl font-semibold transition-all">14</button>
                         </div>
-                        
+
+                        <!-- コンボ表示 -->
+                        <div id="combo-display" class="hidden mt-3 text-center text-orange-500 font-bold text-lg"></div>
+
                         <!-- Feedback Message -->
-                        <div id="feedback-message" class="hidden mt-6 text-center">
+                        <div id="feedback-message" class="hidden mt-4 text-center">
                             <p id="feedback-text" class="text-xl font-bold"></p>
                         </div>
+
+                        <!-- キーボードショートカットヒント -->
+                        <p class="hidden md:block text-xs text-gray-400 text-center mt-4">💡 キー 1〜4 でも回答できます</p>
                     </div>
                 </div>
                 
                 <!-- Game Complete Screen -->
                 <div id="complete-screen" class="hidden text-center py-10">
                     <h2 class="text-3xl font-bold text-green-600 mb-4">ゲーム終了!</h2>
-                    <div class="flex justify-center mb-6">
-                        <svg class="w-20 h-20 text-yellow-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zm7-10a1 1 0 01.707.293l.707.707L15.707 2A1 1 0 0118 3.293l-1.293 1.293-.707.707A1 1 0 0114.293 7l.707.707L16.293 9A1 1 0 0115 10.293l-1.293-1.293-.707-.707a1 1 0 01-.707-.293l-.707-.707L10.293 6A1 1 0 0112 4.707l1.293 1.293.707.707z" clip-rule="evenodd"></path>
-                        </svg>
+                    <div id="new-record-badge" class="hidden bg-yellow-100 border-2 border-yellow-400 text-yellow-800 rounded-lg px-4 py-2 mb-4 inline-block font-bold text-lg">
+                        🎉 新記録達成！
                     </div>
                     <div class="bg-blue-50 rounded-lg p-4 mb-6 inline-block">
-                        <p class="mb-2">クリアタイム: <span id="clear-time" class="font-bold">02:45</span></p>
+                        <p class="mb-2">プレイ時間: <span id="clear-time" class="font-bold">02:00</span></p>
                         <p class="mb-2">正答率: <span id="correct-rate" class="font-bold">80%</span></p>
                         <p>獲得スコア: <span id="earned-score" class="font-bold text-xl text-blue-600">850</span></p>
                     </div>
@@ -376,10 +385,20 @@ select,input[type=text],input[type=number],input[type=email],textarea{min-height
                 <!-- Game Over Screen -->
                 <div id="game-over-screen" class="hidden text-center py-10">
                     <h2 class="text-3xl font-bold text-red-600 mb-4">タイムアップ!</h2>
-                    <p class="text-lg mb-6">お疲れさまでした！</p>
-                    <button id="retry-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg">
-                        もう一度チャレンジ
-                    </button>
+                    <p class="text-gray-600 mb-4">お疲れさまでした！</p>
+                    <div id="new-record-badge-go" class="hidden bg-yellow-100 border-2 border-yellow-400 text-yellow-800 rounded-lg px-4 py-2 mb-4 inline-block font-bold text-lg">
+                        🎉 新記録達成！
+                    </div>
+                    <div class="bg-red-50 rounded-lg p-4 mb-6 inline-block text-left">
+                        <p class="mb-2">正解数: <span id="game-over-questions" class="font-bold text-red-700">0 / 0問</span></p>
+                        <p class="mb-2">正答率: <span id="game-over-correct-rate" class="font-bold text-red-700">0%</span></p>
+                        <p>獲得スコア: <span id="game-over-score" class="font-bold text-2xl text-red-600">0</span></p>
+                    </div>
+                    <div>
+                        <button id="retry-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg">
+                            もう一度チャレンジ
+                        </button>
+                    </div>
                 </div>
             </div>
             
@@ -927,7 +946,7 @@ button, .btn, .btn-primary, .option-btn, [role="button"] { min-height: 48px; min
 'use strict';
 function init(){
   // ローディング状態
-  document.querySelectorAll('button:not([type=reset]):not([data-ux]):not(.option-btn):not(#prevBtn):not(#nextBtn),input[type=submit]').forEach(function(b){
+  document.querySelectorAll('button:not([type=reset]):not([data-ux]):not(.option-btn):not(.answer-btn):not(#prevBtn):not(#nextBtn):not(#start-game-btn):not(#retry-btn):not(#play-again-btn),input[type=submit]').forEach(function(b){
     b.dataset.ux='1';
     var orig=b.tagName==='BUTTON'?b.textContent:(b.value||'実行');
     b.addEventListener('click',function(){

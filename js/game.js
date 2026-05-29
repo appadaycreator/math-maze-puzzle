@@ -7,7 +7,7 @@
 
 // ゲーム設定
 const GAME_CONFIG = {
-    TIME_LIMIT: 60, // 1分間
+    TIME_LIMIT: 120, // 2分間
     SCORE_CORRECT: 10,
     SCORE_BONUS: 5, // 連続正解ボーナス
     LEVELS: {
@@ -151,9 +151,24 @@ class GameState {
         this.consecutiveCorrect = 0;
         this.timeRemaining = GAME_CONFIG.TIME_LIMIT;
 
+        // プレイカウント更新
+        if (appState && appState.progress) {
+            appState.progress.playCount++;
+            appState.saveProgress();
+            const playCountEl = document.getElementById('play-count');
+            if (playCountEl) playCountEl.textContent = appState.progress.playCount;
+        }
+
         // 画面切り替え
         Utils.hide(this.elements.startScreen);
         Utils.show(this.elements.gamePlayArea);
+
+        // プログレスバー初期化
+        const progressBar = document.getElementById('timer-progress-bar');
+        if (progressBar) {
+            progressBar.style.width = '100%';
+            progressBar.className = 'bg-green-500 h-3 rounded-full transition-all duration-1000';
+        }
 
         // スコア表示を初期化
         this.updateScoreDisplay();
@@ -163,7 +178,7 @@ class GameState {
 
         // 最初の問題を生成
         this.generateNextProblem();
-        
+
         console.log(`ゲーム開始: レベル${this.currentLevel}`);
     }
 
@@ -243,7 +258,7 @@ class GameState {
     handleCorrectAnswer() {
         this.correctCount++;
         this.consecutiveCorrect++;
-        
+
         // スコア計算
         let points = GAME_CONFIG.SCORE_CORRECT;
         if (this.consecutiveCorrect > 1) {
@@ -254,10 +269,27 @@ class GameState {
         // フィードバック表示
         this.showFeedback('正解！', 'correct');
         this.showAnswerFeedback(true);
+        this.showComboFeedback(points);
         this.updateScoreDisplay();
-        
+
         // 効果音
         this.playSound('correct');
+    }
+
+    showComboFeedback(points) {
+        const comboEl = document.getElementById('combo-display');
+        if (!comboEl) return;
+
+        if (this.consecutiveCorrect >= 2) {
+            comboEl.textContent = `🔥 ${this.consecutiveCorrect}連続！ +${points}pt`;
+            comboEl.className = 'text-center text-orange-500 font-bold text-lg';
+        } else {
+            comboEl.textContent = `+${points}pt`;
+            comboEl.className = 'text-center text-green-600 font-bold text-base';
+        }
+        Utils.show(comboEl);
+        clearTimeout(this._comboTimer);
+        this._comboTimer = setTimeout(() => Utils.hide(comboEl), 1200);
     }
 
     handleIncorrectAnswer(userAnswer) {
@@ -326,41 +358,49 @@ class GameState {
     gameOver() {
         this.stopTimer();
         this.isPlaying = false;
-        
+
         // 正答率計算
-        const accuracyRate = this.questionCount > 0 ? 
+        const accuracyRate = this.questionCount > 0 ?
             Math.round((this.correctCount / this.questionCount) * 100) : 0;
-        
-        // 結果表示
-        if (this.elements.clearTime) {
-            const timeUsed = GAME_CONFIG.TIME_LIMIT - this.timeRemaining;
-            this.elements.clearTime.textContent = Utils.formatTime(timeUsed);
+        const timeUsed = GAME_CONFIG.TIME_LIMIT - this.timeRemaining;
+
+        // completeScreen 結果セット
+        if (this.elements.clearTime) this.elements.clearTime.textContent = Utils.formatTime(timeUsed);
+        if (this.elements.correctRate) this.elements.correctRate.textContent = accuracyRate + '%';
+        if (this.elements.earnedScore) this.elements.earnedScore.textContent = this.score;
+
+        // game-over-screen 結果セット
+        const goScore = document.getElementById('game-over-score');
+        const goRate = document.getElementById('game-over-correct-rate');
+        const goQuestions = document.getElementById('game-over-questions');
+        if (goScore) goScore.textContent = this.score;
+        if (goRate) goRate.textContent = accuracyRate + '%';
+        if (goQuestions) goQuestions.textContent = `${this.correctCount} / ${this.questionCount}問`;
+
+        // ハイスコア更新
+        let isNewRecord = false;
+        if (appState && this.score > (appState.progress.highScore || 0)) {
+            appState.progress.highScore = this.score;
+            appState.saveProgress();
+            isNewRecord = true;
+            const highScoreEl = document.getElementById('high-score');
+            if (highScoreEl) highScoreEl.textContent = this.score;
         }
-        
-        if (this.elements.correctRate) {
-            this.elements.correctRate.textContent = accuracyRate + '%';
-        }
-        
-        if (this.elements.earnedScore) {
-            this.elements.earnedScore.textContent = this.score;
-        }
-        
+
+        // 新記録バッジ
+        ['new-record-badge', 'new-record-badge-go'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) isNewRecord ? Utils.show(el) : Utils.hide(el);
+        });
+
         // 画面切り替え
         Utils.hide(this.elements.gamePlayArea);
-        
-        // タイムアップかゲーム終了かで表示を分ける
         if (this.timeRemaining <= 0) {
             Utils.show(this.elements.gameOverScreen);
         } else {
             Utils.show(this.elements.completeScreen);
         }
-        
-        // ハイスコア更新
-        if (appState && this.score > appState.progress.highScore) {
-            appState.progress.highScore = this.score;
-            appState.saveProgress();
-        }
-        
+
         this.playSound('complete');
     }
 
@@ -387,13 +427,28 @@ class GameState {
     updateTimerDisplay() {
         if (this.elements.gameTimer) {
             this.elements.gameTimer.textContent = Utils.formatTime(this.timeRemaining);
-            
+
             // タイマーの色を時間に応じて変更
             this.elements.gameTimer.classList.remove('warning', 'danger');
             if (this.timeRemaining <= 10) {
                 this.elements.gameTimer.classList.add('danger');
             } else if (this.timeRemaining <= 30) {
                 this.elements.gameTimer.classList.add('warning');
+            }
+        }
+
+        // プログレスバー更新
+        const progressBar = document.getElementById('timer-progress-bar');
+        if (progressBar) {
+            const pct = (this.timeRemaining / GAME_CONFIG.TIME_LIMIT) * 100;
+            progressBar.style.width = pct + '%';
+            progressBar.classList.remove('bg-green-500', 'bg-yellow-500', 'bg-red-500');
+            if (this.timeRemaining <= 10) {
+                progressBar.classList.add('bg-red-500');
+            } else if (this.timeRemaining <= 30) {
+                progressBar.classList.add('bg-yellow-500');
+            } else {
+                progressBar.classList.add('bg-green-500');
             }
         }
     }
