@@ -428,28 +428,32 @@
     background-color: var(--panel-bg);
     color: var(--text-color);
     border-radius: var(--border-radius);
+    min-height: 56px;
+    padding: 0.75rem 1rem;
 }
 
 .answer-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 12px 24px rgba(59, 130, 246, 0.4);
     border-color: var(--primary-color);
+    background: rgba(59, 130, 246, 0.05);
 }
 
 .answer-btn:active {
-    transform: translateY(0);
+    transform: translateY(0) scale(0.98);
 }
 
 .answer-btn.correct {
     background: var(--correct-color);
     color: white;
-    animation: correctGlow 2s;
+    animation: correctGlow 0.6s ease-out;
+    transform: scale(1.1);
 }
 
 .answer-btn.incorrect {
     background: var(--wrong-color);
     color: white;
-    animation: wrongShake 0.5s;
+    animation: wrongShake 0.5s ease-in-out;
 }
 
 /* アニメーション */

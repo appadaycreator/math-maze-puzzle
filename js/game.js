@@ -7,9 +7,15 @@
 
 // ゲーム設定
 const GAME_CONFIG = {
-    TIME_LIMIT: 120, // 2分間
+    TIME_LIMIT: 120, // デフォルト2分間
     SCORE_CORRECT: 10,
     SCORE_BONUS: 5, // 連続正解ボーナス
+    TIME_PRESETS: {
+        1: { label: '1分', seconds: 60 },
+        2: { label: '2分（推奨）', seconds: 120 },
+        3: { label: '3分', seconds: 180 },
+        5: { label: '5分', seconds: 300 }
+    },
     LEVELS: {
         1: { name: '初級', operations: ['+', '-'], maxNumber: 20 },
         2: { name: '中級', operations: ['*', '/'], maxNumber: 12 },
@@ -22,6 +28,7 @@ const GAME_CONFIG = {
 class GameState {
     constructor() {
         this.currentLevel = 1;
+        this.selectedTimeLimit = GAME_CONFIG.TIME_LIMIT;
         this.score = 0;
         this.questionCount = 0;
         this.correctCount = 0;
@@ -30,7 +37,7 @@ class GameState {
         this.isPlaying = false;
         this.gameTimer = null;
         this.currentProblem = null;
-        
+
         this.initializeElements();
         this.loadGameState();
     }
@@ -97,6 +104,14 @@ class GameState {
             });
         });
 
+        // 制限時間選択
+        document.querySelectorAll('.time-preset-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const preset = parseInt(e.target.getAttribute('data-preset'));
+                this.selectTimeLimit(preset);
+            });
+        });
+
         // 回答ボタン（イベント委譲）
         if (this.elements.problemDisplay) {
             this.elements.problemDisplay.addEventListener('click', (e) => {
@@ -132,12 +147,30 @@ class GameState {
         if (level >= 1 && level <= 4) {
             this.currentLevel = level;
             this.updateUI();
-            
+
             // レベルボタンのスタイル更新
             document.querySelectorAll('.level-btn').forEach(btn => {
-                btn.classList.remove('active');
+                btn.classList.remove('active', 'bg-blue-100', 'text-blue-700');
+                btn.classList.add('text-gray-700');
                 if (parseInt(btn.getAttribute('data-level')) === level) {
-                    btn.classList.add('active');
+                    btn.classList.add('active', 'bg-blue-100', 'text-blue-700');
+                    btn.classList.remove('text-gray-700');
+                }
+            });
+        }
+    }
+
+    selectTimeLimit(preset) {
+        if (GAME_CONFIG.TIME_PRESETS[preset]) {
+            this.selectedTimeLimit = GAME_CONFIG.TIME_PRESETS[preset].seconds;
+
+            // ボタンのスタイル更新
+            document.querySelectorAll('.time-preset-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-blue-100', 'text-blue-700');
+                btn.classList.add('text-gray-700');
+                if (parseInt(btn.getAttribute('data-preset')) === preset) {
+                    btn.classList.add('active', 'bg-blue-100', 'text-blue-700');
+                    btn.classList.remove('text-gray-700');
                 }
             });
         }
@@ -149,7 +182,7 @@ class GameState {
         this.questionCount = 0;
         this.correctCount = 0;
         this.consecutiveCorrect = 0;
-        this.timeRemaining = GAME_CONFIG.TIME_LIMIT;
+        this.timeRemaining = this.selectedTimeLimit;
 
         // プレイカウント更新
         if (appState && appState.progress) {
@@ -440,7 +473,7 @@ class GameState {
         // プログレスバー更新
         const progressBar = document.getElementById('timer-progress-bar');
         if (progressBar) {
-            const pct = (this.timeRemaining / GAME_CONFIG.TIME_LIMIT) * 100;
+            const pct = (this.timeRemaining / this.selectedTimeLimit) * 100;
             progressBar.style.width = pct + '%';
             progressBar.classList.remove('bg-green-500', 'bg-yellow-500', 'bg-red-500');
             if (this.timeRemaining <= 10) {
