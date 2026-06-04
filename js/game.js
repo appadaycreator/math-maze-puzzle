@@ -10,6 +10,12 @@ const GAME_CONFIG = {
     TIME_LIMIT: 120, // デフォルト2分間
     SCORE_CORRECT: 10,
     SCORE_BONUS: 5, // 連続正解ボーナス
+    DIFFICULTY_MULTIPLIERS: {
+        1: 1.0,   // 初級：基本スコア
+        2: 1.5,   // 中級：1.5倍
+        3: 2.0,   // 上級：2倍
+        4: 2.5    // マスター：2.5倍
+    },
     TIME_PRESETS: {
         1: { label: '1分', seconds: 60 },
         2: { label: '2分（推奨）', seconds: 120 },
@@ -134,6 +140,42 @@ class GameState {
                 }
             }
         });
+
+        // SNS共有ボタン
+        document.querySelectorAll('.share-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const platform = btn.getAttribute('data-platform');
+                this.shareResult(platform);
+            });
+        });
+
+        // URLコピーボタン
+        const copyUrlBtn = document.getElementById('copy-url-btn');
+        if (copyUrlBtn) {
+            copyUrlBtn.addEventListener('click', () => {
+                this.copyResultUrl();
+            });
+        }
+
+        // 結果シェアボタン
+        const shareResultBtn = document.getElementById('share-result-btn');
+        if (shareResultBtn) {
+            shareResultBtn.addEventListener('click', () => {
+                this.openShareMenu();
+            });
+        }
+
+        // 進捗リセットボタン
+        const resetBtn = document.getElementById('reset-progress-btn');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => {
+                if (confirm('ゲーム記録をすべてリセットします。よろしいですか？\n\nこの操作は取り消せません。')) {
+                    this.resetProgress();
+                    alert('ゲーム記録をリセットしました！');
+                }
+            });
+        }
     }
 
     loadGameState() {
@@ -141,6 +183,29 @@ class GameState {
             this.currentLevel = appState.progress.currentLevel || 1;
             this.updateUI();
         }
+    }
+
+    resetProgress() {
+        // ローカルストレージから全データを削除
+        if (appState && appState.progress) {
+            appState.progress.playCount = 0;
+            appState.progress.clearCount = 0;
+            appState.progress.highScore = 0;
+            appState.progress.currentLevel = 1;
+            appState.saveProgress();
+        }
+
+        // UI更新
+        const playCountEl = document.getElementById('play-count');
+        const clearCountEl = document.getElementById('clear-count');
+        const highScoreEl = document.getElementById('high-score');
+
+        if (playCountEl) playCountEl.textContent = '0';
+        if (clearCountEl) clearCountEl.textContent = '0';
+        if (highScoreEl) highScoreEl.textContent = '0';
+
+        this.currentLevel = 1;
+        this.updateUI();
     }
 
     selectLevel(level) {
@@ -211,8 +276,6 @@ class GameState {
 
         // 最初の問題を生成
         this.generateNextProblem();
-
-        console.log(`ゲーム開始: レベル${this.currentLevel}`);
     }
 
     startTimer() {
@@ -292,10 +355,14 @@ class GameState {
         this.correctCount++;
         this.consecutiveCorrect++;
 
-        // スコア計算
-        let points = GAME_CONFIG.SCORE_CORRECT;
+        // スコア計算（難易度ボーナス付き）
+        const basPoints = GAME_CONFIG.SCORE_CORRECT;
+        const difficultyMultiplier = GAME_CONFIG.DIFFICULTY_MULTIPLIERS[this.currentLevel] || 1.0;
+        let points = Math.round(basPoints * difficultyMultiplier);
+
         if (this.consecutiveCorrect > 1) {
-            points += GAME_CONFIG.SCORE_BONUS * (this.consecutiveCorrect - 1);
+            const bonusPoints = Math.round(GAME_CONFIG.SCORE_BONUS * (this.consecutiveCorrect - 1) * difficultyMultiplier);
+            points += bonusPoints;
         }
         this.score += points;
 
@@ -348,7 +415,25 @@ class GameState {
 
     showAnswerFeedback(isCorrect, userAnswer) {
         const buttons = this.elements.problemDisplay.querySelectorAll('.answer-btn');
-        
+
+        if (isCorrect) {
+            // 背景フラッシュアニメーション
+            if (this.elements.problemDisplay) {
+                this.elements.problemDisplay.classList.add('feedback-correct');
+                setTimeout(() => {
+                    this.elements.problemDisplay.classList.remove('feedback-correct');
+                }, 800);
+            }
+        } else {
+            // 背景フラッシュ＋シェイクアニメーション
+            if (this.elements.problemDisplay) {
+                this.elements.problemDisplay.classList.add('feedback-wrong');
+                setTimeout(() => {
+                    this.elements.problemDisplay.classList.remove('feedback-wrong');
+                }, 500);
+            }
+        }
+
         buttons.forEach(btn => {
             if (btn.textContent.trim() === this.currentProblem.correctAnswer.toString()) {
                 btn.classList.add('correct');
@@ -395,7 +480,7 @@ class GameState {
         // 正答率計算
         const accuracyRate = this.questionCount > 0 ?
             Math.round((this.correctCount / this.questionCount) * 100) : 0;
-        const timeUsed = GAME_CONFIG.TIME_LIMIT - this.timeRemaining;
+        const timeUsed = this.selectedTimeLimit - this.timeRemaining;
 
         // completeScreen 結果セット
         if (this.elements.clearTime) this.elements.clearTime.textContent = Utils.formatTime(timeUsed);
@@ -497,6 +582,81 @@ class GameState {
             window.audioManager.play(type);
         }
     }
+
+    // SNS共有機能
+    generateShareText() {
+        const levelName = GAME_CONFIG.LEVELS[this.currentLevel]?.name || '不明';
+        const accuracy = this.questionCount > 0 ?
+            Math.round((this.correctCount / this.questionCount) * 100) : 0;
+        return `計算チャレンジで${this.score}点獲得！\n難易度: ${levelName}\n正答率: ${accuracy}%\n\n計算力を鍛えよう！`;
+    }
+
+    shareResult(platform) {
+        const text = this.generateShareText();
+        const url = 'https://appadaycreator.com/math-maze-puzzle/';
+        const encodedText = encodeURIComponent(text);
+        const encodedUrl = encodeURIComponent(url);
+
+        let shareUrl = '';
+        switch (platform) {
+            case 'twitter':
+                shareUrl = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
+                break;
+            case 'facebook':
+                shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`;
+                break;
+            case 'line':
+                shareUrl = `https://line.me/R/msg/text/?${encodedText}%0A${encodedUrl}`;
+                break;
+        }
+
+        if (shareUrl) {
+            window.open(shareUrl, '_blank', 'width=600,height=400');
+        }
+    }
+
+    copyResultUrl() {
+        const url = 'https://appadaycreator.com/math-maze-puzzle/';
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(url).then(() => {
+                alert('URLをコピーしました！');
+            }).catch(() => {
+                // フォールバック
+                this.fallbackCopy(url);
+            });
+        } else {
+            this.fallbackCopy(url);
+        }
+    }
+
+    fallbackCopy(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        alert('URLをコピーしました！');
+    }
+
+    openShareMenu() {
+        const text = this.generateShareText();
+        const url = 'https://appadaycreator.com/math-maze-puzzle/';
+
+        if (navigator.share) {
+            navigator.share({
+                title: '計算チャレンジ',
+                text: text,
+                url: url
+            }).catch(() => {});
+        } else {
+            // フォールバック：Twitter共有
+            const encodedText = encodeURIComponent(text);
+            const encodedUrl = encodeURIComponent(url);
+            const shareUrl = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
+            window.open(shareUrl, '_blank', 'width=600,height=400');
+        }
+    }
 }
 
 // ゲームマネージャー
@@ -520,7 +680,6 @@ let gameManager;
 
 document.addEventListener('DOMContentLoaded', () => {
     gameManager = new GameManager();
-    console.log('ゲームマネージャーが初期化されました');
 });
 
 // エクスポート

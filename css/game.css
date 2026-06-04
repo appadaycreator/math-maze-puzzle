@@ -800,6 +800,81 @@
     }
 }
 
+/* 正答フィードバック アニメーション */
+@keyframes correctFlash {
+    0% { background: rgba(39, 174, 96, 0); }
+    50% { background: rgba(39, 174, 96, 0.3); }
+    100% { background: rgba(39, 174, 96, 0); }
+}
+
+@keyframes comboFloat {
+    0% { opacity: 0; transform: translateY(20px); }
+    50% { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-40px); }
+}
+
+@keyframes scorePopup {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-30px) scale(1.5); }
+}
+
+#problem-display.feedback-correct {
+    animation: correctFlash 0.8s ease-out;
+}
+
+#problem-display.feedback-wrong {
+    animation: wrongShake 0.5s ease-in-out;
+}
+
+.combo-badge {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #ff6b6b;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    animation: comboFloat 1s ease-out forwards;
+    pointer-events: none;
+    z-index: 2000;
+}
+
+.score-popup {
+    color: #27ae60;
+    font-weight: bold;
+    font-size: 1.2rem;
+    animation: scorePopup 1s ease-out forwards;
+}
+
+/* SNS共有ボタン */
+.share-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    margin: 4px 4px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: white;
+}
+
+.share-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.share-btn svg {
+    margin-right: 6px;
+    width: 18px;
+    height: 18px;
+}
+
 /* ダークモード対応 */
 @media (prefers-color-scheme: dark) {
     .game-container {

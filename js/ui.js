@@ -633,7 +633,6 @@ class AudioManager {
             
             // エラーハンドリング
             this.sounds[key].addEventListener('error', () => {
-                console.warn(`音声ファイルの読み込みに失敗: ${src}`);
                 // フォールバック音声を使用
                 this.sounds[key] = null;
             });
@@ -647,8 +646,7 @@ class AudioManager {
         
         if (sound && sound.src) {
             sound.currentTime = 0;
-            sound.play().catch(error => {
-                console.warn(`音声再生エラー (${soundName}):`, error);
+            sound.play().catch(() => {
                 this.playFallback(soundName);
             });
         } else {
@@ -766,8 +764,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.tooltipSystem = tooltipSystem;
     window.particleSystem = particleSystem;
     window.audioManager = audioManager;
-
-    console.log('UIシステムが初期化されました');
 });
 
 // エクスポート
