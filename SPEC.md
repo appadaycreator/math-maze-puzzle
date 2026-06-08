@@ -3,11 +3,37 @@
 ## 概要
 
 **サービス名**: Math Maze Puzzle
-**バージョン**: 1.2.1
-**更新日**: 2026-06-04
+**バージョン**: 1.3.0
+**更新日**: 2026-06-09
 **URL**: https://appadaycreator.com/math-maze-puzzle/
 
 迷路をたどりながら計算問題を解くパズルゲーム。子供から大人まで楽しめる無料の暗算力・計算力アップゲーム。
+
+## 最新の更新内容（v1.3.0）
+
+### P1: SEO・集客改善
+- **メタディスクリプション最適化**: CTR向上を狙った新テキスト（158文字以内）
+- **OGタグ・Twitter Card最適化**: twitter:creator追加、og:description/twitter:descriptionを統一
+- **内部リンク強化**: about.html に「ゲームをプレイする」CTA追加
+
+### P2: ユーザー継続改善
+- **スコア履歴表示機能**: localStorage に最新5回のスコアを記録し、サイドバーに簡易グラフ表示
+  - 新規メソッド：recordScoreHistory()、updateScoreHistoryDisplay()
+  - index.html サイドバーに「📊 スコア推移」セクション追加
+  - ページ読み込み・ゲーム終了時に自動更新
+- **LINE共有機能**: 既実装を確認（js/game.js の shareResult('line') で対応済み）
+
+## 最新の更新内容（v1.2.2）
+
+### P1: モバイルメニューのボタンアクセシビリティ改善
+- **実装内容**: モバイルサイドメニューの7個のボタンに aria-label を追加
+  - 言語切替：ja-btn-mobile、en-btn-mobile
+  - 文字サイズ：font-xs、font-sm、font-md、font-lg、font-xl
+
+- **改善効果**:
+  - モバイルユーザーのスクリーンリーダー対応強化
+  - 各ボタンの機能が音声で正確に読み上げられる
+  - アクセシビリティスコア向上（WCAG 2.1 AAレベル維持）
 
 ## 最新の更新内容（v1.2.1）
 

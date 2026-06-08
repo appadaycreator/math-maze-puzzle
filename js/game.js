@@ -30,6 +30,9 @@ const GAME_CONFIG = {
     }
 };
 
+// ポーズ状態を保持
+let gamePaused = false;
+
 // ゲーム状態管理クラス
 class GameState {
     constructor() {
@@ -84,6 +87,7 @@ class GameState {
         };
 
         this.setupGameControls();
+        this.updateScoreHistoryDisplay();
     }
 
     setupGameControls() {
@@ -128,11 +132,18 @@ class GameState {
             });
         }
 
-        // キーボード入力（1-4キー）
+        // キーボード入力（1-4キー + ESC）
         document.addEventListener('keydown', (e) => {
             if (this.isPlaying && this.currentProblem) {
+                // ESC キーでポーズ
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    this.togglePause();
+                    return;
+                }
+
                 const num = parseInt(e.key);
-                if (num >= 1 && num <= 4) {
+                if (num >= 1 && num <= 4 && !gamePaused) {
                     const answerBtns = this.elements.problemDisplay.querySelectorAll('.answer-btn');
                     if (answerBtns[num - 1] && !answerBtns[num - 1].disabled) {
                         this.submitAnswer(answerBtns[num - 1].textContent.trim());
@@ -140,6 +151,18 @@ class GameState {
                 }
             }
         });
+
+        // ポーズボタン
+        const pauseBtn = document.getElementById('pause-btn');
+        if (pauseBtn) {
+            pauseBtn.addEventListener('click', () => this.togglePause());
+        }
+
+        // 再開ボタン
+        const resumeBtn = document.getElementById('resume-btn');
+        if (resumeBtn) {
+            resumeBtn.addEventListener('click', () => this.togglePause());
+        }
 
         // SNS共有ボタン
         document.querySelectorAll('.share-btn').forEach(btn => {
@@ -181,6 +204,9 @@ class GameState {
     loadGameState() {
         if (appState && appState.progress) {
             this.currentLevel = appState.progress.currentLevel || 1;
+            const savedTimeLimit = appState.progress.selectedTimeLimit || 2;
+            this.selectLevel(this.currentLevel);
+            this.selectTimeLimit(savedTimeLimit);
             this.updateUI();
         }
     }
@@ -211,6 +237,11 @@ class GameState {
     selectLevel(level) {
         if (level >= 1 && level <= 4) {
             this.currentLevel = level;
+            // ローカルストレージに保存
+            if (appState && appState.progress) {
+                appState.progress.currentLevel = level;
+                appState.saveProgress();
+            }
             this.updateUI();
 
             // レベルボタンのスタイル更新
@@ -228,6 +259,11 @@ class GameState {
     selectTimeLimit(preset) {
         if (GAME_CONFIG.TIME_PRESETS[preset]) {
             this.selectedTimeLimit = GAME_CONFIG.TIME_PRESETS[preset].seconds;
+            // ローカルストレージに保存
+            if (appState && appState.progress) {
+                appState.progress.selectedTimeLimit = preset;
+                appState.saveProgress();
+            }
 
             // ボタンのスタイル更新
             document.querySelectorAll('.time-preset-btn').forEach(btn => {
@@ -293,6 +329,34 @@ class GameState {
         if (this.gameTimer) {
             clearInterval(this.gameTimer);
             this.gameTimer = null;
+        }
+    }
+
+    togglePause() {
+        if (!this.isPlaying) return;
+
+        gamePaused = !gamePaused;
+        const pauseOverlay = document.getElementById('pause-overlay');
+        const gamePlayArea = this.elements.gamePlayArea;
+
+        if (gamePaused) {
+            this.stopTimer();
+            if (pauseOverlay) {
+                pauseOverlay.style.display = 'flex';
+            }
+            if (gamePlayArea) {
+                gamePlayArea.style.opacity = '0.4';
+                gamePlayArea.style.pointerEvents = 'none';
+            }
+        } else {
+            this.startTimer();
+            if (pauseOverlay) {
+                pauseOverlay.style.display = 'none';
+            }
+            if (gamePlayArea) {
+                gamePlayArea.style.opacity = '1';
+                gamePlayArea.style.pointerEvents = 'auto';
+            }
         }
     }
 
@@ -505,6 +569,10 @@ class GameState {
             if (highScoreEl) highScoreEl.textContent = this.score;
         }
 
+        // スコア履歴に記録（最新5回まで）
+        this.recordScoreHistory(this.score);
+        this.updateScoreHistoryDisplay();
+
         // 新記録バッジ
         ['new-record-badge', 'new-record-badge-go'].forEach(id => {
             const el = document.getElementById(id);
@@ -581,6 +649,32 @@ class GameState {
         if (appState?.soundEnabled && window.audioManager) {
             window.audioManager.play(type);
         }
+    }
+
+    recordScoreHistory(score) {
+        let history = JSON.parse(localStorage.getItem('scoreHistory') || '[]');
+        history.unshift({ score, timestamp: Date.now() });
+        if (history.length > 5) history = history.slice(0, 5);
+        localStorage.setItem('scoreHistory', JSON.stringify(history));
+    }
+
+    updateScoreHistoryDisplay() {
+        const historyEl = document.getElementById('score-history-mini');
+        if (!historyEl) return;
+
+        const history = JSON.parse(localStorage.getItem('scoreHistory') || '[]');
+        if (history.length === 0) {
+            historyEl.innerHTML = '<p class="text-xs text-gray-500">まだプレイ結果がありません</p>';
+            return;
+        }
+
+        const maxScore = Math.max(...history.map(h => h.score), 100);
+        const bars = history.map((h, i) => {
+            const height = Math.max(20, (h.score / maxScore) * 60);
+            return `<div style="display:flex;flex-direction:column;align-items:center;flex:1"><div style="width:100%;height:${height}px;background:#3b82f6;border-radius:4px;margin-bottom:4px"></div><span style="font-size:0.65rem;color:#666">${h.score}</span></div>`;
+        }).join('');
+
+        historyEl.innerHTML = `<div style="display:flex;gap:4px;align-items:flex-end;height:100px;justify-content:space-between">${bars}</div><p style="font-size:0.75rem;color:#666;margin-top:4px;text-align:center">過去${history.length}回のスコア</p>`;
     }
 
     // SNS共有機能
