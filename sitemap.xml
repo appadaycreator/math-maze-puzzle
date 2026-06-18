@@ -6,7 +6,7 @@
   <!-- メインページ -->
   <url>
     <loc>https://mathmaze.example.com/</loc>
-    <lastmod>2024-01-15</lastmod>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -14,7 +14,7 @@
   <!-- ランディングページ -->
   <url>
     <loc>https://mathmaze.example.com/lp.html</loc>
-    <lastmod>2024-01-15</lastmod>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -22,7 +22,7 @@
   <!-- 遊び方 -->
   <url>
     <loc>https://mathmaze.example.com/about.html</loc>
-    <lastmod>2024-01-15</lastmod>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -30,7 +30,7 @@
   <!-- 機能要件書 -->
   <url>
     <loc>https://mathmaze.example.com/function.html</loc>
-    <lastmod>2024-01-15</lastmod>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -38,7 +38,7 @@
   <!-- 利用規約 -->
   <url>
     <loc>https://mathmaze.example.com/terms.html</loc>
-    <lastmod>2024-01-15</lastmod>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -46,7 +46,7 @@
   <!-- プライバシーポリシー -->
   <url>
     <loc>https://mathmaze.example.com/privacy.html</loc>
-    <lastmod>2024-01-15</lastmod>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
@@ -54,7 +54,7 @@
   <!-- お問い合わせ -->
   <url>
     <loc>https://mathmaze.example.com/contact.html</loc>
-    <lastmod>2024-01-15</lastmod>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
